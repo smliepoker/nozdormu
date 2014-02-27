@@ -1,0 +1,208 @@
+@import "define"
+
+/* ====================================
+ * #/ad/edit
+ * ==================================*/
+.ad_list .push,
+.ad_list .wap,
+.push .ad_list,
+.push .wap,
+.wap .ad_list,
+.wap .push,
+.file .url,
+.url .file,
+.Android .iPhone,
+.iPhone .Android,
+.oversea .internal,
+.internal .oversea,
+.wap .not_wap_ad,
+#ad-editor .provinces,
+#ad-editor .nations,
+#ad-editor.nations .domestic,
+#ad-editor.nations .provinces
+  display: none
+
+.help-block img
+  min-width: 20px
+  min-height: 20px
+  border: 1px solid #CCC
+  background-size: 16px 16px
+  padding: 1px
+
+.multiple img
+  cursor: pointer
+  margin-right: 10px
+
+.pos-ab
+  position: absolute
+  z-index: 1000
+
+aside,
+.affix-top
+  width: 250px
+  position: fixed
+  top: $topbar-height + $sidebar-width + $gap
+  right: $gap
+  
+  ul
+    &:first-child
+      border: 1px solid #DDD
+      border-radius: 4px
+  
+      li
+        border-bottom: 1px solid #DDD
+  
+        &:last-child
+          border: none
+  
+  .nav-pills.nav-stacked > li
+    margin: 0
+  
+  .nav-pills > li > a
+    border-radius: 0
+  
+#ad-editor
+  @extend .label-button
+  margin-right: 300px
+  
+  .well
+    margin-bottom: 0
+
+  .progress
+    width: 300px
+    display: inline-block
+    margin: 0 0 0 10px
+    vertical-align: middle
+  
+#ad-editor.provinces .provinces,
+#ad-editor.nations .nations
+  display: block
+  
+#coverall
+  padding: 8px 12px
+  display: flex
+  flex-direction: row
+  font-size: 12px
+  
+  &:hover
+    color: #08C
+    cursor: pointer
+
+  input
+    margin-right: 5px
+
+/* ====================================
+ * #/ad/payment
+ * ==================================*/
+.ad-payment,
+.stat-sales,
+.stat-salesman
+  .label-status
+    background: $gray
+
+    &:before
+      font-family: FontAwesome
+      display: inline
+      content: "\f096"
+
+    &.paid
+      background: $success-color
+
+      &:before
+        content: "\f00c"
+
+    &.bad
+      background: $red
+
+      &:before
+        content: "\f00d"
+
+    span
+      font-weight: normal
+
+/* ====================================
+ * #/dashboard/user
+ * ==================================*/
+@for $i from 1 through 50
+  .media-#{$i} .media-#{$i}
+    display: table-row
+
+.hide-all .media-,
+.media-all .hide-all > tr
+  display: table-row
+
+
+/* ====================================
+ * #/ad/quote
+ * ==================================*/
+.modified input
+  color: #3A87AD
+  font-weight: bold
+  background: #D9EDF7
+
+/* ====================================
+ * error page
+ * ==================================*/
+.error-container
+  margin-top: 1em
+  text-align: center
+
+.error-code
+  display: inline-block
+  vertical-align: top
+  font-size: 100px
+  font-weight: 600
+  line-height: .7em
+
+.error-details
+  display: inline-block
+  vertical-align: top
+  margin-top: 4em
+
+.error-details ul
+  text-align: left
+
+/* ====================================
+ * system real_time
+ * ==================================*/
+.controller-item
+  margin-bottom: 5px
+
+.visible-button .fa-eye + .show-label,
+.visible-button .fa-eye-slash + .hide-label
+  display: none
+
+/* ====================================
+ * calendar
+ * ==================================*/
+.calendar
+  display: flex
+  flex-wrap: wrap
+  border: 1px solid #DDD
+  border-width: 2px 1px 1px 2px
+
+  .week-title,
+  .pre-date,
+  .date,
+  .next-date
+    flex: auto
+    width: 14%
+    padding: 10px
+    font: 20px/2 Arial, Microsoft Yahei
+    border-right: 1px solid #DDD
+    border-bottom: 1px solid #DDD
+
+  .sunday
+    width: 16%
+
+  .week-title
+    text-align: center
+    background: #F0F0F0
+
+  p
+    text-align: right
+
+  a
+    display: block
+    text-align: center
+    margin-bottom: 0

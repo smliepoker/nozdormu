@@ -1,0 +1,9 @@
+# IDE
+.idea
+
+# repos
+bower_components
+node_modules
+
+# build
+css/*.css

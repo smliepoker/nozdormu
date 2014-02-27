@@ -1,0 +1,40 @@
+{
+  "name": "nozdormu",
+  "version": "0.1.0",
+  "authors": [
+    "Meathill <lujia.zhai@dianjoy.com>"
+  ],
+  "description": "a front-end framework of admin panela",
+  "main": "index.html",
+  "keywords": [
+    "admin",
+    "front-end",
+    "html5",
+    "data-visualization"
+  ],
+  "license": "MIT",
+  "homepage": "admin.yxpopo.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "jqueryui": "~1.10.4",
+    "bootstrap": "~3.1.1",
+    "handlebars": "~1.3.0",
+    "lodash": "~2.4.1",
+    "backbone": "~1.1.2",
+    "raphael": "~2.1.2",
+    "morris.js": "~0.4.3",
+    "moment": "~2.5.1",
+    "nervenet": "~0.1.3",
+    "animate.css": "~3.1.0",
+    "font-awesome": "~4.0.3",
+    "spark-md5": "~0.0.5"
+  }
+}

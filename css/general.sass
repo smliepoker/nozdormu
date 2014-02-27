@@ -1,0 +1,173 @@
+@import "define"
+
+body
+  color: #444
+  font: 14px/1.6 $text-font
+  background: #FFF url(../img/sidebar-bg.png) repeat-y ($sidebar-width - 250px) 0
+
+h1, h2, h3, h4, h5, h6,
+legend,
+.lead,
+.masthead h1,
+.secondary-masthead .breadcrumb,
+.btn-large,
+#page-loading
+  font-family: 'Open Sans', 'trebuchet ms', arial, Microsoft Yahei, Simhei
+
+/* ====================================
+ * rewrite bootstrap
+ * ==================================*/
+.dropdown-backdrop
+  display: none
+
+.navbar
+  padding-right: 8px
+
+  .pagination
+    margin: 8px 0
+
+.navbar-static-top
+  z-index: auto
+
+.navbar-form .btn-group
+  &.hidden-xs
+    display: inline-block !important
+
+/* ---------------------------------- */
+/* table */
+.table
+  .label
+    font-size: 100%
+
+    + .label
+      margin-left: 0.5em
+
+  th .label
+    margin-left: 0.5em
+
+  tr.show
+    display: table-row !important
+
+  td.btn-group
+    display: table-cell
+    white-space: nowrap
+    font-size: 0
+
+    .btn
+      float: none
+
+  + .pagination
+    margin: 0
+
+/* ---------------------------------- */
+/* label */
+.label-ch
+  background: $info-color
+
+.label-ad
+  background: $success-color
+
+/* ---------------------------------- */
+/* modal */
+.modal-body
+  max-height: 600px
+  overflow: auto
+
+  img
+    max-width: 100%
+    max-height: 600px
+
+  .container
+    width: 100%
+
+/* ---------------------------------- */
+/* other */
+.date[readonly]
+  cursor: pointer
+  text-align: center
+
+.nav-tabs,
+.nav-pills
+  margin-bottom: 1.5em
+
+.dropdown-menu
+  > li
+    > a
+      padding: 6px 12px
+      border-radius: 4px
+
+      &:hover,
+      &:focus
+        color: #fff
+        background-color: #e5412d
+
+  .active
+    > a,
+    > a:hover,
+    > a:focus
+      color: #fff
+      background-color: #a7a7a7
+
+.badge-important
+  background-color: $primary-color
+
+.pagination
+  > .active
+    > a
+      z-index: initial
+
+/* ====================================
+ * typography
+ * ==================================*/
+.text-editable
+  border-bottom: 1px $blue dotted
+
+/* ====================================
+ * helper
+ * ==================================*/
+.mg0
+  margin: 0
+
+.mb20
+  margin-bottom: 20px
+
+.mt20 
+  margin-top: 20px
+
+.heading-inline
+  display: inline-block
+
+.preview
+  max-width: 200px
+  max-height: 200px
+
+/* ====================================
+ * animation
+ * ==================================*/
+.animated.time2x
+  -webkit-animation-iteration-count: 2
+  -moz-animation-iteration-count: 2
+  animation-iteration-count: 2
+
+#search .dropdown-menu
+  left: 2px
+  top: 35px
+
+#search .spin
+  position: absolute
+  display: none
+  top: 4px
+  right: 8px
+  height: 32px
+  width: 32px
+  font-size: 20px
+
+#search .dropdown-menu > .divider:first-child
+  display: none
+
+#search .dropdown-menu li a:hover,
+#search .dropdown-menu li a:focus
+  color: #262626
+  text-decoration: none
+  background-color: #F5F5F5
+  outline: none

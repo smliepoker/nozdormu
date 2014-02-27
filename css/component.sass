@@ -1,0 +1,673 @@
+@import "define"
+
+.weight
+  background: #FF9933
+
+.back-button
+  margin-left: 10px
+
+/* user detail */
+#apks .badge
+  font-size: 14px
+
+/* ---------------------------------- */
+/* @morris-hover */
+.morris-hover
+  position: absolute
+  z-index: 5
+
+  &.morris-default-style
+    padding: 6px
+    color: #666
+    font-size: 12px
+    font-weight: 600
+    text-align: center
+    background: rgba(255, 255, 255, 0.8)
+    border: solid 2px rgba(230, 230, 230, 0.8)
+    border-radius: 10px
+    background-clip: padding-box
+
+    .morris-hover-row-label
+      margin: .25em 0
+      font-weight: 600
+
+    .morris-hover.morris-default-style .morris-hover-point
+      margin: 0.1em 0
+      white-space: nowrap
+
+.morris-chart
+  .placeholder.empty
+    text-align: center
+    color: #999
+    line-height: 200px
+
+/* ---------------------------------- */
+/* @progress-stat */
+.progress-stat 
+  margin-top: 2.25em
+  
+  &:first-child
+    margin-top: 0
+  
+  .stat-header
+    display: table
+    width: 100%
+    margin-bottom: .5em
+
+  .progress
+    margin-bottom: 0
+
+  .stat-note
+    margin-top: .65em
+    color: #888
+    font-style: italic
+  
+.stat-value 
+  display: table-cell
+  width: 50%
+  margin-top: -1.15em
+  color: #666
+  font-size: 15px
+  font-weight: 600
+  text-align: right
+  text-transform: uppercase
+  
+.stat-label 
+  display: table-cell
+  width: 50%
+  color: #999
+  font-weight: 600
+  text-transform: uppercase
+
+.progress-bar-info 
+  background-color: #3498db
+  
+.progress-bar-warning 
+  background-color: #ff751a
+  
+.progress-bar-primary 
+  background-color: #e5412d
+
+.progress-bar-secondary
+  background-color: #f0ad4e
+
+.progress-bar-tertiary
+  background-color: #888888
+
+.progress-striped .progress-bar-info,
+.progress-striped .progress-bar-warning,
+.progress-striped .progress-bar-primary,
+.progress-striped .progress-bar-secondary,
+.progress-striped .progress-bar-tertiary
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent))
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)
+  background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)
+  
+/* ---------------------------------- */
+/* @portlet */
+.portlet
+  position: relative
+  clear: both
+  width: auto
+
+  + .portlet
+    margin-top: 20px
+    
+  .portlet-header
+    @extend .clearfix
+    position: relative
+    padding: 1px 15px
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#fafafa), to(#ebebeb))
+    background-image: -webkit-linear-gradient(top, #fafafa, 0%, #ebebeb, 100%)
+    background-image: -moz-linear-gradient(top, #fafafa 0%, #ebebeb 100%)
+    background-image: linear-gradient(to bottom, #fafafa 0%, #ebebeb 100%)
+    background-repeat: repeat-x
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffebebeb', GradientType=0)
+    border: 1px solid #D5D5D5
+    border-radius: 4px 4px 0 0
+    background-clip: padding-box
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6
+      float: left
+      padding: 10px 0
+      margin: 0 1em 0 0
+      display: inline-block
+      vertical-align: middle
+      font-size: 15px
+      font-weight: 600
+      color: #555
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5)
+
+      i
+        display: inline-block
+        margin-top: -3px
+        margin-right: 10px
+        font-size: 16px
+        color: #777
+        vertical-align: middle
+
+  .portlet-tools
+    float: left
+    display: inline-block
+    padding: 0
+    margin: 5px 0 0 0
+
+    > li
+      display: inline-block
+      vertical-align: middle
+      padding: 0
+      margin: 0
+      list-style: none
+
+    .btn-icon
+      margin-top: -2px
+      color: #555
+      font-size: 16px
+
+      &:hover
+        text-decoration: none
+        background-color: #fff
+
+      .caret
+        margin-top: -3px
+
+    .dropdown-menu
+      left: auto
+      right: 0
+
+    .btn.btn-sm
+      padding-top: 3px
+      padding-bottom: 3px
+      margin-bottom: 0
+
+    .form-control.input-sm
+      display: inline-block
+      width: 125px
+      height: 26px
+
+    .progress
+      margin-top: 0
+      margin-bottom: 0
+      width: 125px
+
+    .nav-tabs,
+    .nav-pills
+      margin-bottom: 0
+
+    .nav-pills
+      > li
+        > a
+          padding: 2px 9px
+          font-size: 12px
+          font-weight: 600
+
+        &:active
+          > a,
+          > a:hover,
+          > a:focus
+            color: #fff
+            background-color: #555
+
+  .portlet-content
+    @extend .clearfix
+    padding: 15px
+    background: #FFF
+    border: 1px solid #D5D5D5
+    border-radius: 0 0 4px 4px
+    background-clip: padding-box
+
+  .portlet-toolbar
+    @extend .clearfix
+    padding: 10px 15px
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#fafafa), to(#ebebeb))
+    background-image: -webkit-linear-gradient(top, #fafafa, 0%, #ebebeb, 100%)
+    background-image: -moz-linear-gradient(top, #fafafa 0%, #ebebeb 100%)
+    background-image: linear-gradient(to bottom, #fafafa 0%, #ebebeb 100%)
+    background-repeat: repeat-x
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffebebeb', GradientType=0)
+    border: 1px solid #d5d5d5
+
+  .portlet-header + .portlet-content,
+  .portlet-toolbar + .portlet-content
+    margin-top: 1px
+    border: 4px 4px 0 0
+
+  .portlet-header + .portlet-toolbar
+    margin-top: 1px
+
+  .portlet-content + .portlet-toolbar
+    margin-top: 1px
+    border-bottom-right-radius: 4px
+    border-bottom-left-radius: 4px
+
+  .toolbar-bottom .portlet-content
+    border-bottom-right-radius: 0 !important
+    border-bottom-left-radius: 0 !important
+
+  &.portlet-nopad .portlet-content
+    @extend .clearfix
+    padding: 0
+
+  &.portlet-plain
+    background: transparent
+    border: none
+
+    .portlet-header
+      padding: 0 0 8px 0
+      background: #fff
+      filter: none
+      border: none
+      border-bottom: 1px dotted #ccc
+
+      h3
+        left: 0
+        padding: 0
+        margin: 0
+        font-size: 18px
+        font-weight: 600
+        color: #555
+        line-height: 22px
+
+      i
+        font-size: 20px
+
+    .portlet-content
+      padding-right: 0
+      padding-left: 0
+      background: transparent
+      border: none
+    
+/* ====================================
+ * dashboard
+ * ==================================*/
+.heading
+  padding-bottom: 8px
+  margin-bottom: 1.35em
+  border-bottom: 1px dotted #CCC
+
+/* ---------------------------------- */
+/* @dashboard-stat */
+.dashboard-stat 
+  position: relative
+  display: block
+  padding: 30px 20px
+  background-color: #eee
+  border-top-right-radius: 5px
+  border-top-left-radius: 5px
+  border-bottom-right-radius: 5px
+  border-bottom-left-radius: 5px
+  overflow: hidden
+
+  &,
+  &:hover,
+  &:active,
+  &:focus
+    color: #666
+    text-decoration: none
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5)
+    outline: none
+  
+    i
+      color: #e4e4e4
+  
+  &:hover
+    background-color: #e6e6e6
+  
+    i
+      color: #dcdcdc
+  
+  &:active
+    outline: 0
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125)
+    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125)
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125)
+
+  &.primary,
+  &.secondary,
+  &.tertiary,
+  &.expense,
+  &.success
+    color: #FFF
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5)
+
+  
+  &.primary
+    &,
+    &:active
+      background-color: #e5412d
+  
+      i
+        color: #dd301b
+  
+    &:hover
+      background-color: #e3351f
+  
+      i
+        color: #d42e1a
+  
+  &.secondary
+    &,
+    &:active
+      background-color: #f0ad4e
+
+      i
+        color: #eea236
+
+    &:hover
+      background-color: #eea236
+
+      i
+        color: #ec9924
+  
+  &.tertiary
+    &,
+    &:active
+      background-color: #888888
+
+      i
+        color: #7b7b7b
+
+    &:hover
+      background-color: #7b7b7b
+
+      i
+        color: #717171
+  
+  &.expense
+    &,
+    &:active
+      background-color: #5bc0de
+  
+      i
+        color: #39b3d7
+  
+    &:hover
+      background-color: #39b3d7
+
+      i
+        background-color: #269abc
+
+  &.success
+    &,
+    &:active
+      background-color: $success-bg-color
+
+      i
+        color: $success-color
+
+    &:hover
+      background-color: darken($success-bg-color, 10%)
+
+      i
+        color: darken($success-color, 10%)
+  
+  .visual
+    z-index: 10
+    float: right
+    width: 54px
+    height: 100%
+
+    i
+      position: absolute
+      left: 0
+      left: auto
+      right: 0
+      bottom: 0
+      display: block
+      height: 72px
+      font-size: 72px
+      -webkit-transform: rotate(-30deg)
+      -moz-transform: rotate(-30deg)
+      -o-transform: rotate(-30deg)
+      -ms-transform: rotate(-30deg)
+      transform: rotate(-30deg)
+      text-shadow: none
+
+  .details
+    position: relative
+    float: left
+    margin-top: -10px
+    text-align: left
+
+  .value
+    display: block
+    font-size: 32px
+    font-weight: 600
+
+  .content
+    display: block
+    margin-bottom: 1em
+    font-size: 13px
+    font-weight: 600
+    text-transform: uppercase
+
+  .more
+    position: absolute
+    top: 10px
+    right: 10px
+    font-size: 16px
+    color: rgba(0, 0, 0, 0.25) !important
+    text-shadow: none
+  
+/* ---------------------------------- */
+/* @wall-num on dashboard-op */
+.wall-num
+
+  .offer-wall-num
+    text-align: center
+    border: 1px solid #DDD
+    border-radius: 6px
+    background: #F0F0F0
+    color: #333
+
+    h4
+      font: bold 16px/40px Arial, Helvetica, Microsoft Yahei, Simhei, Simsun
+      margin: 0
+
+    .level
+      background-color: #FFF
+      font: bold 60px/100px Arial, Helvetica, serif-sans
+      margin: 0 10px 10px
+      border-radius: 4px
+
+  .offer-wall-num.danger
+    color: $danger-color
+    background-color: $danger-bg-color
+    border-color: $danger-border-color
+
+  .offer-wall-num.success
+    color: $success-color
+    background-color: $success-bg-color
+    border-color: $success-border-color
+
+  .danger .text-success,
+  .success .text-danger
+    display: none
+
+/* ====================================
+ * tables
+ * ==================================*/
+.ad_list .show,
+.push .show,
+.wap .show
+  display: table-row
+
+.status-0.label
+  background: #468847
+
+.status-1.label
+  background: #999
+
+.sdk-type-0 .sdk
+  background: #7F8C8D
+
+.ad_list .sdk
+  background: #9B59B6
+
+.push .sdk
+  background: #F39C12
+
+.wap .sdk
+  background: #34495E
+
+.level-1 .label-level
+  background: #9B59B6
+
+.level-2 .label-level
+  background: #F39C12
+
+.level-3 .label-level
+  background: #34495E
+
+.level-4 .label-level
+  background: #16A085
+
+.level-5 .label-level
+  background: #2ECC71
+
+.hide-all > *
+  display: none
+
+.order + i
+  margin-left: 0.5em
+
+.table .input-group
+  max-width: 300px
+
+.level-0 .label-level
+  background-color: #999
+
+.level-1 .label-level
+  background: #9B59B6
+
+.level-2 .label-level
+  background: #F39C12
+
+.level-3 .label-level
+  background: #34495E
+
+.level-4 .label-level
+  background: #16A085
+
+.level-5 .label-level
+  background: #2ECC71
+
+table .platform
+  display: inline-block
+  font: 16px/18px 'FontAwesome'
+
+table.scroll-fix
+  thead
+    tr
+      th
+        padding: 8px 0
+        text-indent: 8px
+
+tr.Android .platform:before
+  content: '\f17b'
+  color: #93B528
+
+tr.iPhone .platform:before
+  content: '\f179'
+  color: #DDD
+
+// for fixed header
+body > .table
+  display: none
+
+.scroll-fix
+  display: none
+
+/* ====================================
+ * navbar
+ * ==================================*/
+.curr
+  font-weight: bold
+  color: $blue
+
+  &:before
+    content: ': '
+    font-weight: normal
+    color: #333
+
+/* ====================================
+ * label
+ * ==================================*/
+.label
+  &.up
+    background: $red
+
+  &.down
+    background: $success-color
+
+/* ====================================
+ * item-grid
+ * ==================================*/
+.label-button
+  input[type=radio],
+  input[type=checkbox]
+    display: none
+
+    + label
+      min-width: 80px
+      border: 1px solid #CCC
+      padding: 3px 8px
+      text-align: center
+      margin: 0 5px 5px 0
+      background: #FFF
+      color: #333
+      border-radius: 3px
+      position: relative
+
+    + label:hover
+      border-color: #ADADAD
+      background: #EBEBEB
+      cursor: pointer
+
+    &:checked
+      + label
+        background-color: #5cb85c
+        border-color: #4cae4c
+        color: #FFF
+        padding-left: 25px
+
+        &:before
+          content: '\f00c'
+          font-family: 'FontAwesome'
+          position: absolute
+          left: 8px
+          top: 3px
+
+        &:hover
+          background-color: #47a447
+          border-color: #398439
+
+.item-grid
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+
+  label
+    min-width: 100px
+    order: 2
+
+  hr
+    order: 1
+    display: none
+    margin: 0 0 5px
+
+  input[type=radio]:checked,
+  input[type=checkbox]:checked
+
+    + label
+      order: 0
+
+    ~ hr
+      display: block
+      width: 100%

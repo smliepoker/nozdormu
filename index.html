@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<title>游戏泡泡-管理员服务</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, user-scalable=no" />
+
+<!-- for iOS desktop -->
+<meta name="apple-mobile-web-app-title" content="点乐管理员后台">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="apple-touch-icon-precomposed" href="../img/logo-57.png" /> <!--默认 57x57 像素-->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../img/logo-72.png" /> <!--iPad 1 72x72 像素-->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../img/logo-114.png" /> <!--iPhone 4 114x114 像素-->
+
+<!-- for Windows 8 -->
+<meta name="msapplication-TileColor" content="#888"/> <!-- Windows 8 磁贴颜色 -->
+<meta name="msapplication-TileImage" content="../img/logo-512.png"/>
+
+<link rel="shortcut icon" type="image/png" href="img/logo.png" />
+<link href="bower_components/jqueryui/themes/black-tie/jquery-ui.min.css" rel="stylesheet" />
+<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="bower_components/animate.css/animate.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/component.sass">
+<link rel="stylesheet" href="css/framework.css" />
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/page.sass">
+<link rel="stylesheet" href="css/medias.css">
+<link rel="stylesheet" href="css/general.sass">
+
+<header id="header">
+  <h1 id="site-logo">
+    <a href="./">
+      <img src="../img/logo.png" alt="游戏泡泡 管理员后台" width="80" />
+    </a>
+  </h1>
+  <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
+    <i class="fa fa-cog"></i>
+  </a>
+  <a href="javascript:;" data-toggle="collapse" data-target="#sidebar" id="sidebar-toggle" class="navbar-toggle collapsed">
+    <i class="fa fa-bars"></i>
+  </a>
+</header>
+<nav id="top-bar">
+  <ul class="nav navbar-nav navbar-left collapse top-bar-collapse">
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+        <i class="fa fa-link"></i> 常用链接 <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="/"><i class="fa fa-fw fa-user"></i> 点乐官网</a></li>
+        <li><a href="#mail-popup" data-toggle="modal"><i class="fa fa-fw fa-envelope"></i> 公司邮箱</a></li>
+        <li><a href="//whale.dianjoy.com:3000/"><i class="fa fa-fw fa-calendar"></i> Redmine</a></li>
+        <li class="divider"></li>
+        <li><a href="http://a.dianjoy.com/dev/api/adlist/adlist.php?app_id=072cb4d9d9d5dfd23ed2981e5e33fe59&net=WIFI&device_id=200212882"><i class="fa fa-list-alt"></i> Android墙测试</a></li>
+      </ul>
+    </li>
+  </ul>
+  <form class="navbar-form navbar-left ajax pit" action="#/search/:query" method="post" id="search">
+    <input class="form-control" type="text" name="query" placeholder="可搜索用户、广告、应用"/>
+    <span class="spin"><i class="fa fa-spinner fa-spin"></i></span>
+    <ul class="dropdown-menu">
+    </ul>
+    <script type="text/html-template">
+      {{#if empty}}
+        <li class="dropdown-header">查询结果为空</li>
+      {{/if}}
+      {{#if user}}
+        <li class="dropdown-header">开发者</li>
+        {{#each user}}
+        <li><a data-label="user" href="user/userdetail.php?id={{id}}" class="popup">{{account}}</a></li>
+        {{/each}}
+      {{/if}}
+      {{#if ad}}
+        <li class="divider"></li>
+        <li class="dropdown-header">广告</li>
+        {{#each ad}}
+        <li><a data-label="ad" href="ad/addetail.php?id={{id}}" class="popup">{{channel}} {{ad_name}} {{cid}} 的属性</a></li>
+        <li><a data-label="ad" href="#/stat/ad_ymd/{{../start_date}}/{{../end_date}}/{{id}}">{{channel}} {{ad_name}} {{cid}} 按时间统计</a></li>
+        {{!--
+        <li><a data-label="ad" href="#/stat/ad_loc/{{../start_date}}/{{../end_date}}/{{id}}">{{channel}} {{ad_name}} 按地区统计</a></li>
+        <li><a data-label="ad" href="#/stat/ad_apk/{{../start_date}}/{{../end_date}}/{{id}}">{{channel}} {{ad_name}} 按应用统计</a></li>
+        --}}
+        {{/each}}
+      {{/if}}
+      {{#if app}}
+        <li class="divider"></li>
+        <li class="dropdown-header">应用</li>
+        {{#each app}}
+        <li><a data-label="app" class="popup" href="apk/apkdetail.php?id={{id}}">{{appname}}的属性</a></li>
+        <li><a data-label="app" href="#/stat/apk">{{appname}}的统计</a></li>
+        {{/each}}
+      {{/if}}
+    </script>
+  </form>
+
+  <ul class="nav navbar-nav navbar-right" id="notification">
+    <li class="dropdown">
+      <a href="#" data-toggle="dropdown" role="button" title="我的任务">
+        <i class="fa fa-fw fa-tasks my-task"></i> {{#todo}}<span class="badge">1</span>{{/todo}}
+      </a>
+      <ul class="dropdown-menu profile-menu tasks" role="menu">
+        <li class="title">我的任务 <i class="fa fa-tasks"></i></li>
+        <script type="text/html-template">
+          {{#todo}}
+          <li class="dropdown-submenu">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+              10日内需补登数据 <span class="badge badge-important">{{num}}</span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              {{#ads}}
+              <li><a href="#/ad/quote_ad/{{from}}/{{to}}/{{id}}">{{name}}</a></li>
+              {{/ads}}
+            </ul>
+          </li>
+          {{/todo}}
+        </script>
+        <li class="empty">（无）</li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" data-toggle="dropdown" role="button" title="系统通知">
+        <i class="fa fa-fw fa-bell my-alarm"></i>
+      </a>
+      <ul class="dropdown-menu profile-menu alarms" role="menu">
+        <li class="title">
+          系统通知 <i class="fa fa-bell"></i>
+        </li>
+        <script type="text/html-template">
+          {{#each notification}}
+          <li class="alarm">
+            <input type="checkbox" name="{{id}}" {{#if status}}checked{{/if}} />
+            <a href="{{handler}}" {{#if is_popup}}class="popup"{{/if}} {{#if is_blank}}target="_blank"{{/if}}>
+              {{name}} {{description}} <small class="text-muted">{{create_time}}</small>
+            </a>
+          </li>
+          {{/each}}
+        </script>
+        <li class="empty">（无）</li>
+      </ul>
+    </li>
+    <li class="disabled pit"><a href="#"><i class="fa fa-fw fa-envelope-o my-task"></i></a></li>
+    <li class="vertical-divider"></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="fa fa-user"></i> {{user}} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu" id="my-profile">
+        <li class="pit">
+          <a href="/#/profile"><i class="fa fa-flag"></i> 绩效目标</a>
+        </li>
+        <li>
+          <a href="system/changepwd.html" class="popup"><i class="fa fa-edit"></i> 修改密码</a>
+        </li>
+        <li class="pit">
+          <a href="/#/config"><i class="fa fa-cogs"></i> 设置</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="logout.php" class="logout"><i class="fa fa-sign-out"></i> 退出登录</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+</nav>
+<div id="sidebar">
+  <ul id="main-nav">
+    <li class="active">
+      <a href="#/home"><i class="fa fa-dashboard"></i> 首页</a>
+    </li>
+    <script type="text/html-template">
+      {{#each category}}
+      <li><a href="url"><i class="fa fa-{{icon}}"></i> {{label}}</a></li>
+      {{/each}}
+    </script>
+  </ul>
+</div>
+
+<div id="fix-header-container"></div>
+<div class="main-area" id="main-page">
+  <div id="content-header">
+    <h1>管理员后台</h1>
+  </div>
+
+  <div class="well well-large lead hide page-loading" id="page-loading">
+    <i class="fa fa-spinner fa-spin fa-3x pull-left"></i>
+    加载模块中，请稍候
+  </div>
+  <div class="page-loading hide" id="mask">
+
+  </div>
+  <div id="sub-page">
+    <div class="alert alert-danger error hide">
+      <strong>加载失败，请刷新页面重试。</strong>
+      若此错误反复出现，请报告给肉山处理。
+    </div>
+    <div class="alert alert-danger overtime hide">
+      <strong>加载超时</strong>
+      请检查网络链接，确认没问题后刷新页面。
+    </div>
+  </div>
+</div>
+
+
+<div class="modal modal-styled fade" id="normal-alert">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" form="popup-form"><i class="fa fa-check"></i> 确定</button>
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="mail-popup">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">公司邮箱</h4>
+      </div>
+      <div class="modal-body">
+        <form id="mail-login-form" action="https://exmail.qq.com/cgi-bin/login" target="_blank" method="post" class="form-horizontal" role="form">
+          <input type="hidden" name="firstlogin" value="false">
+          <input type="hidden" name="errtemplate" value="dm_loginpage">
+          <input type="hidden" name="aliastype" value="other">
+          <input type="hidden" name="dmtype" value="bizmail">
+          <input type="hidden" name="p" value="">
+          <input type="hidden" name="domain" value="dianjoy.com">
+          <div class="form-group">
+            <label class="col-sm-2 control-label col-xs-12" for="uin">帐号</label>
+            <div class="col-sm-10 col-xs-12">
+              <div class="input-group">
+                <input name="uin" id="uin" class="form-control" />
+                <span class="input-group-addon">@dianjoy.com</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label col-xs-12" for="pwd">密码</label>
+            <div class="col-sm-10 col-xs-12">
+              <input type="password" name="pwd" class="form-control" id="pwd">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button form="mail-login-form" class="btn btn-primary"><i class="fa fa-sign-in"></i> 登录</button>
+        <a href="https://exmail.qq.com/cgi-bin/readtemplate?check=false&t=bizmail_orz" class="btn btn-default">忘记密码</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul id="howl">
+  <script type="text/html-template" class="template">
+    <li class="howl-slot" style="display:none" id="howl-slot-{{id}}">
+      <div class="howl-message">
+        <button data-dismiss="alert" data-target="#howl-slot-{{id}}" class="close" type="button">&times;</button>
+        <div class="howl-message-inner">
+          <h4 class="howl-title">点乐后台通知</h4>
+          {{#if handler}}
+          <a href="{{handler}}">{{name}} {{description}} <small>{{create_time}}</small></a>
+          {{else}}
+          收到{{number}}条新消息，请及时处理哟。
+          {{/if}}
+        </div>
+      </div>
+    </li>
+  </script>
+</ul>
+
+<footer id="footer">
+  <p class="pull-right">
+    <a href="#top" class="to-top-button"><i class="fa fa-chevron-up"></i> 返回顶部</a>
+  </p>
+  <address>
+    后台主要由<a href="mailto:lujia.zhai@dianjoy.com">肉山</a>负责维护，欢迎各种反馈、咨询。Dianjoy &copy; 2013 保留一切权利。
+  </address>
+</footer>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jqueryui/ui/minified/jquery-ui.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/handlebars/handlebars.min.js"></script>
+<script src="bower_components/lodash/dist/lodash.min.js"></script>
+<script src="bower_components/backbone/backbone-min.js"></script>
+<script src="bower_components/raphael/raphael-min.js"></script>
+<script src="bower_components/morris.js/morris.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/nervenet/nervenet.min.js"></script>
+<script src="bower_components/spark-md5/spark-md5.min.js"></script>
+<script src="../js/popup/Manager.js"></script>
+<script src="../js/service/Manager.js"></script>
+<script src="../js/view/SubPage.js"></script>
+<script src="../js/view/MainPage.js"></script>
+<script src="../js/view/Spotlight.js"></script>
+<script src="../js/notification/NotificationPanel.js"></script>
+<script src="../js/notification/Manager.js"></script>
+<script src="../js/admin/view/MainPage.js"></script>
+<script src="../js/admin/router/AdminPanel.js"></script>
+<script src="../js/model/PageMediator.js"></script>
+<script src="../js/model/NotificationCollection.js"></script>
+<script src="../js/form/utils.js"></script>
+<script src="../js/utils/Utils.js"></script>
+<script src="../js/utils/Datetime.js"></script>
+<script src="../js/admin/main.js"></script>
