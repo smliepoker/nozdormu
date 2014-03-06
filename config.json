@@ -1,0 +1,16 @@
+{
+  "img_url": ".",
+  "module": ".",
+  "project": {
+    "name": "测试项目"
+
+  },
+  "admin": {
+    "name": "Meathill",
+    "mail": "meathill@gmail.com"
+  },
+  "company": {
+    "name": "Dianjoy",
+    "start": "2012"
+  }
+}
