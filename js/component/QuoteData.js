@@ -33,7 +33,7 @@
         });
         self.removeClass('modified');
       });
-      Dianjoy.service.Manager.call('./ad/action_ad.php', {
+      dianjoy.service.Manager.call('./ad/action_ad.php', {
         m: 'quote',
         date_start: this.$el.data('date'),
         modified: cpas
@@ -47,4 +47,4 @@
       this.$el.removeClass('syncing');
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

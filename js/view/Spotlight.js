@@ -93,7 +93,7 @@
       }.bind(this));
     },
     load: function(query, done) {
-      Dianjoy.service.Manager.call('api/search_result.php', {
+      dianjoy.service.Manager.call('api/search_result.php', {
         param: query
       }, function(res) {
         if (res.code != 0) return done(new Error('Not found!'));
@@ -103,4 +103,4 @@
       });
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.view'), jQuery));
+}(Nervenet.createNameSpace('dianjoy.view'), jQuery));

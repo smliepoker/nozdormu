@@ -127,12 +127,12 @@
         .addClass('btn-success')
         .append(' <i class="icon-ok fa fa-check"></i>');
       
-      if (!Dianjoy.service.Manager.autoUpload) {
+      if (!dianjoy.service.Manager.autoUpload) {
         return;
       }
       var bar = target.bar = $('<div class="progress"><div class="bar progress-bar"></div></div>');
       target.filename = file.name;
-      Dianjoy.service.Manager.upload(file, {
+      dianjoy.service.Manager.upload(file, {
         type: target.id || 'ad_url',
         id: $('#adid').val(),
         uploader: target,
@@ -194,7 +194,7 @@
     },
     input_blurHandler: function(event) {
       var target = event.currentTarget,
-          msgs = Dianjoy.form.checkInput(target);
+          msgs = dianjoy.form.checkInput(target);
       target = $(target);
       if (msgs.length > 0) {
         target.closest('.form-group').addClass('has-error');
@@ -250,10 +250,10 @@
       this.addLoading();
 
       // ajax提交类型的
-      var isPass = Dianjoy.form.checkForm(this.el);
+      var isPass = dianjoy.form.checkForm(this.el);
       if (this.$el.hasClass('ajax') && isPass) {
         var data = this.$el.serialize();
-        Dianjoy.service.Manager.call(action, data, this.submit_successHandler, this.submit_errorHandler, this);
+        dianjoy.service.Manager.call(action, data, this.submit_successHandler, this.submit_errorHandler, this);
         return false;
       }
 
@@ -262,4 +262,4 @@
       return isPass;
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

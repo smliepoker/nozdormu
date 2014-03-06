@@ -107,5 +107,5 @@
   };
   manager = _.extend(manager, Backbone.Events);
   ns.Manager = manager;
-}(Nervenet.createNameSpace('Dianjoy.service')));
+}(Nervenet.createNameSpace('dianjoy.service')));
 

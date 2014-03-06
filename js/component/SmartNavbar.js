@@ -2,11 +2,11 @@
   'use strict';
   function dateStart_closeHandler(selectDate) {
     var end = $(this).siblings('.date.end');
-    end.datepicker('setDate', Dianjoy.utils.getMinDate(30, selectDate, end.val()));
+    end.datepicker('setDate', dianjoy.utils.getMinDate(30, selectDate, end.val()));
   }
   function dateEnd_closeHandler(selectDate) {
     var start = $(this).siblings('.date.start');
-    start.datepicker('setDate', Dianjoy.utils.getMaxDate(-30, selectDate, start.val()));
+    start.datepicker('setDate', dianjoy.utils.getMaxDate(-30, selectDate, start.val()));
   }
   var init = {
     events: {
@@ -113,4 +113,4 @@
     }
   };
   ns.SmartNavbar = Backbone.View.extend(init);
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

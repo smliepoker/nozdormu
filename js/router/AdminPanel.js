@@ -1,9 +1,10 @@
 ;(function (ns) {
   'use strict';
   ns.AdminPanel = Backbone.Router.extend({
+    $subPage: null,
     routes: {
-      'home': 'showHomepage',
-      'home/:start/:end': 'showHomepage',
+      '': 'showHomepage',
+      's:start/e:end': 'showHomepage',
       'ad/:op': 'showAdPages',
       'ad/:op/:start': 'showAdPages',
       'ad/:op/:start/:end': 'showAdPages',
@@ -72,11 +73,10 @@
         .openSubPage('./client/' + op + '.php');
     },
     showHomepage: function (start, end) {
-      start = start || '';
-      end = end || '';
-      R.mainPage
-        .setBreadcrumb()
-        .openSubPage('./dashboard/dashboard.php?start=' + start + '&end=' + end);
+      var url = baseURL + 'dashboard/';
+      url += start ? 'start-' + start + '/' : '';
+      url += end ? 'end-' + end + '/' : '';
+      this.$subPage.load(url);
     },
     showIframe: function (url) {
       R.mainPage.openIframe(decodeURIComponent(url));
@@ -87,7 +87,7 @@
         .openSubPage('./my/' + op + '.php');
     },
     showPopup: function (title, url) {
-      Dianjoy.popup.Manager.popup(title, decodeURIComponent(url), false, true, true);
+      dianjoy.popup.Manager.popup(title, decodeURIComponent(url), false, true, true);
     },
     showPublisherPage: function (op, status) {
       status = status || '';
@@ -120,4 +120,4 @@
         .openSubPage('./system/' + op + '.php?start=' + start + '&end=' + end + '&id=' + id);
     }
   });
-})(Nervenet.createNameSpace('Dianjoy.admin.router'));
+})(Nervenet.createNameSpace('dianjoy.router'));

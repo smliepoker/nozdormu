@@ -130,4 +130,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

@@ -16,17 +16,17 @@
 <meta name="msapplication-TileColor" content="#888"/> <!-- Windows 8 磁贴颜色 -->
 <meta name="msapplication-TileImage" content="{{img_url}}/img/logo-512.png"/>
 
-<link rel="shortcut icon" type="image/png" href="{{img_url}}/img/logo.png" />
+<link rel="shortcut icon" type="image/png" href="{{img_url}}/img/fav.png" />
 <link rel="stylesheet" href="//cdn.staticfile.org/jqueryui/1.10.3/css/base/minified/jquery-ui.min.css" />
 <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.1.1/css/bootstrap.min.css" />
 <link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/4.0.3/css/font-awesome.min.css" />
 <link rel="stylesheet" href="//cdn.staticfile.org/animate.css/3.1.0/animate.min.css" />
-<link rel="stylesheet" href="{{module}}/css/component.sass">
+<link rel="stylesheet" href="{{module}}/css/component.css">
 <link rel="stylesheet" href="{{module}}/css/framework.css" />
 <link rel="stylesheet" href="{{module}}/css/layout.css">
-<link rel="stylesheet" href="{{module}}/css/page.sass">
+<link rel="stylesheet" href="{{module}}/css/page.css">
 <link rel="stylesheet" href="{{module}}/css/medias.css">
-<link rel="stylesheet" href="{{module}}/css/general.sass">
+<link rel="stylesheet" href="{{module}}/css/general.css">
 
 <header id="header">
   <h1 id="site-logo">
@@ -173,15 +173,15 @@
   <div class="page-loading hide" id="mask">
 
   </div>
+  <div class="alert alert-danger error hide">
+    <strong>加载失败，请刷新页面重试。</strong>
+    若此错误反复出现，请报告给{{admin.name}}处理。
+  </div>
+  <div class="alert alert-danger overtime hide">
+    <strong>加载超时</strong>
+    请检查网络链接，确认没问题后刷新页面。
+  </div>
   <div id="sub-page">
-    <div class="alert alert-danger error hide">
-      <strong>加载失败，请刷新页面重试。</strong>
-      若此错误反复出现，请报告给{{admin.name}}处理。
-    </div>
-    <div class="alert alert-danger overtime hide">
-      <strong>加载超时</strong>
-      请检查网络链接，确认没问题后刷新页面。
-    </div>
   </div>
 </div>
 
@@ -254,4 +254,5 @@
 <script src="{{module}}/js/model/NotificationCollection.js"></script>
 <script src="{{module}}/js/form/utils.js"></script>
 <script src="{{module}}/js/utils/Utils.js"></script>
+<script src="{{module}}/js/config.js"></script>
 <script src="{{module}}/js/app.js"></script>

@@ -28,5 +28,5 @@
       this.$el.removeClass('hide').slideDown();
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));
 

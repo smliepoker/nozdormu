@@ -13,7 +13,7 @@
         this.$el.next().find('a[title=' + init.pn + ']').parent().addClass('active');
       }
       
-      Dianjoy.service.Manager.on('complete:call', this.changeHandler, this);
+      dianjoy.service.Manager.on('complete:call', this.changeHandler, this);
     },
     changeHandler: function (response) {
       var tr = this.$('#' + response.aid);
@@ -30,5 +30,5 @@
       }
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));
 

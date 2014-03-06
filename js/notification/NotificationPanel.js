@@ -79,4 +79,4 @@
       console.log(model);
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.notification')));
+}(Nervenet.createNameSpace('dianjoy.notification')));

@@ -46,7 +46,7 @@
           seq_rmb: length - i
         });
       });
-      Dianjoy.service.Manager.call('ad/action_ad.php', {
+      dianjoy.service.Manager.call('ad/action_ad.php', {
         seq: seq,
         m: 'adjust_seq'
       }, this.successHandler, this.errorHandler, this);
@@ -67,5 +67,5 @@
       this.showResult('success');
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));
 

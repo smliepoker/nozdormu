@@ -40,7 +40,7 @@
         })
         self.removeClass('modified');
       });
-      Dianjoy.service.Manager.call('ad/action_ad.php', {
+      dianjoy.service.Manager.call('ad/action_ad.php', {
         m: 'quote_ad',
         adid: this.$el.data('id'),
         date_start: this.$el.data('start'),
@@ -62,4 +62,4 @@
       this.$el.removeClass('syncing');
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

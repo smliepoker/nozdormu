@@ -37,4 +37,4 @@
     }
   };
   ns.NavbarTableMediator = Backbone.Model.extend(init);
-}(Nervenet.createNameSpace('Dianjoy.component.model')));
+}(Nervenet.createNameSpace('dianjoy.component.model')));

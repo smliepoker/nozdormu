@@ -53,4 +53,4 @@
                 .children().first().text(this.model.get('ownerlabel'));
         }
     });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

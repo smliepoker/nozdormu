@@ -24,4 +24,4 @@
       this.save();
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.config')));
+}(Nervenet.createNameSpace('dianjoy.config')));

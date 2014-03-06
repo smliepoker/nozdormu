@@ -11,7 +11,7 @@
       this.createOptions();
       this.data = JSON.parse(this.$('script').remove().html().replace(/,\s?]/, ']'));
       this.model.on('change:chart-data', this.model_changeHandler, this);
-      this.getTime = Dianjoy.utils.Datetime.formatAsHourMinute;
+      this.getTime = dianjoy.utils.Datetime.formatAsHourMinute;
       if (!this.data) {
         return;
       }
@@ -31,13 +31,13 @@
           google.load('visualization', '1.0', {
             packages: ['corechart'],
             callback: function() {
-              Dianjoy.utils.trigger('google:ready');
+              dianjoy.utils.trigger('google:ready');
             }
           });
         };
         document.head.appendChild(script);
       }
-      Dianjoy.utils.once('google:ready', this.render, this);
+      dianjoy.utils.once('google:ready', this.render, this);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);
@@ -129,12 +129,12 @@
         type: this.type,
         output: 'json'
       };
-      Dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, this.remote_errorHandler, this);
+      dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, this.remote_errorHandler, this);
     },
     validData: function (data) {
       if (this.minLength && this.minLength > data.length - 1) {
         var min = data[0].length,
-            format = Dianjoy.utils.Datetime.formatAsHourMinute;
+            format = dianjoy.utils.Datetime.formatAsHourMinute;
         for (var i = data.length, len = this.minLength; i < len; i++) {
           var sample = [format(i)];
           sample.length = min;
@@ -159,5 +159,5 @@
       this.render(data);
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));
 

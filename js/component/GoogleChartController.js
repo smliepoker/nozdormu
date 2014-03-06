@@ -65,7 +65,7 @@
         type: this.type,
         date: dates[0]
       };
-      Dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, null, this);
+      dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, null, this);
       this.$('.date, button').prop('disabled', true);
       this.$('.fa-calendar').toggleClass('fa-calendar fa-spinner fa-spin');
     },
@@ -75,7 +75,7 @@
         return array;
       }
       var time = '',
-          format = Dianjoy.utils.Datetime.formatAsHourMinute;
+          format = dianjoy.utils.Datetime.formatAsHourMinute;
       for (var i = 1; i < TOTAL; i++) {
         time = format(i - 1);
         if (array[i][0] !== time) {
@@ -128,6 +128,6 @@
       this.model.set('chart-data', dates.join(','));
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));
 
 

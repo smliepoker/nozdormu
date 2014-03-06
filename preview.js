@@ -2,10 +2,12 @@
  * Created by meathill on 14-3-6.
  * 使用node，预览效果和debug
  */
-var http = require('http')
+var express = require('express')
   , fs = require('fs')
-  , mustache = require('mustache');
-http.createServer(function (req, res) {
+  , path = require('path')
+  , mustache = require('mustache')
+  , app = express();
+app.get('/', function (req, res) {
   var template = ''
     , config = null
     , options = {
@@ -13,10 +15,7 @@ http.createServer(function (req, res) {
     };
   function output() {
     if (template && config) {
-      res.writeHead(200, {
-        'Content-Type': 'text/html'
-      });
-      res.end(mustache.render(template, config));
+      res.send(mustache.render(template, config));
     }
   }
   fs.readFile('index.html', options, function (err, data) {
@@ -33,5 +32,10 @@ http.createServer(function (req, res) {
     config = JSON.parse(data);
     output();
   });
-}).listen(1337, 'meathill.pc');
+});
+app.get('/dashboard', function (req, res) {
+  res.send('<div class="alert alert-success">Hello, world</div>');
+});
+app.use(express.static(path.join(__dirname, '/')));
+app.listen(1337);
 console.log('server running at 1337');

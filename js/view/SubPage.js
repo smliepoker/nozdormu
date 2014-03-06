@@ -11,24 +11,23 @@
         'change .toggle': 'toggle_changeHandler'
       },
       classMap = {
-        '.smart-table': 'Dianjoy.component.SmartTable',
-        '.smart-navbar': 'Dianjoy.component.SmartNavbar',
-        '.smart-amount': 'Dianjoy.component.SmartAmount',
-        '.smart-amount-publisher': 'Dianjoy.component.SmartAmountPublisher',
-        '.sequence-list': 'Dianjoy.component.SequenceList',
-        '.search-result': 'Dianjoy.component.SearchResult',
-        '.google-chart': 'Dianjoy.component.GoogleChart',
-        '.morris-chart': 'Dianjoy.component.MorrisChart',
-        '.google-chart-controller': 'Dianjoy.component.GoogleChartController',
-        '.quote-data': 'Dianjoy.component.QuoteData',
-        '.quote-ad': 'Dianjoy.component.QuoteSingleAd',
-        '.payments-table': 'Dianjoy.component.PaymentsTable',
-        'form': 'Dianjoy.component.SmartForm',
-        '#ad-editor': 'Dianjoy.component.AdEditor',
-        '#apply-list': 'Dianjoy.component.ApplyList'
+        '.smart-table': 'dianjoy.component.SmartTable',
+        '.smart-navbar': 'dianjoy.component.SmartNavbar',
+        '.smart-amount': 'dianjoy.component.SmartAmount',
+        '.smart-amount-publisher': 'dianjoy.component.SmartAmountPublisher',
+        '.sequence-list': 'dianjoy.component.SequenceList',
+        '.search-result': 'dianjoy.component.SearchResult',
+        '.google-chart': 'dianjoy.component.GoogleChart',
+        '.morris-chart': 'dianjoy.component.MorrisChart',
+        '.google-chart-controller': 'dianjoy.component.GoogleChartController',
+        '.quote-data': 'dianjoy.component.QuoteData',
+        '.quote-ad': 'dianjoy.component.QuoteSingleAd',
+        '.payments-table': 'dianjoy.component.PaymentsTable',
+        'form': 'dianjoy.component.SmartForm',
+        '#ad-editor': 'dianjoy.component.AdEditor',
+        '#apply-list': 'dianjoy.component.ApplyList'
       },
-      components = [],
-      error;
+      components = [];
   function getPath(str) {
     var arr = str.split('.');
     if (arr[0] === 'Dianjoy') {
@@ -40,15 +39,13 @@
   ns.SubPage = Backbone.View.extend({
     events: eventsMap,
     initialize: function () {
-      error = this.$('.alert-error').remove().removeClass('hide');
       this.model.on('change:form', this.modelForm_changeHandler, this);
     },
     clear: function () {
-      Dianjoy.utils.clearLoop().off();
-      Dianjoy.popup.Manager.off();
+      dianjoy.utils.clearLoop().off();
+      dianjoy.popup.Manager.off();
       this.destroyComponents();
       this.model.clear({silent: true});
-      this.$('iframe').off('load');
       this.$el.empty();
     },
     destroyComponents: function () {
@@ -90,17 +87,8 @@
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
-    },
-    loadIframe: function (url) {
-      var self = this,
-          iframe = $('<iframe frameborder="0" scrolling="no"></iframe>');
-      this.clear();
-      this.$el.append(iframe);
-      iframe.attr('src', url);
-      iframe.on('load', function () {
-        this.height = this.contentDocument.height;
-        self.trigger('load:complete', this.contentDocument.title);
-      });
+      this.trigger('load:start', url);
+      ga('send', 'pageview', url);
     },
     loadMediatorClass: function (className, init, dom) {
       var script = document.createElement("script");
@@ -120,9 +108,6 @@
       this.$('a.btn').addClass('disabled');
       this.$('button').prop('disabled', bl);
     },
-    showOvertimeAlert: function () {
-      this.$el.append(error.filter('.overtime'));
-    },
     alert_closeHandler: function (event) {
       var target = $(event.currentTarget).parent();
       if (target.hasClass('media')) {
@@ -130,14 +115,14 @@
           m: 'read_all_message',
           id: $(target).attr('id')
           };
-        Dianjoy.service.Manager.call('user/action_user.php', data);
+        dianjoy.service.Manager.call('user/action_user.php', data);
         return;
       }
       if (!target.hasClass('ad')) {
         return;
       }
       var flag = target.attr('className').match(/noad-\d+/)[0];
-      Dianjoy.component.model.Cookie.getInstance().add('no-ad', flag);
+      dianjoy.component.model.Cookie.getInstance().add('no-ad', flag);
     },
     checkAll_changeHandler: function (event) {
       var target = event.currentTarget;
@@ -150,7 +135,7 @@
       });
     },
     deleteButton_clickHandler: function (event) {
-      Dianjoy.utils.deleteRow($(event.currentTarget));
+      dianjoy.utils.deleteRow($(event.currentTarget));
 
       if (event.preventDefault) {
         event.preventDefault();
@@ -160,7 +145,7 @@
     face_clickHandler: function(event) {
       var img = $(event.currentTarget).clone();
       img.removeClass('preview img-polaroid');
-      Dianjoy.popup.Manager.popup(img.attr('alt'), img[0].outerHTML, false);
+      dianjoy.popup.Manager.popup(img.attr('alt'), img[0].outerHTML, false);
     },
     modelForm_changeHandler: function (model, value) {
       if (!value) {
@@ -178,11 +163,11 @@
       var target = $(event.currentTarget),
           classes = target.data('toggle-class').split(' ');
       this.$('.' + classes.join(', .')).toggleClass('hide');
-      Dianjoy.component.model.Cookie.getInstance().toggle('toggle', classes);
+      dianjoy.component.model.Cookie.getInstance().toggle('toggle', classes);
     },
-    loadCompleteHandler: function (response, status, xhr) {
+    loadCompleteHandler: function (response, status) {
       if (status === 'error') {
-        this.$el.append(error.filter('.error'));
+        this.trigger('load:failed');
       } else {
         this.initComponents();
       }
@@ -192,7 +177,7 @@
       var tables = this.$('table'),
           table = null,
           smartTables = _.filter(components, function (item) {
-            return item instanceof Dianjoy.component.SmartTable;
+            return item instanceof dianjoy.component.SmartTable;
           });
       tables.each(function (i) {
         var t = $('<table><thead></thead><tbody></tobdy></table>'),
@@ -206,11 +191,11 @@
         });
         table = table ? table.add(t) : t;
       });
-      event.currentTarget.href = Dianjoy.utils.tableToExcel(table, '广告数据');
+      event.currentTarget.href = dianjoy.utils.tableToExcel(table, '广告数据');
     },
     printHandler: function (event) {
       window.print();
       event.preventDefault();
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.view')));
+}(Nervenet.createNameSpace('dianjoy.view')));

@@ -75,5 +75,5 @@
     return instance;
   };
   ns.Cookie = cookie;
-}(Nervenet.createNameSpace('Dianjoy.component.model')));
+}(Nervenet.createNameSpace('dianjoy.component.model')));
 

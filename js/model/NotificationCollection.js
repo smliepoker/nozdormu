@@ -17,4 +17,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.model')));
+}(Nervenet.createNameSpace('dianjoy.model')));

@@ -51,7 +51,7 @@
       table.find('input[type=checkbox]').prop('checked', target.prop('checked'));
     },
     deleteButton_clickHandler: function (event) {
-      Dianjoy.utils.deleteRow($(event.currentTarget));
+      dianjoy.utils.deleteRow($(event.currentTarget));
 
       if (event.preventDefault) {
         event.preventDefault();
@@ -72,7 +72,7 @@
       var form = event.currentTarget,
           url  = form.action,
           data = $(form).serialize();
-      Dianjoy.service.Manager.call(url, data, this.remote_successHandler, this.remote_errorHandler, this);
+      dianjoy.service.Manager.call(url, data, this.remote_successHandler, this.remote_errorHandler, this);
       return false;
     },
     iframeButton_clickHandler: function (event) {
@@ -135,7 +135,7 @@
     submitButton_clickHandler: function () {
       var form = this.$('form');
       if (form.length > 0) {
-        if (Dianjoy.form.checkForm(form[0])) {
+        if (dianjoy.form.checkForm(form[0])) {
           form.submit();
         }
       } else {
@@ -185,5 +185,5 @@
     ns.Manager.popup(this.title || target.text(), this.href, hasConfirm, hasCancel, true);
     return false;
   });
-}(Nervenet.createNameSpace('Dianjoy.popup')));
+}(Nervenet.createNameSpace('dianjoy.popup')));
 

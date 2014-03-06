@@ -45,4 +45,4 @@
       this.chart = new Morris[this.className](this.options);
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

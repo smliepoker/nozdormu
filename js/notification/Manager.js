@@ -46,4 +46,4 @@
       }
     }
   }))();
-}(Nervenet.createNameSpace('Dianjoy.notification')));
+}(Nervenet.createNameSpace('dianjoy.notification')));

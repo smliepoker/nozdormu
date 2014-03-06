@@ -22,7 +22,7 @@
       var msg = btn.attr('msg') ? btn.attr('msg') : '删除之后无法复原，您确定么？';
       if (window.confirm(msg)) {
         btn.addClass('disabled');
-        Dianjoy.service.Manager.call(btn.attr('href'), null, this.deleteRow_successHandler, this.deleteRow_errorHandler, btn);
+        dianjoy.service.Manager.call(btn.attr('href'), null, this.deleteRow_successHandler, this.deleteRow_errorHandler, btn);
       }
     },
     formatDate: function (date, format) {
@@ -95,4 +95,4 @@
     }
   });
   _.extend(ns, Backbone.Events);
-}(Nervenet.createNameSpace('Dianjoy.utils')));
+}(Nervenet.createNameSpace('dianjoy.utils')));

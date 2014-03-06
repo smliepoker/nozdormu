@@ -37,56 +37,37 @@
   });
 
   ns.MainPage = Backbone.View.extend({
-    subPage: null,
+    $context: null,
     events: {
       'click .popup': 'popupButton_clickHandler',
       'click .logout': 'logout_clickHandler',
-      'click .iframe': 'iframeButton_clickHandler',
       'change input[type=range]': 'range_changeHandler',
       'click .to-top-button': 'topButton_clickHandler'
     },
-    initialize: function () {
-      this.subPage = new Dianjoy.view.SubPage({
-        el: '#sub-page',
-        model: this.model
-      });
-      this.subPage.on('load:complete', this.subpage_loadCompleteHandler, this);
+    removeLoading: function () {
+      clearTimeout(timeout);
+      this.$('.page-loading').addClass('hide');
     },
-    openSubPage: function (url) {
-      if (url) {
-        var self = this;
-        this.$('.page-loading').removeClass('hide');
-        this.subPage.load(url);
-        timeout = setTimeout(function () {
-          self.$('.page-loading').addClass('hide');
-          self.subPage.showOvertimeAlert();
-        }, 60000); // 60s后认为超时
-        if ('ga' in window) {
-          ga('send', 'pageview', url);
-        } else if (_gaq) {
-          _gaq.push(['_trackPageview', url]);
-        }
-      }
+    showErrorAlert: function () {
+      this.$('.error').removeClass('hide');
     },
-    openIframe: function (url) {
-      if (url) {
-        this.clear();
-        this.$('.page-loading').removeClass('hide');
-        this.subPage.loadIframe(url);
-        if ('ga' in window) {
-          ga('send', 'pageview', url);
-        } else if (_gaq) {
-          _gaq.push(['_trackPageview', url]);
-        }
-      }
+    showLoading: function () {
+      var self = this;
+      this.setBreadcrumb();
+      this.$('.overtime, .error').addClass('hide');
+      this.$('.page-loading').removeClass('hide');
+      timeout = setTimeout(function () {
+        self.$('.page-loading').addClass('hide');
+        self.showOvertimeAlert();
+      }, 60000); // 60s后认为超时
+    },
+    showOvertimeAlert: function () {
+      this.$('.overtime').removeClass('hide');
     },
     setBreadcrumb: function() {
-      var nav = this.$('#main-nav'),
-        target = location.hash,
-        button = nav.find('[href="' + target + '"]'),
-        className = target.substring(2).split('/').slice(0, 2).join('-');
-      // 给subpage加样式
-      this.model.cid = this.subPage.el.className = className;
+      var nav = this.$('#main-nav')
+        , target = location.hash
+        , button = nav.find('[href="' + target + '"]');
       while (button.length === 0) {
         target = target.substr(0, target.lastIndexOf('/'));
         if (target.lastIndexOf('/') < 2) {
@@ -115,33 +96,18 @@
 
       return this;
     },
-    iframeButton_clickHandler: function (event) {
-      R.router.navigate('#/iframe/' + encodeURIComponent(event.currentTarget.getAttribute('href')));
-      event.preventDefault();
-    },
-    logout_clickHandler: function (event) {
+    logout_clickHandler: function () {
       return window.confirm('您确定要退出登录么？');
     },
     popupButton_clickHandler: function (event) {
-      if ('ga' in window) {
-        ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
-      } else if (_gaq) {
-        _gaq.push(['_trackEvent', 'popup', 'popup', event.currentTarget.href]);
-      }
+      ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
     },
     range_changeHandler: function (event) {
       $(event.currentTarget).siblings('.help-inline').text(event.currentTarget.value);
-    },
-    subpage_loadCompleteHandler: function (title) {
-      clearTimeout(timeout);
-      this.$('.page-loading').addClass('hide');
-      if (title) {
-        this.setIframeBreadcrumb(title);
-      }
     },
     topButton_clickHandler: function (event) {
       document.body.scrollTop = 0;
       event.preventDefault();
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.view'), jQuery));
+}(Nervenet.createNameSpace('dianjoy.view'), jQuery));

@@ -88,4 +88,4 @@
     }
   };
   _.extend(ns, utils);
-}(Nervenet.createNameSpace('Dianjoy.form')));
+}(Nervenet.createNameSpace('dianjoy.form')));

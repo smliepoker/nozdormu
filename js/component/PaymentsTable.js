@@ -23,4 +23,4 @@
       this.model.unset('label-id', {silent: true});
     }
   });
-}(Nervenet.createNameSpace('Dianjoy.component')));
+}(Nervenet.createNameSpace('dianjoy.component')));

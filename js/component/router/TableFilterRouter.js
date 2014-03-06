@@ -26,5 +26,5 @@
       });
     },
   });
-}($.namespace('Dianjoy.router')));
+}($.namespace('dianjoy.router')));
 
