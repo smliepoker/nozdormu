@@ -150,13 +150,9 @@
     <li class="active">
       <a href="#/"><i class="fa fa-dashboard"></i> 首页</a>
     </li>
-    <script type="text/html-template">
-      {{={{{ }}}=}}
-      {{#each category}}
-      <li><a href="url"><i class="fa fa-{{icon}}"></i> {{label}}</a></li>
-      {{/each}}
-      {{{={{ }}=}}}
-    </script>
+    {{#category}}
+    <li><a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a></li>
+    {{/category}}
   </ul>
 </div>
 
@@ -254,5 +250,12 @@
 <script src="{{module}}/js/model/NotificationCollection.js"></script>
 <script src="{{module}}/js/form/utils.js"></script>
 <script src="{{module}}/js/utils/Utils.js"></script>
+{{#config-js}}
+<script>
+  {{#pair}}var {{key}} = "{{value}}";{{/pair}}
+</script>
+{{/config-js}}
+{{^config-js}}
 <script src="{{module}}/js/config.js"></script>
+{{/config-js}}
 <script src="{{module}}/js/app.js"></script>

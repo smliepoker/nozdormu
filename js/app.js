@@ -10,10 +10,6 @@ $(function () {
       el: '#sub-page',
       model: mediator
     })
-    //全局组件实例化
-    , search = new dianjoy.view.Search({
-      el: '#search'
-    })
     , router = new dianjoy.router.AdminPanel(mainPage);
 
   context.mapValue('mainPage', mainPage);
