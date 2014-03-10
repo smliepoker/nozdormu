@@ -30,10 +30,10 @@
       components = [];
   function getPath(str) {
     var arr = str.split('.');
-    if (arr[0] === 'Dianjoy') {
+    if (arr[0] === 'dianjoy') {
       arr = arr.slice(1);
     }
-    return '../js/' + arr.join('/') + '.js';
+    return webURL + '/js/' + arr.join('/') + '.js';
   }
 
   ns.SubPage = Backbone.View.extend({
@@ -83,10 +83,10 @@
         }
       }
     },
-    load: function (url) {
+    load: function (url, data) {
       this.setDisabled(true);
       this.clear();
-      this.$el.load(url, _.bind(this.loadCompleteHandler, this));
+      this.$el.load(url, data, _.bind(this.loadCompleteHandler, this));
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },

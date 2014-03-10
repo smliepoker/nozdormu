@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+<title>登录后台 - {{project.name}}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="{{description}}">
+<meta name="author" content="Meathill(lujia.zhai@dianjoy.com)" />
+
+<link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/4.0.3/css/font-awesome.min.css" />
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.1.1/css/bootstrap.min.css" />
+<link rel="stylesheet" href="//cdn.staticfile.org/jqueryui/1.10.3/css/base/minified/jquery-ui.min.css" />
+<link rel="stylesheet" href="{{module}}/css/component.css">
+<link rel="stylesheet" href="{{module}}/css/login.css">
+
+<div id="login-container">
+
+	<div id="logo">
+		<a href="./login.php">
+			<img src="{{img_url}}/img/logo.png" alt="Logo" />
+		</a>
+	</div>
+
+	<div id="login">
+
+		<h3>{{project.welcome}}</h3>
+
+		<h5>请登录</h5>
+
+		<form id="login-form" action="{{login.action}}" class="form" method="post">
+
+      {{#msg}}
+      <div class="alert alert-danger">
+        {{msg}}
+      </div>
+      {{/msg}}
+
+			<div class="form-group">
+				<label for="username">用户名</label>
+				<input type="text" class="form-control" id="username" placeholder="用户名" name="username" required>
+			</div>
+
+			<div class="form-group">
+				<label for="password">密码</label>
+				<input type="password" class="form-control" id="password" placeholder="密码" name="password" required>
+			</div>
+
+      <div class="form-group">
+        <label for="verifycode">验证码</label>
+        <div class="input-group">
+          <span class="input-group-addon"><img src="{{login.verify-code}}" alt="验证码" title="点击刷新" id="verify-code" /></span>
+          <input type="text" maxLength="4" size="4" name="verifycode" id="verifycode" class="form-control" placeholder="验证码" autofocus required />
+        </div>
+      </div>
+
+			<div class="form-group">
+
+				<button id="login-btn" class="btn btn-primary btn-block">登录 &nbsp; <i class="fa fa-play-circle"></i></button>
+
+			</div>
+		</form>
+
+
+		<a href="mailto:{{admin.mail}}" class="btn btn-default"><i class="fa fa-envelope"></i> 忘记密码请联系管理员</a>
+
+	</div> <!-- /#login -->
+
+
+</div> <!-- /#login-container -->
+
+
+<script src="//cdn.staticfile.org/jquery/2.1.0/jquery.min.js"></script>
+<script>
+  $(function () {
+    $('#verify-code').on('click', function () {
+      this.src = '{{login.verify-code}}?ts=' + Date.now();
+    });
+  });
+</script>

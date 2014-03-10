@@ -3,9 +3,10 @@
   "module": ".",
   "api": "",
   "project": {
-    "name": "测试项目"
-
+    "name": "测试项目",
+    "welcome": "欢迎"
   },
+  "logout": "#/logout",
   "admin": {
     "name": "Meathill",
     "mail": "meathill@gmail.com"

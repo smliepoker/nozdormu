@@ -3,12 +3,25 @@
 .weight
   background: #FF9933
 
-.back-button
-  margin-left: 10px
-
 /* user detail */
 #apks .badge
   font-size: 14px
+
+/* ====================================
+ * button
+ * ================================== */
+.btn-primary
+  background-color: $primary-color
+  border-color: darken($primary-color, 5%)
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active
+    background-color: darken($primary-color, 10%)
+
+.back-button
+  margin-left: 10px
 
 /* ---------------------------------- */
 /* @morris-hover */

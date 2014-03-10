@@ -30,8 +30,8 @@
 
 <header id="header">
   <h1 id="site-logo">
-    <a href="">
-      <img src="{{img_url}}/img/logo.png" alt="{{project.name}} 管理员后台" width="80" />
+    <a href="./">
+      <img src="{{img_url}}/img/logo.png" alt="{{project.name}} 管理员后台" width="36" />
     </a>
   </h1>
   <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
@@ -138,7 +138,7 @@
         </li>
         <li class="divider"></li>
         <li>
-          <a href="#/logout" class="logout"><i class="fa fa-sign-out"></i> 退出登录</a>
+          <a href="{{logout}}" class="logout"><i class="fa fa-sign-out"></i> 退出登录</a>
         </li>
       </ul>
     </li>
@@ -151,7 +151,22 @@
       <a href="#/"><i class="fa fa-dashboard"></i> 首页</a>
     </li>
     {{#category}}
-    <li><a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a></li>
+    {{#has_sub}}
+    <li class="dropdown">
+      <a data-toggle="dropdown" href="#" role="button" title="{{title}}">
+        <i class="fa fa-{{icon}}"></i> {{title}} <b class="caret"></b>
+      </a>
+      <ul class="sub-nav dropdown-menu" role="menu" data-title="{{title}}">
+        {{#sub}}
+        <li><a href="{{url}}"><i class="fa fa-fw fa-{{icon}}"></i> {{title}}</a></li>
+        {{/sub}}
+      </ul>
+    {{/has_sub}}
+    {{^has_sub}}
+    <li>
+      <a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a>
+    {{/has_sub}}
+    </li>
     {{/category}}
   </ul>
 </div>
