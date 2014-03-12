@@ -31,7 +31,7 @@
 		<h5>请登录</h5>
 
 		<form id="login-form" action="{{login.action}}" class="form" method="post">
-
+      <input type="hidden" name="hash" value="" id="hash">
       {{#msg}}
       <div class="alert alert-danger">
         {{msg}}
@@ -78,5 +78,6 @@
     $('#verify-code').on('click', function () {
       this.src = '{{login.verify-code}}?ts=' + Date.now();
     });
+    $('#hash').val(location.hash);
   });
 </script>

@@ -114,9 +114,13 @@
           .end().last().toggleClass('disabled', index >= last);
       });
     },
-    setTotal: function (total) {
+    setTotal: function (total, page) {
       this.total = Math.ceil(total / this.perpage);
       this.length = total;
+      if (page != null) {
+        this.render(page);
+        this.displayPageNum(page);
+      }
     },
     turnToPage: function (index) {
       this.trigger('turn', index);
@@ -142,51 +146,49 @@
       'modified': 'value_modifiedHandler'
     },
     initialize: function () {
+      this.template = Handlebars.compile(this.$('script').html());
+      var init = this.$el.data();
       // 重置数据记录
       this.order = [];
       this.sortArray = [];
       this.lastOrder = '';
-      var ms = window.location.hash.match(/channel=(.*)$|&/);
-      if (ms) {
-        this.model.set('ch-label', decodeURIComponent(ms[1]));
-      }
 
       this.model.set({
         ch: this.translate('ch'),
         ad: this.translate('ad')
       });
 
-      // 实现高亮和大类筛选
       this.originClass = this.el.className;
+      this.collection = new dianjoy.model.ListCollection([], {
+        url: init.url,
+        pagesize: init.pagesize,
+        param: this.model.toJSON()
+      });
+      this.collection.on('reset', this.render, this);
+
+      // 实现大类筛选
       this.model.on('change:show', this.model_showChangeHandler, this);
       this.model.on('change:keyword', this.model_keywordChangeHandler, this);
       this.model.on('change:ad change:ch change:owner change:pub change:country change:status change:jt change:tt', this.model_filterChangeHandler, this);
       this.model.on('change:id', this.model_changeHandler, this);
 
-      // 遍历全部行，执行筛选和排序的准备工作
-      this.travelAll();
-
       // 固定头部、翻页、编辑器
-      var spec = this.$el.data();
-      if ('fixHead' in spec) {
+      if ('fixHead' in init) {
         this.header = new FixedHeader({
           body: this,
           model: this.model
         });
       }
-      if ('pagesize' in spec && spec.pagesize > 0) {
+      if ('pagesize' in init && init.pagesize > 0) {
         this.isPaged = true;
         this.items = this.$('tbody').children();
         this.$('tbody').empty();
         this.pagination = new Pager({
-          el: spec && 'pagination' in spec ? spec.pagination : this.$('.pager'),
-          perpage: spec.pagesize,
-          length: this.items.length
+          el: init && 'pagination' in init ? init.pagination : this.$('.pager'),
+          perpage: init.pagesize
         });
         this.pagination.on('turn', this.pagination_turnHandler, this);
-        this.$('.waiting').remove();
       }
-      this.filterRows();
     },
     remove: function () {
       if (this.header) {
@@ -196,16 +198,14 @@
         this.pagination.off();
         this.pagination.remove();
       }
+      this.collection.off();
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
     },
-    applySortArray: function (children, row) {
-      var obj = {ad: row},
-          len = this.order.length - 1;
-      for (; len > -1; len--) {
-        obj[PREFIX + this.order[len]] = Number(children[this.order[len]].innerText.replace(/[\s\-:\u5143\u00a5%,]/g, ''));
-      }
-      this.sortArray.push(obj);
+    render: function (collection) {
+      this.$('.waiting').hide();
+      this.$('tbody').html(this.template({games: collection.toJSON()}));
+      this.pagination.setTotal(this.collection.total, this.collection.page);
     },
     filterRows: function() {
       // TODO: 这个函数很丑陋的保留了两种筛选机制，将来 http://whale.dianjoy.com:3000/issues/12270 的时候一并处理掉
@@ -267,23 +267,6 @@
         });
       }
       return id;
-    },
-    travelAll: function () {
-      var self = this,
-          all = [];
-      if (this.$('.order').length) {
-        this.$('a.order').each(function (i) {
-          self.order.push($(this).parent().index());
-        });
-        all.push(this.applySortArray);
-      }
-      this.$('tbody tr').not('.amount').each(function (i) {
-        var children = $(this).children(),
-            len = all.length - 1;
-        for (; len > -1; len--) {
-          all[len].call(self, children, this);
-        }
-      });
     },
     turnToPage: function (index) {
       this.visibleItems = this.visibleItems || this.items;

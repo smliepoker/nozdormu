@@ -86,7 +86,8 @@
     load: function (url, data) {
       this.setDisabled(true);
       this.clear();
-      this.$el.load(url, data, _.bind(this.loadCompleteHandler, this));
+      this.$el.load(url, _.bind(this.loadCompleteHandler, this));
+      this.model.set(data);
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },

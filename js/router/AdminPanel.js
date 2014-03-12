@@ -14,7 +14,7 @@
       this.$mainPage.setBreadcrumb();
     },
     showNormalPage: function (cate, sub, path) {
-      var url = baseURL + cate + '/' + sub + '.php';
+      var url = baseURL + cate + '/template/' + sub + '.html';
       if (path) {
         var paths = path.split('/')
           , params = {};
