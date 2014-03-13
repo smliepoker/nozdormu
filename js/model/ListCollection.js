@@ -4,7 +4,6 @@
 ;(function (ns) {
   ns.ListCollection = Backbone.Collection.extend({
     total: 0,
-    page: 0,
     pagesize: 20,
     param: {},
     initialize: function(models, options) {
@@ -18,14 +17,12 @@
       if (options.param) {
         this.param = options.param;
       }
-      this.fetch();
     },
     fetch: function (param) {
       param = param || this.param;
       Backbone.Collection.prototype.fetch.call(this, {
         reset: true,
         data: _.extend(param, {
-          page: this.page,
           pagesize: this.pagesize
         })
       });

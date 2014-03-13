@@ -5,7 +5,7 @@
     $subPage: null,
     routes: {
       '': 'showHomepage',
-      'logout': 'logoutHandler',
+      'admin/:sub': 'showAdminPage',
       ':cate/:sub(/*path)': 'showNormalPage'
     },
     showHomepage: function () {
@@ -24,6 +24,11 @@
         }
       }
       this.$subPage.load(url, params);
+      this.$mainPage.setBreadcrumb();
+    },
+    showAdminPage: function (sub) {
+      var url = baseURL + '/admin/' + sub + '.php';
+      this.$subPage.load(url);
       this.$mainPage.setBreadcrumb();
     }
   });

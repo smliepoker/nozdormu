@@ -1,6 +1,7 @@
 ;(function (ns) {
   'use strict';
   ns.SmartForm = Backbone.View.extend({
+    $router: null,
     events: {
       "blur input[type=text]": "input_blurHandler",
       "click .upload-button": "uploadButton_clickHandler",
@@ -20,6 +21,7 @@
       } else {
         this.fillCitiesSelect(0);
       }
+      this.model.on('load:complete', this.model_loadCompleteHandler, this);
     },
     remove: function () {
       this.model.off(null, null, this);
@@ -41,20 +43,25 @@
     },
     addLoading: function () {
       this.$el.addClass('loading');
-      $(this.el.elements).filter('[type=submit], button').not('button[type]')
+      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
         .prop('disabled', true)
-        .prepend('<i class="icon-spinner icon-spin fa fa-spin fa-spinner"></i> ');
+        .find('i').hide()
+        .end().prepend('<i class="fa fa-spin fa-spinner"></i>')
     },
     removeLoading: function (className, msg) {
       this.$('.loading, .processing, .icon-spin, .fa-spin').remove();
-      $(this.el.elements).filter('[type=submit], button').not('button[type]')
+      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
         .prop('disabled', false)
-        .find('.icon-spin, .fa-spin').remove();
+        .find('i')
+          .show();
       this.$el.removeClass('loading');
-      this.model.set('form', {
-        className: className,
-        msg: msg
-      });
+      if (className && msg) {
+        this.model.set('form', {
+          className: className,
+          msg: msg
+        });
+      }
+
     },
     errorInput_focusHandler: function(event) {
       $(event.currentTarget).tooltip('destroy')
@@ -207,6 +214,9 @@
       }
       target.closest('.form-group').addClass('has-success');
     },
+    model_loadCompleteHandler: function () {
+      this.removeLoading();
+    },
     province_changeHandler: function(event) {
       this.fillCitiesSelect(event.currentTarget.selectedIndex);
     },
@@ -232,6 +242,7 @@
       // 筛选类型的
       if (this.$el.hasClass('keyword-form')) {
         this.model.set('keyword', form.elements.query.value);
+        this.addLoading();
         event.preventDefault();
         return false;
       }
@@ -242,7 +253,7 @@
         action = action.replace(/\/:(\w+)/g, function(str, key) {
           return '/' + form.elements[key].value;
         });
-        R.router.navigate(action);
+        this.$router.navigate(action);
         return false;
       }
 

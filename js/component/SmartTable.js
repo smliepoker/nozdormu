@@ -75,65 +75,54 @@
       'click a': 'clickHandler'
     },
     initialize: function (options) {
-      var total = Math.ceil(options.length / options.perpage);
+      var total = Math.ceil(options.length / options.pagesize);
       this.template = this.$('script').remove().html() || '';
       this.template = this.template ? Handlebars.compile(this.template) : false;
       this.total = total;
-      this.length = options.length;
-      this.perpage = options.perpage;
-      this.render();
-      this.displayPageNum(0);
+      this.pagesize = options.pagesize;
     },
-    render: function (page) {
+    render: function () {
       if (!this.template) {
         return;
       }
-      page = page || 0;
-      var arr = [],
-          start = page - 5 > 0 ? page - 5 : 0,
-          end = start + 10 < this.total ? start + 10 : this.total,
-          length = end - start;
+      var page = this.model.get('page')
+        , arr = []
+        , start = page - 5 > 0 ? page - 5 : 0
+        , end = start + 10 < this.total ? start + 10 : this.total
+        , length = end - start;
       for (var i = 0; i < length; i++) {
         arr[i] = i + start + 1;
       }
       this.$el.html(this.template({
         pages: arr,
-        prev: page,
-        next: page + 2,
-        total: this.total,
-        total_num: this.length,
-        perpage: this.perpage
+        prev: page - 1,
+        next: page + 1
       }));
     },
-    displayPageNum: function (index) {
-      this.$('[href="#/to/' + (index + 1) + '"]').parent('.hidden-xs').addClass('active')
+    displayPageNum: function () {
+      var page = this.model.get('page');
+      this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
         .siblings().removeClass('active');
-      var last = this.total - 1;
       this.$el.each(function () {
-        $(this).children().first().toggleClass('disabled', index === 0)
-          .end().last().toggleClass('disabled', index >= last);
+        $(this).children().first().toggleClass('disabled', page === 0)
+          .end().last().toggleClass('disabled', page >= this.total - 1);
       });
     },
-    setTotal: function (total, page) {
-      this.total = Math.ceil(total / this.perpage);
-      this.length = total;
-      if (page != null) {
-        this.render(page);
-        this.displayPageNum(page);
-      }
-    },
-    turnToPage: function (index) {
-      this.trigger('turn', index);
-      this.render(index);
-      this.displayPageNum(index);
+    setTotal: function (total) {
+      this.total = Math.ceil(total / this.pagesize);
+      this.render();
+      this.displayPageNum();
     },
     clickHandler: function (event) {
       if ($(event.currentTarget).parent().hasClass('disabled')) {
         return false;
       }
-      var href = event.currentTarget.href,
-          index = Number(href.substr(href.lastIndexOf('/') + 1)) - 1;
-      this.turnToPage(index);
+      var target = $(event.currentTarget)
+        , href = target.attr('href')
+        , index = Number(href.substr(href.lastIndexOf('/') + 1));
+      this.model.set('page', index);
+      target.html('<i class="fa fa-spin fa-spinner"></i>');
+      this.$el.children().addClass('disabled');
       event.preventDefault();
     }
   });
@@ -143,6 +132,7 @@
       'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
       'click thead .label': 'labelFilter_removeHandler',
       'click .order': 'order_clickHandler',
+      'click .edit': 'edit_clickHandler',
       'modified': 'value_modifiedHandler'
     },
     initialize: function () {
@@ -158,19 +148,17 @@
         ad: this.translate('ad')
       });
 
-      this.originClass = this.el.className;
       this.collection = new dianjoy.model.ListCollection([], {
+        model: Backbone.Model.extend({idAttribute: init.id}),
         url: init.url,
         pagesize: init.pagesize,
         param: this.model.toJSON()
       });
       this.collection.on('reset', this.render, this);
+      this.collection.on('change', this.collection_changeHandler, this);
 
       // 实现大类筛选
-      this.model.on('change:show', this.model_showChangeHandler, this);
-      this.model.on('change:keyword', this.model_keywordChangeHandler, this);
-      this.model.on('change:ad change:ch change:owner change:pub change:country change:status change:jt change:tt', this.model_filterChangeHandler, this);
-      this.model.on('change:id', this.model_changeHandler, this);
+      this.model.on('change', this.model_changeHandler, this);
 
       // 固定头部、翻页、编辑器
       if ('fixHead' in init) {
@@ -181,13 +169,13 @@
       }
       if ('pagesize' in init && init.pagesize > 0) {
         this.isPaged = true;
-        this.items = this.$('tbody').children();
-        this.$('tbody').empty();
         this.pagination = new Pager({
           el: init && 'pagination' in init ? init.pagination : this.$('.pager'),
-          perpage: init.pagesize
+          model: this.model,
+          pagesize: init.pagesize
         });
         this.pagination.on('turn', this.pagination_turnHandler, this);
+        this.model.set('page', 0);
       }
     },
     remove: function () {
@@ -205,7 +193,8 @@
     render: function (collection) {
       this.$('.waiting').hide();
       this.$('tbody').html(this.template({games: collection.toJSON()}));
-      this.pagination.setTotal(this.collection.total, this.collection.page);
+      this.pagination.setTotal(this.collection.total);
+      this.model.trigger('load:complete');
     },
     filterRows: function() {
       // TODO: 这个函数很丑陋的保留了两种筛选机制，将来 http://whale.dianjoy.com:3000/issues/12270 的时候一并处理掉
@@ -268,20 +257,32 @@
       }
       return id;
     },
-    turnToPage: function (index) {
-      this.visibleItems = this.visibleItems || this.items;
-      if (this.visibleItems.length === 0) {
-        this.$('tbody').empty();
-        return;
+    collection_changeHandler: function (model) {
+      var changed = model.changed
+        , target;
+      for (var prop in changed) {
+        target = this.$('#' + model.id + ' [href="#' + prop + '"]');
+        if (target.children().is('img')) {
+          target.children('img').attr('src', changed[prop]);
+        } else {
+          target.text(changed[prop]);
+        }
       }
-      var start = this.$('th.desc').length === 0 ? 0 : this.visibleItems.length - 1,
-          dir = this.$('th.desc').length === 0 ? 1 : -1,
-          end = this.pagination.perpage < this.visibleItems.length - index * this.pagination.perpage ? this.pagination.perpage : this.visibleItems.length - index * this.pagination.perpage,
-          fragment = document.createDocumentFragment();
-      for (var i = 0; i < end; i++) {
-        fragment.appendChild(this.visibleItems[start + dir * (i + index * this.pagination.perpage)]);
-      }
-      this.$('tbody').removeClass('hide hide-all').html(fragment);
+    },
+    edit_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , data = target.data()
+        , index = target.closest('td').index()
+        , prop = event.currentTarget.hash.substr(1)
+        , id = target.closest('tr').attr('id')
+        , model = this.collection.get(id)
+        , options = {
+          label: this.$('thead th').eq(index).text(),
+          value: this.model.get(prop)
+        };
+      options[data.type] = true;
+      dianjoy.popup.Manager.popupEditor(model, prop, options);
+      event.preventDefault();
     },
     labelFilter_addHandler: function (event) {
       var filter = event.target.hash.match(/#(\w+)\-(\d+)/);
@@ -295,11 +296,8 @@
       this.model.set(filter[1] + '-label', '-');
       event.preventDefault();
     },
-    model_changeHandler: function (model, value) {
-      var status = this.$el.data('status'),
-          ids = '#' + value.split(',').join(',#');
-      this.$(ids).removeClass(status).addClass(status.split(' ')[this.model.get('to')]);
-      this.model.unset('id', {silent: true});
+    model_changeHandler: function (model) {
+      this.collection.fetch(model.toJSON());
     },
     model_filterChangeHandler: function (model, value) {
       for (var prop in model.changed) {
@@ -317,20 +315,6 @@
         }
       }
       this.filterRows();
-      this.setFrameHeight();
-    },
-    model_keywordChangeHandler: function () {
-      this.filterRows();
-    },
-    model_showChangeHandler: function (model, value) {
-      // TODO: issues/12270 要改
-      if (this.isPaged) {
-        this.filterRows();
-      } else {
-        $('.amount').addClass('hide');
-        this.$('tbody').removeClass('hide hide-all').children('.show').removeClass('show');
-        this.$el.attr('class', this.originClass + ' ' + value);
-      }
       this.setFrameHeight();
     },
     order_clickHandler: function (event) {
@@ -375,7 +359,7 @@
       event.preventDefault();
     },
     pagination_turnHandler: function (index) {
-      this.turnToPage(index);
+      this.model.set('page', index);
     },
     value_modifiedHandler: function (event, value) {
       var index = $(event.target).closest('td').index(),

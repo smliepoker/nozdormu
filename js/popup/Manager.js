@@ -5,7 +5,8 @@
  */
 ;(function (ns) {
   'use strict';
-  var popup;
+  var popup
+    , editor;
 
   var NormalAlertPopup = Backbone.View.extend({
     events: {
@@ -150,12 +151,72 @@
     loadCompleteHandler: function() {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
       this.$('.date').datepicker({
-          dateFormat: 'yy-mm-dd'
-        });
+        dateFormat: 'yy-mm-dd'
+      });
       ns.Manager.trigger('load');
     },
     showHandler: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
+      this.$('.alert').addClass('hide');
+    }
+  });
+
+  var EditPopup = Backbone.View.extend({
+    prop: '',
+    events: {
+      'show.bs.modal': 'showHandler',
+      'submit form': 'form_submitHandler'
+    },
+    initialize: function () {
+      this.template = Handlebars.compile(this.$('script').remove().html());
+    },
+    initUI: function (prop, options) {
+      this.prop = prop;
+      this.$('form').html(this.template(options));
+    },
+    displayResult: function (isSuccess, msg, icon) {
+      msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
+      this.$('.fa-spin').removeClass('fa-spin fa-spinner');
+      this.$el.removeClass('processing');
+      this.$('.alert')
+        .hide()
+        .toggleClass('alert-danger', !isSuccess)
+        .toggleClass('alert-success', isSuccess)
+        .html(msg)
+        .slideDown();
+    },
+    form_submitHandler: function (event) {
+      if (this.$('.btn-primary').prop('disabled')) {
+        return;
+      }
+      var attr = {};
+      attr[this.prop] = event.currentTarget.elements.prop.value;
+      this.model.save(attr, {
+        patch: true,
+        wait: true,
+        success: _.bind(this.savedHandler, this),
+        error: _.bind(this.errorHandler, this)
+      });
+      this.$el.addClass('processing')
+        .find('.btn-primary').prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
+
+      event.preventDefault();
+    },
+    errorHandler: function (error) {
+      console.log(error);
+      this.displayResult(false, '修改失败，请稍后重试', 'fa-frown-o');
+      this.$('.btn-primary').prop('disabled', false);
+    },
+    savedHandler: function () {
+      this.displayResult(true, '修改成功', 'fa-smile-o');
+      var modal = this.$el;
+      setTimeout(function () {
+        modal.modal('hide');
+      }, 3000);
+    },
+    showHandler: function () {
+      this.$('.btn-primary').prop('disabled', false);
       this.$('.alert').addClass('hide');
     }
   });
@@ -169,6 +230,14 @@
         model: ns.mediator
       });
       popup.initUI(title, content, hasConfirm, hasCancel, isRemote);
+    },
+    popupEditor: function (model, prop, options) {
+      editor = editor || new EditPopup({
+        el: '#edit-popup'
+      });
+      editor.model = model;
+      editor.initUI(prop, options);
+      editor.$el.modal('show');
     }
   }, Backbone.Events);
 
@@ -178,7 +247,7 @@
         hasConfirm = 'confirm' in data ? data.confirm : true,
         hasCancel = 'cancel' in data ? data.cancel : true;
     popup = popup || new NormalAlertPopup({
-      el: '#normal-alert',
+      el: '#normal-popup',
       model: ns.mediator
     });
     popup.button = target;

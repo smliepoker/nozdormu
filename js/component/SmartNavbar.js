@@ -2,11 +2,11 @@
   'use strict';
   function dateStart_closeHandler(selectDate) {
     var end = $(this).siblings('.date.end');
-    end.datepicker('setDate', dianjoy.utils.getMinDate(30, selectDate, end.val()));
+    end.datepicker('setDate', moment(selectDate).add('days', 30).format('YYYY-MM-DD'));
   }
   function dateEnd_closeHandler(selectDate) {
     var start = $(this).siblings('.date.start');
-    start.datepicker('setDate', dianjoy.utils.getMaxDate(-30, selectDate, start.val()));
+    start.datepicker('setDate', moment(selectDate).subtract(30).format('YYYY-MM-DD'));
   }
   var init = {
     events: {
