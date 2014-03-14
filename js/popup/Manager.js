@@ -165,7 +165,8 @@
     prop: '',
     events: {
       'show.bs.modal': 'showHandler',
-      'submit form': 'form_submitHandler'
+      'submit form': 'form_submitHandler',
+      'click .upload-button': 'uploadButton_clickHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
@@ -173,6 +174,12 @@
     initUI: function (prop, options) {
       this.prop = prop;
       this.$('form').html(this.template(options));
+    },
+    createUploader: function (sibling) {
+      var uploader = $('<input type="file" class="hidden">');
+      uploader.on('change', _.bind(this.uploader_changeHandler, this));
+      uploader.insertAfter(sibling);
+      return uploader;
     },
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
@@ -203,6 +210,42 @@
 
       event.preventDefault();
     },
+    upload_errorHandler: function () {
+      this.$('.progress').fadeOut(function () {
+        $(this).addClass('hide')
+          .children().removeClass('progress-bar-danger');
+      }).children().addClass('progress-bar-danger');
+      this.displayResult(false, '上传失败，请稍后重试', 'fa-frown-o');
+    },
+    upload_progressHandler: function (loaded, total) {
+      var percent = loaded / total * 100 >> 0;
+      this.$('.progress-bar')
+        .attr('aria-valuenow', percent)
+        .width(percent + '%')
+        .text(percent + '%');
+    },
+    upload_successHandler: function (response) {
+      this.$('.progress').fadeOut(function () {
+        $(this).addClass('hide');
+      });
+      this.$('img').attr('src', response.url);
+      this.displayResult(true, '上传成功，可以保存了', 'fa-smile-o');
+      this.$('[name="prop"]').val(response.url);
+    },
+    uploadButton_clickHandler: function (event) {
+      this.$('[type="file"]').remove();
+      var uploader = this.createUploader(event.currentTarget);
+      uploader.click();
+    },
+    uploader_changeHandler: function (event) {
+      $(event.currentTarget).off();
+      var data = {
+        id: this.model.id,
+        type: this.prop
+      };
+      dianjoy.service.Manager.upload(event.target.files[0], data, this.upload_successHandler, this.upload_errorHandler, this.upload_progressHandler, this);
+      this.$('.progress').removeClass('hide');
+    },
     errorHandler: function (error) {
       console.log(error);
       this.displayResult(false, '修改失败，请稍后重试', 'fa-frown-o');
@@ -217,7 +260,7 @@
     },
     showHandler: function () {
       this.$('.btn-primary').prop('disabled', false);
-      this.$('.alert').addClass('hide');
+      this.$('.alert').hide();
     }
   });
 

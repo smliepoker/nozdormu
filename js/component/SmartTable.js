@@ -278,7 +278,7 @@
         , model = this.collection.get(id)
         , options = {
           label: this.$('thead th').eq(index).text(),
-          value: this.model.get(prop)
+          value: model.get(prop)
         };
       options[data.type] = true;
       dianjoy.popup.Manager.popupEditor(model, prop, options);
