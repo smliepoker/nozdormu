@@ -13,23 +13,16 @@
       classMap = {
         '.smart-table': 'dianjoy.component.SmartTable',
         '.smart-navbar': 'dianjoy.component.SmartNavbar',
-        '.smart-amount': 'dianjoy.component.SmartAmount',
-        '.smart-amount-publisher': 'dianjoy.component.SmartAmountPublisher',
-        '.sequence-list': 'dianjoy.component.SequenceList',
         '.search-result': 'dianjoy.component.SearchResult',
-        '.google-chart': 'dianjoy.component.GoogleChart',
         '.morris-chart': 'dianjoy.component.MorrisChart',
-        '.google-chart-controller': 'dianjoy.component.GoogleChartController',
-        '.quote-data': 'dianjoy.component.QuoteData',
-        '.quote-ad': 'dianjoy.component.QuoteSingleAd',
-        '.payments-table': 'dianjoy.component.PaymentsTable',
-        'form': 'dianjoy.component.SmartForm',
-        '#ad-editor': 'dianjoy.component.AdEditor',
-        '#apply-list': 'dianjoy.component.ApplyList'
+        'form': 'dianjoy.component.SmartForm'
       },
       components = [];
-  function getPath(str) {
+  function getPath(str, isCustom) {
     var arr = str.split('.');
+    if (isCustom) {
+      return custom + arr.join('/') + '.js';
+    }
     if (arr[0] === 'dianjoy') {
       arr = arr.slice(1);
     }
@@ -82,6 +75,21 @@
           }
         }
       }
+      // 初始化非本库的自定义组件
+      var self = this;
+      this.$('[data-nozdormu-class]').each(function (i) {
+        var className = $(this).data('nozdormu-class')
+          , component = Nervenet.parseNamespace(className)
+          , init = {
+            model: self.model
+          };
+        if (component) {
+          init.el = this;
+          components.push(new component(init));
+        } else {
+          self.loadMediatorClass(className, init, $(this), true);
+        }
+      });
     },
     load: function (url, data) {
       this.setDisabled(true);
@@ -91,10 +99,10 @@
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },
-    loadMediatorClass: function (className, init, dom) {
+    loadMediatorClass: function (className, init, dom, isCustom) {
       var script = document.createElement("script");
       script.async = true;
-      script.src = getPath(className);
+      script.src = getPath(className, isCustom);
       script.onload = function() {
         this.onload = null;
         var component = Nervenet.parseNamespace(className);
