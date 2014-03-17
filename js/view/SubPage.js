@@ -15,6 +15,7 @@
         '.smart-navbar': 'dianjoy.component.SmartNavbar',
         '.search-result': 'dianjoy.component.SearchResult',
         '.morris-chart': 'dianjoy.component.MorrisChart',
+        '.article-editor': 'dianjoy.component.ArticleEditor',
         'form': 'dianjoy.component.SmartForm'
       },
       components = [];
