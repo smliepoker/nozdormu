@@ -16,6 +16,7 @@ $(function () {
   context.mapValue('subPage', subPage);
   context.mapValue('router', router);
   context.inject(router);
+  context.inject(dianjoy.service.Manager);
 
   subPage.on('load:start', mainPage.showLoading, mainPage);
   subPage.on('load:complete', mainPage.removeLoading, mainPage);

@@ -77,8 +77,8 @@
       }
       // 初始化非本库的自定义组件
       var self = this;
-      this.$('[data-nozdormu-class]').each(function (i) {
-        var className = $(this).data('nozdormu-class')
+      this.$('[data-mediator-class]').each(function (i) {
+        var className = $(this).data('mediator-class')
           , component = Nervenet.parseNamespace(className)
           , init = {
             model: self.model
@@ -95,7 +95,7 @@
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
-      this.model.set(data);
+      this.model.set('path', data);
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },

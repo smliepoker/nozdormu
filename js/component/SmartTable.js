@@ -143,11 +143,6 @@
       this.sortArray = [];
       this.lastOrder = '';
 
-      this.model.set({
-        ch: this.translate('ch'),
-        ad: this.translate('ad')
-      });
-
       this.collection = new dianjoy.model.ListCollection([], {
         model: Backbone.Model.extend({idAttribute: init.id}),
         url: init.url,
@@ -192,7 +187,7 @@
     },
     render: function (collection) {
       this.$('.waiting').hide();
-      this.$('tbody').html(this.template({games: collection.toJSON()}));
+      this.$('tbody').html(this.template({list: collection.toJSON()}));
       this.pagination.setTotal(this.collection.total);
       this.model.trigger('load:complete');
     },
@@ -240,22 +235,6 @@
       if (frameElement) {
         frameElement.height = document.body.offsetHeight;
       }
-    },
-    translate: function (key) {
-      var id = -1,
-          selected = this.model.get(key + '-label'),
-          parent = this.$('.filter');
-      parent = parent.hasClass(key) ? parent.filter('.' + key) : parent;
-      if (selected !== '-') {
-        this.$('.label-' + key).each(function () {
-          if (this.innerText === selected) {
-            id = Number(this.href.substr(this.href.lastIndexOf('-') + 1));
-            $(this).clone().appendTo(parent);
-            return false;
-          }
-        });
-      }
-      return id;
     },
     collection_changeHandler: function (model) {
       var changed = model.changed

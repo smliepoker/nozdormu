@@ -28,7 +28,7 @@
       });
     },
     parse: function (response) {
-      this.total = response.total / this.pagesize;
+      this.total = response.total;
       return response.list;
     }
   });

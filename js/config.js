@@ -6,4 +6,5 @@ var DEBUG = true
 
   }
   , GAid = 'UA-35957679-5'
-  , baseURL = '';
+  , baseURL = ''
+  , webURL = '';

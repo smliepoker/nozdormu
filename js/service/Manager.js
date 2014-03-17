@@ -4,6 +4,7 @@
 ;(function (ns) {
   'use strict';
   var manager = {
+    $subPage: null,
     autoUpload: false,
     
     call: function (url, data, onSuccess, onError, context) {
@@ -97,6 +98,9 @@
     onError: function (xhr, status, error) {
       console.log(error);
       console.log(xhr, status);
+      if (status === 401) {
+        this.$subPage.load(webURL + 'template/permission_error.html');
+      }
     },
     onProgress: function (loaded, total) {
       console.log(loaded / total);
