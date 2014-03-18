@@ -35,11 +35,17 @@
   margin-left: 10px
 
 /* ====================================
- * img
+ * game-info
  * ================================== */
-.icon-100
-  width: 100px
-  height: 100px
+.game-info h2
+  margin-top: 0
+
+/* ====================================
+ * editor
+ * ================================== */
+.article-preview
+  max-height: 800px
+  overflow: auto
 
 /* ---------------------------------- */
 /* @morris-hover */
@@ -485,128 +491,6 @@
     font-size: 16px
     color: rgba(0, 0, 0, 0.25) !important
     text-shadow: none
-  
-/* ---------------------------------- */
-/* @wall-num on dashboard-op */
-.wall-num
-
-  .offer-wall-num
-    text-align: center
-    border: 1px solid #DDD
-    border-radius: 6px
-    background: #F0F0F0
-    color: #333
-
-    h4
-      font: bold 16px/40px Arial, Helvetica, Microsoft Yahei, Simhei, Simsun
-      margin: 0
-
-    .level
-      background-color: #FFF
-      font: bold 60px/100px Arial, Helvetica, serif-sans
-      margin: 0 10px 10px
-      border-radius: 4px
-
-  .offer-wall-num.danger
-    color: $danger-color
-    background-color: $danger-bg-color
-    border-color: $danger-border-color
-
-  .offer-wall-num.success
-    color: $success-color
-    background-color: $success-bg-color
-    border-color: $success-border-color
-
-  .danger .text-success,
-  .success .text-danger
-    display: none
-
-/* ====================================
- * tables
- * ==================================*/
-.ad_list .show,
-.push .show,
-.wap .show
-  display: table-row
-
-.status-0.label
-  background: #468847
-
-.status-1.label
-  background: #999
-
-.sdk-type-0 .sdk
-  background: #7F8C8D
-
-.ad_list .sdk
-  background: #9B59B6
-
-.push .sdk
-  background: #F39C12
-
-.wap .sdk
-  background: #34495E
-
-.level-1 .label-level
-  background: #9B59B6
-
-.level-2 .label-level
-  background: #F39C12
-
-.level-3 .label-level
-  background: #34495E
-
-.level-4 .label-level
-  background: #16A085
-
-.level-5 .label-level
-  background: #2ECC71
-
-.hide-all > *
-  display: none
-
-.order + i
-  margin-left: 0.5em
-
-.table .input-group
-  max-width: 300px
-
-.level-0 .label-level
-  background-color: #999
-
-.level-1 .label-level
-  background: #9B59B6
-
-.level-2 .label-level
-  background: #F39C12
-
-.level-3 .label-level
-  background: #34495E
-
-.level-4 .label-level
-  background: #16A085
-
-.level-5 .label-level
-  background: #2ECC71
-
-table .platform
-  display: inline-block
-  font: 16px/18px 'FontAwesome'
-
-table.scroll-fix
-  thead
-    tr
-      th
-        padding: 8px 0
-        text-indent: 8px
-
-tr.Android .platform:before
-  content: '\f17b'
-  color: #93B528
-
-tr.iPhone .platform:before
-  content: '\f179'
-  color: #DDD
 
 // for fixed header
 body > .table

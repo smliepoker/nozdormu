@@ -269,7 +269,7 @@
       hasConfirm = hasConfirm !== null ? hasConfirm : true;
       hasCancel = hasCancel !== null ? hasCancel : true;
       popup = popup || new NormalAlertPopup({
-        el: '#normal-alert',
+        el: '#normal-popup',
         model: ns.mediator
       });
       popup.initUI(title, content, hasConfirm, hasCancel, isRemote);

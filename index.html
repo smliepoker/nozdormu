@@ -57,7 +57,7 @@
     <span class="spin hide"><i class="fa fa-spinner fa-spin"></i></span>
     <ul class="dropdown-menu">
     </ul>
-    <script type="text/html-template">
+    <script type="text/x-handlebars-template">
       {{={{{ }}}=}}
       {{#if empty}}
         <li class="dropdown-header">查询结果为空</li>
@@ -79,7 +79,7 @@
       </a>
       <ul class="dropdown-menu profile-menu tasks" role="menu">
         <li class="title">我的任务 <i class="fa fa-tasks"></i></li>
-        <script type="text/html-template">
+        <script type="text/x-handlebars-template">
           {{={{{ }}}=}}
           {{#todo}}
           <li class="dropdown-submenu">
@@ -106,7 +106,7 @@
         <li class="title">
           系统通知 <i class="fa fa-bell"></i>
         </li>
-        <script type="text/html-template">
+        <script type="text/x-handlebars-template">
           {{={{{ }}}=}}
           {{#each notification}}
           <li class="alarm">
@@ -224,7 +224,7 @@
         <div class="info"></div>
         <div class="alert" style="display: none"></div>
         <form class="editor" id="prop-editor">
-          <script type="text/html-template">
+          <script type="text/x-handlebars-template">
             {{={{{ }}}=}}
             <div class="form-group">
               <label for="editor-popup-input">{{label}}</label>
@@ -260,7 +260,7 @@
 </div>
 
 <ul id="howl">
-  <script type="text/html-template" class="template">
+  <script type="text/x-handlebars-template" class="template">
     {{={{{ }}}=}}
     <li class="howl-slot" style="display:none" id="howl-slot-{{id}}">
       <div class="howl-message">
@@ -298,6 +298,7 @@
 <script src="//cdn.staticfile.org/morris.js/0.4.3/morris.min.js"></script>
 <script src="//cdn.staticfile.org/moment.js/2.5.1/moment.min.js"></script>
 <script src="//cdn.staticfile.org/bootstrap-markdown/2.2.1/js/bootstrap-markdown.min.js"></script>
+<script src="{{module}}/bower_components/marked/lib/marked.js"></script>
 <script src="{{module}}/bower_components/nervenet/nervenet.min.js"></script>
 <script src="{{module}}/bower_components/spark-md5/spark-md5.min.js"></script>
 <script src="{{module}}/js/popup/Manager.js"></script>
