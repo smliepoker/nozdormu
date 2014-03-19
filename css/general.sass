@@ -147,10 +147,12 @@ legend,
   max-width: 200px
   max-height: 200px
 
-@for $i from 1 through 2
-  .icon-50 * #{$i}
+@for $i from 1 through 4
+  .icon-#{$i * 50}
     width: 50px * $i
     height: 50px * $i
+    min-width: 50px * $i
+    min-height: 50px * $i
 
 /* ====================================
  * animation

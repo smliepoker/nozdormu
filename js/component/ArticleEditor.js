@@ -5,9 +5,11 @@
   var timeout = 0
     , isConverting = false;
   ns.ArticleEditor = Backbone.View.extend({
+    $context: null,
     preview: null,
     events: {
-      'textinput textarea': 'textArea_textInputHandler',
+      'textInput textarea': 'textArea_textInputHandler',
+      'change [name="topic"]': 'topic_changeHandler',
       'keydown': 'keydownHandler'
     },
     initialize: function () {
@@ -33,7 +35,7 @@
         this.undelegateEvents();
       }
     },
-    textArea_textInputHandler: function (event) {
+    refreshPreview: function () {
       clearTimeout(timeout);
       var preview = this.preview
         , content = event.currentTarget.value;
@@ -42,9 +44,19 @@
         preview.html(marked(content));
       }, 1000);
     },
+    textArea_textInputHandler: function () {
+      this.refreshPreview();
+    },
+    topic_changeHandler: function (event) {
+      // 增加最近编辑的文档
+      this.$context.trigger('add-document', event.currentTarget.value);
+    },
     keydownHandler: function (event) {
       if (event.ctrlKey && event.keyCode === 13) { // ctrl+enter
         this.$el.submit();
+      }
+      if (event.keyCode === 8 || event.keyCode === 46) {
+        this.refreshPreview();
       }
     }
   });

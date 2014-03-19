@@ -128,6 +128,7 @@
   });
 
   ns.SmartTable = Backbone.View.extend({
+    $context: null,
     events: {
       'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
       'click thead .label': 'labelFilter_removeHandler',
@@ -255,12 +256,11 @@
         , prop = event.currentTarget.hash.substr(1)
         , id = target.closest('tr').attr('id')
         , model = this.collection.get(id)
-        , options = {
-          label: this.$('thead th').eq(index).text(),
-          value: model.get(prop)
-        };
+        , options = _.extend({
+          label: this.$('thead th').eq(index).text()
+        }, data);
       options[data.type] = true;
-      dianjoy.popup.Manager.popupEditor(model, prop, options);
+      this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
     },
     labelFilter_addHandler: function (event) {
@@ -276,6 +276,9 @@
       event.preventDefault();
     },
     model_changeHandler: function (model) {
+      if (_.intersection(_.keys(model.changed), _.keys(model.defaults)).length === 0) {
+        return;
+      }
       this.collection.fetch(model.toJSON());
     },
     model_filterChangeHandler: function (model, value) {

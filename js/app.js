@@ -12,18 +12,23 @@ $(function () {
     })
     , router = new dianjoy.router.AdminPanel(mainPage);
 
-  context.mapValue('mainPage', mainPage);
-  context.mapValue('subPage', subPage);
-  context.mapValue('router', router);
-  context.inject(router);
-  context.inject(dianjoy.service.Manager);
+  context
+    .mapValue('mainPage', mainPage)
+    .mapValue('subPage', subPage)
+    .mapValue('router', router)
+    .inject(router)
+    .inject(subPage)
+    .inject(dianjoy.service.Manager)
+    .inject(dianjoy.popup.Manager)
+    .mapEvent('add-recent-document', dianjoy.controller.addRecentDocumentCommand)
+    .mapEvent('create-excel', dianjoy.controller.createExcelCommand)
+    .mapEvent('edit-model', dianjoy.controller.editModelCommand);
 
   subPage.on('load:start', mainPage.showLoading, mainPage);
   subPage.on('load:complete', mainPage.removeLoading, mainPage);
   subPage.on('load:failed', mainPage.showErrorAlert, mainPage);
-  
+
   // 服务器返回消息全局处理
-  dianjoy.service.Manager.autoUpload = true;
   dianjoy.service.Manager.on('complete', function (response) {
     if (response.refresh) {
       Backbone.history.loadUrl(Backbone.history.fragment);
@@ -59,19 +64,3 @@ $(function () {
     $('#top-bar .collapse').addClass('in');
   }
 });
-dianjoy.chartColors = [
-  '#e5412d',
-  '#f0ad4e',
-  '#444',
-  '#888',
-  '#16A085',
-  '#27AE60',
-  '#2980B9',
-  '#8E44AD',
-  '#2C3E50',
-  '#F39C12',
-  '#D35400',
-  '#C0392B',
-  '#BDC3C7',
-  '#7F8C8D'];
-var URL = window.URL || window.webkitURL;

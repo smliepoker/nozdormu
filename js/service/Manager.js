@@ -5,8 +5,9 @@
   'use strict';
   var manager = {
     $subPage: null,
+    api: 'upload.php',
     autoUpload: false,
-    
+    maxUploadSize: 209715200, // 上传文件上限
     call: function (url, data, onSuccess, onError, context) {
       var self = this;
       onSuccess = onSuccess || this.onSuccess;
@@ -31,51 +32,53 @@
         }
       });
     },
-    upload: function (file, data, onSuccess, onError, onProgress, context) {
+    upload: function (file, data, context) {
       if (!file) {
         return;
       }
-      if (file.size > 209715200) { // 不能上传大于200m的文件
-        alert('不能通过后台上传大于200M的文件，请使用别的方式上传。');
+      if (file.size > this.maxUploadSize) {
+        alert('上传文件体积过大，请使用别的方式上传。');
         return;
       }
-      var self = this,
-          uploader = data.uploader,
-          formdata = new FormData();
+      var dispatcher = _.extend({}, Backbone.Events)
+        , formData = new FormData()
+        , onProgress = this.onProgress;
       //上传文件
-      formdata.append('file', file);
-      formdata.append('type', data.type);
-      formdata.append('id', data.id);
-      onSuccess = onSuccess || this.onSuccess;
-      onError = onError || this.onError;
-      onProgress = onProgress || this.onProgress;
+      formData.append('file', file);
+      formData.append('type', data.type);
+      formData.append('id', data.id);
       $.ajax({
-        url: data.url || "../upload.php",
+        url: data.url || this.api,
         type: 'post',
-        data: formdata,
+        data: formData,
         dataType: 'json',
         cache: false,
         contentType: false,
+        context: this,
         processData: false,
         xhr: function() {
           var xhr = new XMLHttpRequest();
           xhr.upload.addEventListener('progress', function(event) {
-            onProgress.call(context, event.loaded, event.total, uploader);
+            onProgress(event.loaded, event.total);
+            dispatcher.trigger('progress', event.loaded, event.total, dispatcher);
           });
           return xhr;
         },
         success: function (response) {
-          if (response.id) {
-            onSuccess.call(context, response, uploader);
-            self.trigger('complete:upload', response);
+          if (response.id && response.code === 0) {
+            dispatcher.trigger('success', response, dispatcher);
+            this.onSuccess(response);
           } else {
-            onError.call(context, response, uploader);
+            dispatcher.trigger('error', response, dispatcher);
+            this.onError(response);
           }
         },
         error: function (xhr, status, err) {
-          onError.call(context, xhr, status, err);
+          dispatcher.trigger('error', xhr, status, err, dispatcher);
+          this.onError(xhr, status, err);
         }
       });
+      return dispatcher;
     },
     postHandle: function (response) {
       if (!'method' in response) {
@@ -96,8 +99,7 @@
       }
     },
     onError: function (xhr, status, error) {
-      console.log(error);
-      console.log(xhr, status);
+      console.log(xhr, status, error);
       if (status === 401) {
         this.$subPage.load(webURL + 'template/permission_error.html');
       }
@@ -106,6 +108,7 @@
       console.log(loaded / total);
     },
     onSuccess: function (response) {
+      this.trigger('complete:upload', response);
       console.log('success', response);
     }
   };

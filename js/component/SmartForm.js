@@ -27,6 +27,20 @@
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
     },
+    addLoading: function () {
+      this.$el.addClass('loading');
+      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
+        .prop('disabled', true)
+        .find('i').hide()
+        .end().prepend('<i class="fa fa-spin fa-spinner"></i>')
+    },
+    createUploader: function (sibling) {
+      var data = $(sibling).data()
+        , accept = 'accept' in data ? 'accept="' + data.accept + '"' : ''
+        , uploader = $('<input type="file" class="hidden" ' + accept + '>');
+      uploader.insertAfter(sibling);
+      return uploader;
+    },
     fillCitiesSelect: function (index) {
       if (!('CITIES' in window) || index === -1) {
         return;
@@ -40,13 +54,6 @@
         html += '<option value="' + CITIES[index][i] + '">' + CITIES[index][i] + '</option>';
       }
       target.innerHTML = html;
-    },
-    addLoading: function () {
-      this.$el.addClass('loading');
-      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
-        .prop('disabled', true)
-        .find('i').hide()
-        .end().prepend('<i class="fa fa-spin fa-spinner"></i>')
     },
     removeLoading: function (className, msg) {
       this.$('.loading, .processing, .icon-spin, .fa-spin').remove();
@@ -63,141 +70,122 @@
       }
 
     },
+    setModel: function (model) {
+      this.model.off(null, null, this);
+      this.model = model;
+    },
     errorInput_focusHandler: function(event) {
       $(event.currentTarget).tooltip('destroy')
         .closest('.form-group').removeClass('error');
     },
     fileUploader_changeHandler: function(event) {
-      var target = event.currentTarget,
-          button = $(target).siblings('.upload-button'),
-          validate = $(target).data('validate');
-      if (!target.hasOwnProperty('files') || target.files.length === 0) {
+      var input = $(event.currentTarget)
+        , button = input.siblings('.upload-button')
+        , progress = input.siblings('.progress').removeClass('hide')
+        , data = button.data()
+        , preview = $(data.preview)
+        , field = $(data.field)
+        , validate = data.validate;
+      if (!input[0].hasOwnProperty('files') || input[0].files.length === 0) {
         return;
       }
-      button
-        .removeClass('btn-success btn-danger btn-inverse btn-default')
-        .find('.icon-ok, .icon-remove, .fa-check, .fa-times').remove();
-      var spec = $(target).data('accept'),
-          file = target.files[0];
+
+      // 校验文件类型
+      var spec = data.accept
+        , file = input[0].files[0];
       if (spec && file) {
         var reg = new RegExp(spec, 'i');
-        if (!reg.test(file.name)) {
+        if (!reg.test(file.type) && !reg.test(file.name)) {
           var types = spec.slice(3, -2).split('|');
-          button
-            .addClass('btn-danger')
-            .append(' <i class="icon-remove fa fa-times"></i>');
+          button.addClass('btn-danger')
+            .find('i').addClass('fa-times');
           alert('文件类型不匹配，请上传扩展名为' + types.join('，') + '的文件\n（手工修改不算哦）');
           return;
         }
       }
-
-      if (file.type) {
-        if (/image/i.test(file.type)) {
-          var img = target.img = document.createElement('img'),
-              list = $(target).siblings('.help-block');
-          img.className = "preview img-polaroid";
-          img.alt = $('label[for=' + target.id + ']').text();
-          img.src = URL.createObjectURL(file);
-          if (list.hasClass('multiple')) {
-            img.title = '单击移除';
-          } else {
-            list.empty();
-          }
-          list.append(img);
-        } else if (/video/i.test(file.type)) {
-          var video = target.video = document.createElement('video'),
-              list = $(target).siblings('.help-block');
-          video.controls = true;
-          video.width = 480;
-          video.height = 270;
-          video.onerror = function (e) { console.log(e); };
-          list.empty().append(video);
-        }
-      }
-
-      // 是否需要md5和大小校验
-      if (validate) {
-        var spark = new SparkMD5.ArrayBuffer(),
-            reader = new FileReader(),
-            model = this.model;
-        reader.onload = function () {
-          spark.append(this.result);
-          model.set('file-validate-' + file.name, {
-            size: file.size,
-            md5: spark.end()
-          });
-        };
-        reader.readAsArrayBuffer(file);
-      }
-
       button
-        .addClass('btn-success')
-        .append(' <i class="icon-ok fa fa-check"></i>');
+        .prop('disabled', true)
+        .addClass('disabled')
+        .removeClass('btn-success btn-danger')
+        .find('i')
+          .removeClass('fa-times fa-check')
+          .addClass("fa-spin fa-spinner");
+      this.$el.addClass('loading');
       
       if (!dianjoy.service.Manager.autoUpload) {
         return;
       }
-      var bar = target.bar = $('<div class="progress"><div class="bar progress-bar"></div></div>');
-      target.filename = file.name;
-      dianjoy.service.Manager.upload(file, {
-        type: target.id || 'ad_url',
-        id: $('#adid').val(),
-        uploader: target,
-        url: $(target).attr('upload_url')
-      }, this.fileUpload_successHandler, null, this.fileUpload_progressHandler, this);
+      var uploader = dianjoy.service.Manager.upload(file, {
+        id: this.model.id,
+        type: data.type
+      }, this);
+      uploader.bar = progress;
+      uploader.button = button;
+      uploader.preview = preview.length ? preview : null;
+      uploader.field = field;
+      uploader.filename = file.name;
+      uploader.isSrc = /image|video/i.test(file.type);
+      uploader.on('success', this.fileUpload_successHandler, uploader);
+      uploader.on('progress', this.fileUpload_progressHandler, uploader);
 
-      // 将按钮变成取消
-      button
-        .prop('disabled', true)
-        .after(bar);
-      $(target).closest('form').addClass('uploading');
+      // 是否需要md5和大小校验
+      if (validate) {
+        var spark = new SparkMD5.ArrayBuffer()
+          , reader = new FileReader();
+        reader.onload = function () {
+          spark.append(this.result);
+          uploader.md5 = spark.end();
+        };
+        uploader.size = file.size;
+        reader.readAsArrayBuffer(file);
+      }
     },
-    fileUpload_progressHandler: function(loaded, total, uploader) {
+    fileUpload_progressHandler: function(loaded, total) {
       var progress = (loaded / total * 100 >> 0) + '%';
-      uploader.bar.find('.bar, .progress-bar')
+      this.bar.find('.bar, .progress-bar')
         .width(progress)
         .text(progress);
     },
-    fileUpload_successHandler: function(response, uploader) {
-      var parent = $(uploader).parent(),
-          input = parent.find('[type=text], [type=hidden]'),
-          src = '../' + response.url;
-      // 校验
-      var record = this.model.get('file-validate-' + response.filename);
-      if (record) {
-        if (record.size !== response.size || record.md5 !== response.md5) {
-          alert('上传后文件校验未通过，请重新上传');
-          $(uploader).closest('form').removeClass('uploading');
-          return;
+    fileUpload_successHandler: function(response) {
+      // 校验MD5
+      if (this.md5 && (this.size !== response.size || this.md5 !== response.md5)) {
+        alert('上传后文件校验未通过，请重新上传');
+        return;
+      }
+
+      // 隐藏进度条
+      this.bar.fadeOut(function () {
+        $(this).addClass('hide');
+      });
+
+      // 生成缩略图或链接
+      if (this.preview) {
+        if (this.isSrc) {
+          this.preview.attr('src', response.url);
+        } else {
+          this.preview.html('<a href="' + src + '">' + this.filename + '</a>已上传');
         }
       }
 
-      uploader.bar.fadeOut(function() {
-        $(this).remove();
-        // 生成缩略图或链接
-        parent.find('button').prop('disabled', false);
-        if (uploader.img) {
-          uploader.img.src = src;
-        } else if (uploader.video) {
-          uploader.video.src = src;
-        } else {
-          var preview = ' <span class="help-inline file"><a href="' + src + '">' + uploader.filename + '</a>已上传</span>';
-          parent.find('span').remove();
-          parent.find('.upload-button').after(preview);
-        }
-      });
-
-      if (input.hasClass('multiple')) {
-        var imgs = input.val() === '' ? [] : input.val().split(',');
+      if (this.field.hasClass('multiple')) {
+        var imgs = this.field.val() === '' ? [] : _.filter(this.field.val().split(','));
         if (imgs.indexOf(response.url) === -1) {
           imgs.push(response.url);
         }
-        input.val(imgs.join(','));
+        this.field.val(imgs.join(','));
       } else {
-        input.val(response.url);
+        this.field.val(response.url);
       }
-      $(uploader).closest('form').removeClass('uploading');
-      this.model.set(response);
+
+      this.button
+        .prop('disabled', false)
+        .removeClass('disabled')
+        .addClass('btn-success')
+        .find('i')
+          .removeClass("fa-spin fa-spinner")
+          .addClass('fa-check');
+      this.button.closest('form').removeClass('loading');
+      this.off();
     },
     input_blurHandler: function(event) {
       var target = event.currentTarget,
@@ -228,7 +216,8 @@
       this.removeLoading('danger', xhr.msg || error);
     },
     uploadButton_clickHandler: function(event) {
-      $(event.currentTarget).siblings('input[type=file]').click();
+      var uploader = this.createUploader(event.currentTarget);
+      uploader.click();
     },
     submitHandler: function(event) {
       var form = this.el,

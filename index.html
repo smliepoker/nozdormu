@@ -223,7 +223,7 @@
       <div class="modal-body">
         <div class="info"></div>
         <div class="alert" style="display: none"></div>
-        <form class="editor" id="prop-editor">
+        <form class="editor fake" id="prop-editor">
           <script type="text/x-handlebars-template">
             {{={{{ }}}=}}
             <div class="form-group">
@@ -234,17 +234,27 @@
               {{#if long-text}}
               <textarea name="prop" class="form-control" rows="3" id="editor-popup-input">{{value}}</textarea>
               {{/if}}
+              {{#if select}}
+              选择现有类型：
+              <select class="form-control">
+                {{#each options}}
+                <option value="{{value}}">{{label}}</option>
+                {{/each}}
+              </select>
+              <p>或新建类型：</p>
+              <input type="text" class="form-control">
+              {{/if}}
               {{#if img}}
               <p>
-                <img src="{{#if value}}{{value}}{{else}}./img/image.png{{/if}}" class="img-thumbnail">
+                <img src="{{#if value}}{{value}}{{else}}./img/image.png{{/if}}" id="{{prop}}-preview" class="img-thumbnail">
               </p>
               <div class="progress hide">
                 <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                   <span>0%</span>
                 </div>
               </div>
-              <input type="hidden" name="prop" value="{{value}}">
-              <button type="button" class="btn btn-info upload-button"><i class="fa fa-upload"></i> 上传</button>
+              <input type="hidden" name="prop" value="{{value}}" id="{{prop}}-field">
+              <button type="button" class="btn btn-info upload-button" data-type="{{prop}}" data-preview="#{{prop}}-preview" data-field="#{{prop}}-field" data-accept="image/*"><i class="fa fa-upload"></i> 上传</button>
               {{/if}}
             </div>
             {{{={{ }}=}}}
@@ -305,21 +315,12 @@
 <script src="{{module}}/js/service/Manager.js"></script>
 <script src="{{module}}/js/view/SubPage.js"></script>
 <script src="{{module}}/js/view/MainPage.js"></script>
-<script src="{{module}}/js/view/Spotlight.js"></script>
-<script src="{{module}}/js/notification/NotificationPanel.js"></script>
-<script src="{{module}}/js/notification/Manager.js"></script>
 <script src="{{module}}/js/router/AdminPanel.js"></script>
 <script src="{{module}}/js/model/PageMediator.js"></script>
-<script src="{{module}}/js/model/NotificationCollection.js"></script>
 <script src="{{module}}/js/model/ListCollection.js"></script>
+<script src="{{module}}/js/controller/addRecentDocumentCommand.js"></script>
+<script src="{{module}}/js/controller/createExcelCommand.js"></script>
+<script src="{{module}}/js/controller/editModelCommand.js"></script>
 <script src="{{module}}/js/form/utils.js"></script>
-<script src="{{module}}/js/utils/Utils.js"></script>
-{{#config-js}}
-<script>
-  {{#pair}}var {{key}} = "{{value}}";{{/pair}}
-</script>
-{{/config-js}}
-{{^config-js}}
-<script src="{{module}}/js/config.js"></script>
-{{/config-js}}
+<script src="{{config}}/js/config.js"></script>
 <script src="{{module}}/js/app.js"></script>

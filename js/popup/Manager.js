@@ -130,7 +130,7 @@
           }
         }
       } catch (e) {
-        
+
       }
     },
     submitButton_clickHandler: function () {
@@ -162,24 +162,33 @@
   });
 
   var EditPopup = Backbone.View.extend({
-    prop: '',
+    $context: null,
+    form: null,
     events: {
       'show.bs.modal': 'showHandler',
-      'submit form': 'form_submitHandler',
-      'click .upload-button': 'uploadButton_clickHandler'
+      'click .btn-primary': 'submitHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
     },
-    initUI: function (prop, options) {
-      this.prop = prop;
+    initUI: function (options) {
       this.$('form').html(this.template(options));
+
+      // 用组件适配用户操作
+      if (this.form) {
+        this.form.setElement(this.$('form'));
+        this.form.setModel(this.model);
+      } else {
+        this.form = this.$context.createInstance(dianjoy.component.SmartForm, {
+          el: this.$('form'),
+          model: this.model
+        });
+      }
     },
-    createUploader: function (sibling) {
-      var uploader = $('<input type="file" class="hidden">');
-      uploader.on('change', _.bind(this.uploader_changeHandler, this));
-      uploader.insertAfter(sibling);
-      return uploader;
+    displayProcessing: function () {
+      this.$el.addClass('processing')
+        .find('.btn-primary').prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
     },
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
@@ -192,71 +201,25 @@
         .html(msg)
         .slideDown();
     },
-    form_submitHandler: function (event) {
-      if (this.$('.btn-primary').prop('disabled')) {
-        return;
-      }
-      var attr = {};
-      attr[this.prop] = event.currentTarget.elements.prop.value;
-      this.model.save(attr, {
-        patch: true,
-        wait: true,
-        success: _.bind(this.savedHandler, this),
-        error: _.bind(this.errorHandler, this)
-      });
-      this.$el.addClass('processing')
-        .find('.btn-primary').prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
-
-      event.preventDefault();
-    },
-    upload_errorHandler: function () {
-      this.$('.progress').fadeOut(function () {
-        $(this).addClass('hide')
-          .children().removeClass('progress-bar-danger');
-      }).children().addClass('progress-bar-danger');
-      this.displayResult(false, '上传失败，请稍后重试', 'fa-frown-o');
-    },
-    upload_progressHandler: function (loaded, total) {
-      var percent = loaded / total * 100 >> 0;
-      this.$('.progress-bar')
-        .attr('aria-valuenow', percent)
-        .width(percent + '%')
-        .text(percent + '%');
-    },
-    upload_successHandler: function (response) {
-      this.$('.progress').fadeOut(function () {
-        $(this).addClass('hide');
-      });
-      this.$('img').attr('src', response.url);
-      this.displayResult(true, '上传成功，可以保存了', 'fa-smile-o');
-      this.$('[name="prop"]').val(response.url);
-    },
-    uploadButton_clickHandler: function (event) {
-      this.$('[type="file"]').remove();
-      var uploader = this.createUploader(event.currentTarget);
-      uploader.click();
-    },
-    uploader_changeHandler: function (event) {
-      $(event.currentTarget).off();
-      var data = {
-        id: this.model.id,
-        type: this.prop
-      };
-      dianjoy.service.Manager.upload(event.target.files[0], data, this.upload_successHandler, this.upload_errorHandler, this.upload_progressHandler, this);
-      this.$('.progress').removeClass('hide');
-    },
-    errorHandler: function (error) {
-      console.log(error);
-      this.displayResult(false, '修改失败，请稍后重试', 'fa-frown-o');
-      this.$('.btn-primary').prop('disabled', false);
-    },
-    savedHandler: function () {
-      this.displayResult(true, '修改成功', 'fa-smile-o');
+    hide: function() {
       var modal = this.$el;
       setTimeout(function () {
         modal.modal('hide');
       }, 3000);
+    },
+    reset: function() {
+      this.$('.btn-primary').prop('disabled', false)
+        .find('i').removeClass('fa-spin fa-spinner');
+    },
+    value: function () {
+      return this.$('[name=prop]').val();
+    },
+    submitHandler: function (event) {
+      if (this.$('.btn-primary').prop('disabled')) {
+        return;
+      }
+      this.trigger('submit');
+      event.preventDefault();
     },
     showHandler: function () {
       this.$('.btn-primary').prop('disabled', false);
@@ -265,22 +228,25 @@
   });
 
   ns.Manager = _.extend({
+    $context: null,
     popup: function (title, content, hasConfirm, hasCancel, isRemote) {
       hasConfirm = hasConfirm !== null ? hasConfirm : true;
       hasCancel = hasCancel !== null ? hasCancel : true;
-      popup = popup || new NormalAlertPopup({
+      popup = popup || this.$context.createInstance(NormalAlertPopup, {
         el: '#normal-popup',
         model: ns.mediator
       });
       popup.initUI(title, content, hasConfirm, hasCancel, isRemote);
     },
-    popupEditor: function (model, prop, options) {
-      editor = editor || new EditPopup({
-        el: '#edit-popup'
+    popupEditor: function (model, options) {
+      editor = editor || this.$context.createInstance(EditPopup, {
+        el: '#edit-popup',
+        model: model
       });
       editor.model = model;
-      editor.initUI(prop, options);
+      editor.initUI(options);
       editor.$el.modal('show');
+      return editor;
     }
   }, Backbone.Events);
 
@@ -298,4 +264,3 @@
     return false;
   });
 }(Nervenet.createNameSpace('dianjoy.popup')));
-

@@ -27,16 +27,16 @@
     if (arr[0] === 'dianjoy') {
       arr = arr.slice(1);
     }
-    return webURL + '/js/' + arr.join('/') + '.js';
+    return webURL + 'js/' + arr.join('/') + '.js';
   }
 
   ns.SubPage = Backbone.View.extend({
+    $context: null,
     events: eventsMap,
     initialize: function () {
       this.model.on('change:form', this.modelForm_changeHandler, this);
     },
     clear: function () {
-      dianjoy.utils.clearLoop().off();
       dianjoy.popup.Manager.off();
       this.destroyComponents();
       this.model.clear({silent: true});
@@ -57,8 +57,9 @@
         selector: '.has-popover'
       });
 
-      this.model.fetch();
+      this.model.load();
       // 自动初始化组件
+      var self = this;
       for (var selector in classMap) {
         var dom = this.$(selector);
         if (dom.length) {
@@ -69,7 +70,7 @@
           if (component) {
             dom.each(function () {
               init.el = this;
-              components.push(new component(init));
+              components.push(self.$context.createInstance(component, init));
             });
           } else {
             this.loadMediatorClass(classMap[selector], init, dom); // mediator pattern
@@ -77,7 +78,6 @@
         }
       }
       // 初始化非本库的自定义组件
-      var self = this;
       this.$('[data-mediator-class]').each(function (i) {
         var className = $(this).data('mediator-class')
           , component = Nervenet.parseNamespace(className)
@@ -86,22 +86,26 @@
           };
         if (component) {
           init.el = this;
-          components.push(new component(init));
+          components.push(self.$context.createInstance(component, init));
         } else {
           self.loadMediatorClass(className, init, $(this), true);
         }
       });
     },
-    load: function (url, data) {
+    load: function (url, id, data) {
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
-      this.model.set('path', data);
+      this.model.set({
+        id: id,
+        path: data
+      });
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },
     loadMediatorClass: function (className, init, dom, isCustom) {
-      var script = document.createElement("script");
+      var self = this
+        , script = document.createElement("script");
       script.async = true;
       script.src = getPath(className, isCustom);
       script.onload = function() {
@@ -109,7 +113,7 @@
         var component = Nervenet.parseNamespace(className);
         dom.each(function () {
           init.el = this;
-          components.push(new component(init));
+          components.push(self.$context.createInstance(component, init));
         });
       };
       document.head.appendChild(script);
@@ -189,7 +193,7 @@
           smartTables = _.filter(components, function (item) {
             return item instanceof dianjoy.component.SmartTable;
           });
-      tables.each(function (i) {
+      tables.each(function () {
         var t = $('<table><thead></thead><tbody></tobdy></table>'),
             content = $(this).hasClass('smart-table') ? smartTables.shift() : null;
         content = content && 'visibleItems' in content ? $(content.visibleItems).clone() : $(this.tBodies).children(':visible').clone();
@@ -201,7 +205,7 @@
         });
         table = table ? table.add(t) : t;
       });
-      event.currentTarget.href = dianjoy.utils.tableToExcel(table, '广告数据');
+      this.$context.trigger('create-excel', table, '广告数据', event.currentTarget);
     },
     printHandler: function (event) {
       window.print();
