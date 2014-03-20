@@ -242,7 +242,11 @@
         , target;
       for (var prop in changed) {
         target = this.$('#' + model.id + ' [href="#' + prop + '"]');
-        if (target.children().is('img')) {
+        if (target.data('refresh')) {
+          var tr = $(this.template({list: [model.toJSON()]}))
+            , index = target.closest('td').index();
+          target.parent().replaceWith(tr.children().eq(index));
+        } else if (target.children().is('img')) {
           target.children('img').attr('src', changed[prop]);
         } else {
           target.text(changed[prop]);

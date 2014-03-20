@@ -166,7 +166,8 @@
     form: null,
     events: {
       'show.bs.modal': 'showHandler',
-      'click .btn-primary': 'submitHandler'
+      'click .btn-primary': 'submitButton_clickHandler',
+      'mousedown .input-group': 'inputGroup_mouseDownHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
@@ -174,6 +175,7 @@
     initUI: function (options) {
       if (options) {
         this.$('form').html(this.template(options));
+        this.$('select').val(options.value);
       } else {
         this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
       }
@@ -218,11 +220,14 @@
     value: function () {
       var radio = this.$('[name=prop-radio]');
       if (radio.length) {
-        return this.$('[name=prop-' + radio.val() + ']').val();
+        return this.$('[name=prop-' + radio.filter(':checked').val() + ']').val();
       }
       return this.$('[name=prop]').val();
     },
-    submitHandler: function (event) {
+    inputGroup_mouseDownHandler: function (event) {
+      $(event.currentTarget).find('[type=radio]').prop('checked', true);
+    },
+    submitButton_clickHandler: function (event) {
       if (this.$('.btn-primary').prop('disabled')) {
         return;
       }
