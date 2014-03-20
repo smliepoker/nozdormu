@@ -172,7 +172,11 @@
       this.template = Handlebars.compile(this.$('script').remove().html());
     },
     initUI: function (options) {
-      this.$('form').html(this.template(options));
+      if (options) {
+        this.$('form').html(this.template(options));
+      } else {
+        this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
+      }
 
       // 用组件适配用户操作
       if (this.form) {
@@ -212,6 +216,10 @@
         .find('i').removeClass('fa-spin fa-spinner');
     },
     value: function () {
+      var radio = this.$('[name=prop-radio]');
+      if (radio.length) {
+        return this.$('[name=prop-' + radio.val() + ']').val();
+      }
       return this.$('[name=prop]').val();
     },
     submitHandler: function (event) {

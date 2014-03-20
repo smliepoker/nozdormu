@@ -4,7 +4,8 @@
 ;(function (ns) {
   'use strict';
 
-  var params
+  var collection
+    , params
     , popup;
 
   function callPopup(model, options) {
@@ -46,13 +47,16 @@
     };
     // 有可能需要从远程取数据
     if (options.url) {
-      if (this.collection) {
-        this.collection.off();
+      if (collection) {
+        collection.off();
       }
-      this.collection = new Backbone.Collection({
-        url: options.url
+      collection = new Backbone.Collection();
+      collection.url = options.url;
+      collection.on('sync', collection_syncHandler, this);
+      collection.fetch({
+        data: {id: model.id}
       });
-      this.collection.on('sync', collection_syncHandler, this);
+      callPopup(model);
       return;
     }
     callPopup(model, options);

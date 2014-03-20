@@ -235,14 +235,24 @@
               <textarea name="prop" class="form-control" rows="3" id="editor-popup-input">{{value}}</textarea>
               {{/if}}
               {{#if select}}
-              选择现有类型：
-              <select class="form-control">
-                {{#each options}}
-                <option value="{{value}}">{{label}}</option>
-                {{/each}}
-              </select>
-              <p>或新建类型：</p>
-              <input type="text" class="form-control">
+              <label for="editor-popup-select">选择现有类型：</label>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <input type="radio" name="prop-radio" value="select" id="editor-popup-select" checked>
+                </span>
+                <select class="form-control" name="prop-select">
+                  {{#each options}}
+                  <option value="{{id}}" {{selected}}>{{label}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <label for="editor-popup-new">或新建类型：</label>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <input type="radio" name="prop-radio" value="input" id="editor-popup-new">
+                </span>
+                <input type="text" class="form-control" name="prop-input">
+              </div>
               {{/if}}
               {{#if img}}
               <p>
