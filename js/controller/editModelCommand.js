@@ -49,6 +49,7 @@
     if (!collection) {
       attr[params.prop] = value;
       apply(attr);
+      return;
     }
     // 用户选择了集合里有的
     if (collection.get(value)) {

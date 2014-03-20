@@ -38,7 +38,7 @@
     refreshPreview: function () {
       clearTimeout(timeout);
       var preview = this.preview
-        , content = event.currentTarget.value;
+        , content = this.$('textarea').val();
       timeout = setTimeout(function () {
         isConverting = true;
         preview.html(marked(content));
