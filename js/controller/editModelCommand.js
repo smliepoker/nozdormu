@@ -44,9 +44,11 @@
   function onSubmit() {
     var value = popup.value()
       , attr = {};
+    popup.displayProcessing();
     // 没有选项集，就不需要转化
     if (!collection) {
-      popup.displayProcessing();
+      attr[params.prop] = value;
+      apply(attr);
     }
     // 用户选择了集合里有的
     if (collection.get(value)) {
