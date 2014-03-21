@@ -91,7 +91,10 @@
         , end = start + 10 < this.total ? start + 10 : this.total
         , length = end - start;
       for (var i = 0; i < length; i++) {
-        arr[i] = i + start + 1;
+        arr[i] = {
+          index: i + start,
+          label: i + start + 1
+        };
       }
       this.$el.html(this.template({
         pages: arr,
