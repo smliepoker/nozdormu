@@ -174,8 +174,8 @@
           pagesize: init.pagesize
         });
         this.pagination.on('turn', this.pagination_turnHandler, this);
-        this.model.set('page', 0);
       }
+      this.model.set('page', 0);
     },
     remove: function () {
       if (this.header) {
@@ -192,7 +192,9 @@
     render: function (collection) {
       this.$('.waiting').hide();
       this.$('tbody').html(this.template({list: collection.toJSON()}));
-      this.pagination.setTotal(this.collection.total);
+      if (this.pagination) {
+        this.pagination.setTotal(this.collection.total);
+      }
       this.model.trigger('load:complete');
     },
     filterRows: function() {

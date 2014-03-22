@@ -16,6 +16,7 @@
         '.search-result': 'dianjoy.component.SearchResult',
         '.morris-chart': 'dianjoy.component.MorrisChart',
         '.article-editor': 'dianjoy.component.ArticleEditor',
+        '.smart-info': 'dianjoy.component.SmartInfo',
         'form': 'dianjoy.component.SmartForm'
       },
       components = [];

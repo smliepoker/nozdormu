@@ -8,6 +8,9 @@
     param: {},
     initialize: function(models, options) {
       Backbone.Collection.prototype.initialize.call(this, models, options);
+      if (!options) {
+        return;
+      }
       if (options.url) {
         this.url = options.url;
       }

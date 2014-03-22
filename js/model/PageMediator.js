@@ -9,20 +9,20 @@
       'show': '',
       'keyword': '',
       'author': '',
-      'page': 0
+      'page': -1
     },
     initialize: function () {
       this.on('change', this.changeHandler, this);
     },
     load: function () {
-      var item = localStorage.getItem(this.cid);
+      var item = localStorage.getItem(location.hash);
       if (item) {
         item = JSON.parse(item);
         this.set(item);
       }
     },
     save: function () {
-      localStorage.setItem(this.cid, JSON.stringify(this.getFilters()));
+      localStorage.setItem(location.hash, JSON.stringify(this.getFilters()));
     },
     getFilters: function () {
       return _.pick(this.attributes, _.keys(this.defaults));
