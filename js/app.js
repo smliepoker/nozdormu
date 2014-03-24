@@ -69,7 +69,7 @@ moment.lang('cn', {
   relativeTime : {
     future: "%s 之后",
     past:   "%s 之前",
-    s:  "秒",
+    s:  "%d 秒",
     m:  "一分钟",
     mm: "%d 分钟",
     h:  "一小时",

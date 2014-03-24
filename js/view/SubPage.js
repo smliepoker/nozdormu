@@ -119,6 +119,14 @@
       };
       document.head.appendChild(script);
     },
+    preCheck: function () {
+      for (var i = 0, len = components.length; i < len; i++) {
+        if ('preCheck' in components[i] && !components[i].preCheck()) {
+          return false;
+        }
+      }
+      return true;
+    },
     setDisabled: function (bl) {
       this.$('a.btn').addClass('disabled');
       this.$('button').prop('disabled', bl);

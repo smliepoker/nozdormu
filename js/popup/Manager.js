@@ -161,7 +161,7 @@
     }
   });
 
-  var EditPopup = Backbone.View.extend({
+  var EditPopup = dianjoy.view.DataSyncView.extend({
     $context: null,
     form: null,
     events: {
@@ -190,22 +190,6 @@
           model: this.model
         });
       }
-    },
-    displayProcessing: function () {
-      this.$el.addClass('processing')
-        .find('.btn-primary').prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
-    },
-    displayResult: function (isSuccess, msg, icon) {
-      msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
-      this.$('.fa-spin').removeClass('fa-spin fa-spinner');
-      this.$el.removeClass('processing');
-      this.$('.alert')
-        .hide()
-        .toggleClass('alert-danger', !isSuccess)
-        .toggleClass('alert-success', isSuccess)
-        .html(msg)
-        .slideDown();
     },
     hide: function() {
       var modal = this.$el;

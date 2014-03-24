@@ -52,16 +52,13 @@
       this.$('.error').removeClass('hide');
     },
     showLoading: function () {
-      var self = this;
       this.setBreadcrumb();
       this.$('.overtime, .error').addClass('hide');
       this.$('.page-loading').removeClass('hide');
-      timeout = setTimeout(function () {
-        self.$('.page-loading').addClass('hide');
-        self.showOvertimeAlert();
-      }, 60000); // 60s后认为超时
+      timeout = setTimeout(_.bind(this.showOvertimeAlert, this), 60000); // 60s后认为超时
     },
     showOvertimeAlert: function () {
+      self.$('.page-loading').addClass('hide');
       this.$('.overtime').removeClass('hide');
     },
     setBreadcrumb: function() {
