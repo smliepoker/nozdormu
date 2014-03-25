@@ -2,7 +2,6 @@
   'use strict';
   var eventsMap = {
         'click .face': 'face_clickHandler',
-        'click .delete-button': 'deleteButton_clickHandler',
         'click .alert .close': 'alert_closeHandler',
         'click .print-button': 'printHandler',
         'click .export-button': 'exportHandler',
@@ -156,14 +155,6 @@
       table.find('input[type=checkbox]').not('.check-all').prop('checked', function (i, checked) {
         return !checked;
       });
-    },
-    deleteButton_clickHandler: function (event) {
-      dianjoy.utils.deleteRow($(event.currentTarget));
-
-      if (event.preventDefault) {
-        event.preventDefault();
-      }
-      return false;
     },
     face_clickHandler: function(event) {
       var img = $(event.currentTarget).clone();

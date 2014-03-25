@@ -136,6 +136,7 @@
       'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
       'click thead .label': 'labelFilter_removeHandler',
       'click .order': 'order_clickHandler',
+      'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'modified': 'value_modifiedHandler'
     },
@@ -155,6 +156,7 @@
       });
       this.collection.on('reset', this.render, this);
       this.collection.on('change', this.collection_changeHandler, this);
+      this.collection.on('remove', this.collection_removeHandler, this);
 
       // 实现大类筛选
       this.model.on('change', this.model_changeHandler, this);
@@ -173,7 +175,6 @@
           model: this.model,
           pagesize: init.pagesize
         });
-        this.pagination.on('turn', this.pagination_turnHandler, this);
       }
       this.model.set('page', 0);
     },
@@ -237,11 +238,6 @@
         list.removeClass('hide');
       }
     },
-    setFrameHeight: function () {
-      if (frameElement) {
-        frameElement.height = document.body.offsetHeight;
-      }
-    },
     collection_changeHandler: function (model) {
       var changed = model.changed
         , target;
@@ -258,6 +254,27 @@
         }
       }
     },
+    collection_removeHandler: function (model) {
+      this.$('#' + model.id).fadeOut(function () {
+        $(this).remove();
+      })
+    },
+    deleteButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , tr = target.closest('tr');
+      target.prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
+      this.collection.get(tr.attr('id')).destroy({
+        wait: true,
+        error: function (model, response) {
+          target.prop('disabled', false)
+            .find('i').removeClass('fa-spin fa-spinner');
+          console.log(response.msg);
+          alert('删除失败');
+        }
+      });
+      event.preventDefault();
+    },
     edit_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , data = target.data()
@@ -268,6 +285,7 @@
         , options = _.extend({
           label: this.$('thead th').eq(index).text()
         }, data);
+      data.type = data.type || 'short-text';
       options[data.type] = true;
       this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
@@ -306,7 +324,6 @@
         }
       }
       this.filterRows();
-      this.setFrameHeight();
     },
     order_clickHandler: function (event) {
       var parent = $(event.currentTarget).parent(),
@@ -348,9 +365,6 @@
 
       this.trigger('change:order', parent.index(), order);
       event.preventDefault();
-    },
-    pagination_turnHandler: function (index) {
-      this.model.set('page', index);
     },
     value_modifiedHandler: function (event, value) {
       var index = $(event.target).closest('td').index(),

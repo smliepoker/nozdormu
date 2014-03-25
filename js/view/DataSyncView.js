@@ -14,7 +14,7 @@
       this.$('.fa-spin').removeClass('fa-spin fa-spinner');
       this.$el.removeClass('processing');
       this.$('.btn-primary').prop('disabled', false);
-      this.$('.alert')
+      this.$('.alert-msg')
         .hide()
         .toggleClass('alert-danger', !isSuccess)
         .toggleClass('alert-success', isSuccess)

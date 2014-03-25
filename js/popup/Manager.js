@@ -166,6 +166,7 @@
     form: null,
     events: {
       'show.bs.modal': 'showHandler',
+      'keydown': 'keydownHandler',
       'click .btn-primary': 'submitButton_clickHandler',
       'mousedown .input-group': 'inputGroup_mouseDownHandler'
     },
@@ -176,6 +177,7 @@
       if (options) {
         this.$('form').html(this.template(options));
         this.$('select').val(options.value);
+        $('[data-for=' + options.prop + ']').clone().show().appendTo(this.$('form'));
       } else {
         this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
       }
@@ -191,15 +193,21 @@
         });
       }
     },
-    hide: function() {
+    hide: function () {
       var modal = this.$el;
       setTimeout(function () {
         modal.modal('hide');
       }, 3000);
     },
-    reset: function() {
+    reset: function () {
       this.$('.btn-primary').prop('disabled', false)
         .find('i').removeClass('fa-spin fa-spinner');
+    },
+    save: function () {
+      if ($(this.el.elements).filter('[type=submit], button').not('button[type]').prop('disabled')) {
+        return;
+      }
+      this.trigger('submit');
     },
     value: function () {
       var radio = this.$('[name=prop-radio]');
@@ -212,15 +220,18 @@
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
     },
     submitButton_clickHandler: function (event) {
-      if (this.$('.btn-primary').prop('disabled')) {
-        return;
-      }
-      this.trigger('submit');
+      this.save();
       event.preventDefault();
+    },
+    keydownHandler: function (event) {
+      if (event.ctrlKey && event.keyCode === 13) { // ctrl+enter
+        this.save();
+        event.preventDefault();
+      }
     },
     showHandler: function () {
       this.$('.btn-primary').prop('disabled', false);
-      this.$('.alert').hide();
+      this.$('.alert-msg').hide();
     }
   });
 
