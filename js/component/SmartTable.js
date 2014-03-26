@@ -80,6 +80,8 @@
       this.template = this.template ? Handlebars.compile(this.template) : false;
       this.total = total;
       this.pagesize = options.pagesize;
+      this.render();
+      this.displayPageNum();
     },
     render: function () {
       if (!this.template) {
@@ -176,7 +178,7 @@
           pagesize: init.pagesize
         });
       }
-      this.model.set('page', 0);
+      this.collection.fetch();
     },
     remove: function () {
       if (this.header) {

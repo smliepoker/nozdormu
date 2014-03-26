@@ -92,14 +92,15 @@
         }
       });
     },
-    load: function (url, id, data) {
+    load: function (url, data) {
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
-      this.model.set({
-        id: id,
-        path: data
-      });
+      if (_.isObject(data)) {
+        this.model.set(data);
+      } else {
+        this.model.id = data;
+      }
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },
