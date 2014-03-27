@@ -10,7 +10,7 @@ $(function () {
       el: '#sub-page',
       model: mediator
     })
-    , router = new dianjoy.router.AdminPanel(mainPage);
+    , router = new dianjoy.router.AdminPanel();
 
   context
     .mapValue('mainPage', mainPage)

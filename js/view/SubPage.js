@@ -12,10 +12,11 @@
       classMap = {
         '.smart-table': 'dianjoy.component.SmartTable',
         '.smart-navbar': 'dianjoy.component.SmartNavbar',
+        '.smart-info': 'dianjoy.component.SmartInfo',
+        '.smart-list': 'dianjoy.component.SmartList',
         '.search-result': 'dianjoy.component.SearchResult',
         '.morris-chart': 'dianjoy.component.MorrisChart',
         '.article-editor': 'dianjoy.component.ArticleEditor',
-        '.smart-info': 'dianjoy.component.SmartInfo',
         'form': 'dianjoy.component.SmartForm'
       },
       components = [];
@@ -99,7 +100,7 @@
       if (_.isObject(data)) {
         this.model.set(data);
       } else {
-        this.model.id = data;
+        this.model.set({id: data});
       }
       this.trigger('load:start', url);
       ga('send', 'pageview', url);

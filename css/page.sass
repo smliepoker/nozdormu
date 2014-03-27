@@ -2,124 +2,11 @@
 @import "component"
 
 /* ====================================
- * #/ad/edit
+ * profile
  * ==================================*/
-.ad_list .push,
-.ad_list .wap,
-.push .ad_list,
-.push .wap,
-.wap .ad_list,
-.wap .push,
-.file .url,
-.url .file,
-.Android .iPhone,
-.iPhone .Android,
-.oversea .internal,
-.internal .oversea,
-.wap .not_wap_ad,
-#ad-editor .provinces,
-#ad-editor .nations,
-#ad-editor.nations .domestic,
-#ad-editor.nations .provinces
-  display: none
-
-.help-block img
-  min-width: 20px
-  min-height: 20px
-  border: 1px solid #CCC
-  background-size: 16px 16px
-  padding: 1px
-
-.multiple img
-  cursor: pointer
-  margin-right: 10px
-
-.pos-ab
-  position: absolute
-  z-index: 1000
-
-aside,
-.affix-top
-  width: 250px
-  position: fixed
-  top: $topbar-height + $sidebar-width + $gap
-  right: $gap
-  
-  ul
-    &:first-child
-      border: 1px solid #DDD
-      border-radius: 4px
-  
-      li
-        border-bottom: 1px solid #DDD
-  
-        &:last-child
-          border: none
-  
-  .nav-pills.nav-stacked > li
-    margin: 0
-  
-  .nav-pills > li > a
-    border-radius: 0
-  
-#ad-editor
-  @extend .label-button
-  margin-right: 300px
-  
-  .well
-    margin-bottom: 0
-
-  .progress
-    width: 300px
-    display: inline-block
-    margin: 0 0 0 10px
-    vertical-align: middle
-  
-#ad-editor.provinces .provinces,
-#ad-editor.nations .nations
-  display: block
-  
-#coverall
-  padding: 8px 12px
-  display: flex
-  flex-direction: row
-  font-size: 12px
-  
-  &:hover
-    color: #08C
-    cursor: pointer
-
-  input
-    margin-right: 5px
-
-/* ====================================
- * #/ad/payment
- * ==================================*/
-.ad-payment,
-.stat-sales,
-.stat-salesman
-  .label-status
-    background: $gray
-
-    &:before
-      font-family: FontAwesome
-      display: inline
-      content: "\f096"
-
-    &.paid
-      background: $success-color
-
-      &:before
-        content: "\f00c"
-
-    &.bad
-      background: $red
-
-      &:before
-        content: "\f00d"
-
-    span
-      font-weight: normal
+.profile-page
+  h2,h3
+    margin-top: 0
 
 /* ====================================
  * #/dashboard/user
@@ -131,15 +18,6 @@ aside,
 .hide-all .media-,
 .media-all .hide-all > tr
   display: table-row
-
-
-/* ====================================
- * #/ad/quote
- * ==================================*/
-.modified input
-  color: #3A87AD
-  font-weight: bold
-  background: #D9EDF7
 
 /* ====================================
  * error page

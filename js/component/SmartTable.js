@@ -178,7 +178,7 @@
           pagesize: init.pagesize
         });
       }
-      this.collection.fetch();
+      this.collection.fetch(this.model.toJSON());
     },
     remove: function () {
       if (this.header) {
@@ -262,6 +262,9 @@
       })
     },
     deleteButton_clickHandler: function (event) {
+      if (!confirm('确定删除么？')) {
+        return;
+      }
       var target = $(event.currentTarget)
         , tr = target.closest('tr');
       target.prop('disabled', true)

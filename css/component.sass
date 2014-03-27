@@ -31,8 +31,56 @@
   &.active
     background-color: darken($primary-color, 10%)
 
+.btn-secondary
+  color: #FFF
+  background-color: $secondary-color
+  border-color: draken($secondary-color)
+
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:active,
+  &.disabled:focus,
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:active,
+  &[disabled]:focus
+    background-color: $secondary-color
+    border-color: darken($secondary-color, 5%)
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active
+    background-color: darken($secondary-color, 10%)
+
+
 .back-button
   margin-left: 10px
+
+.btn-group
+  @for $i from 2 through 5
+    &.btn-amount-#{$i}
+      min-width: 39px * $i
+
+/* ====================================
+ * list
+ * ================================== */
+.icons-list
+  padding: 0
+  margin: 0 0 10px
+  list-style: none
+
+  li
+    position: relative
+    margin-bottom: 1em
+    line-height: 1.65em
+
+  .icon-li
+    margin-right: 0.5em
+
+.icon-red
+  .fa:first-of-type
+    color: #e5412d
 
 /* ====================================
  * game-info
