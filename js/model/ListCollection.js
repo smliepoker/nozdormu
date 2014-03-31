@@ -2,37 +2,55 @@
  * Created by meathill on 14-3-12.
  */
 ;(function (ns) {
-  ns.ListCollection = Backbone.Collection.extend({
-    total: 0,
-    pagesize: 20,
-    param: {},
-    initialize: function(models, options) {
-      Backbone.Collection.prototype.initialize.call(this, models, options);
-      if (!options) {
-        return;
-      }
-      if (options.url) {
-        this.url = options.url;
-      }
-      if (options.pagesize) {
-        this.pagesize = options.pagesize;
-      }
-      if (options.param) {
-        this.param = options.param;
-      }
-    },
-    fetch: function (param) {
-      param = param || this.param;
-      Backbone.Collection.prototype.fetch.call(this, {
-        reset: true,
-        data: _.extend(param, {
-          pagesize: this.pagesize
-        })
+  var collections = {}
+    , Collection = ns.ListCollection = Backbone.Collection.extend({
+        total: 0,
+        pagesize: 20,
+        param: {},
+        isLoading: false,
+        initialize: function(models, options) {
+          Backbone.Collection.prototype.initialize.call(this, models, options);
+          if (!options) {
+            return;
+          }
+          if (options.url) {
+            this.url = options.url;
+          }
+          if (options.pagesize) {
+            this.pagesize = options.pagesize;
+          }
+        },
+        fetch: function (param) {
+          if (this.isLoading) {
+            return;
+          }
+          param = param || {};
+          Backbone.Collection.prototype.fetch.call(this, {
+            reset: true,
+            data: _.extend(param, {
+              pagesize: this.pagesize
+            })
+          });
+          this.isLoading = true;
+        },
+        parse: function (response) {
+          this.isLoading = false;
+          this.total = response.total;
+          return response.list;
+        }
       });
-    },
-    parse: function (response) {
-      this.total = response.total;
-      return response.list;
+  Collection.createInstance = function (models, options) {
+    if (options.url in collections) {
+      return collections[options.url];
+    } else {
+      var collection = new Collection(models, options);
+      collections[options.url] = collection;
+      return collection;
     }
-  });
+  };
+  Collection.destroyInstance = function (url) {
+    if (url in collections) {
+      delete collections.url;
+    }
+  }
 }(Nervenet.createNameSpace('dianjoy.model')));

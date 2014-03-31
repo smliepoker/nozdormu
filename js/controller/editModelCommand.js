@@ -97,8 +97,7 @@
       if (collection) {
         collection.off();
       }
-      collection = new dianjoy.model.ListCollection();
-      collection.url = options.url;
+      collection = dianjoy.model.ListCollection.createInstance(null, {url: options.url});
       collection.on('reset', collection_resetHandler, this);
       collection.on('add', collection_addHandler, this);
       collection.fetch({reset: true});

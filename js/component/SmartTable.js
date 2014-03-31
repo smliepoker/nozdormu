@@ -140,7 +140,7 @@
       'click .order': 'order_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
-      'modified': 'value_modifiedHandler'
+      'sortupdate': 'sortUpdateHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').html());
@@ -150,12 +150,14 @@
       this.sortArray = [];
       this.lastOrder = '';
 
-      this.collection = new dianjoy.model.ListCollection([], {
-        model: Backbone.Model.extend({idAttribute: init.id}),
+      var options = {
         url: init.url,
-        pagesize: init.pagesize,
-        param: this.model.toJSON()
-      });
+        pagesize: init.pagesize
+      };
+      if ('id' in init) {
+        options.model = Backbone.Model.extend({idAttribute: init.id});
+      }
+      this.collection = dianjoy.model.ListCollection.createInstance(null, options);
       this.collection.on('reset', this.render, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
@@ -178,6 +180,12 @@
           pagesize: init.pagesize
         });
       }
+
+      // 排序
+      if (this.$el.hasClass('sortable')) {
+        this.$('tbody').sortable();
+      }
+
       this.collection.fetch(this.model.toJSON());
     },
     remove: function () {
@@ -189,6 +197,7 @@
         this.pagination.remove();
       }
       this.collection.off();
+      dianjoy.model.ListCollection.destroyInstance(this.collection.url);
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
     },
@@ -201,7 +210,7 @@
       this.model.trigger('load:complete');
     },
     filterRows: function() {
-      // TODO: 这个函数很丑陋的保留了两种筛选机制，将来 http://whale.dianjoy.com:3000/issues/12270 的时候一并处理掉
+      // TODO: 这个函数很丑陋的保留了两种筛选机制，将来 http://whale.gamepop.com:3000/issues/12270 的时候一并处理掉
       var filters = this.model.getFilters(),
           isShowAll = _.all(filters, function (value) {
             return value === undefined || value === -1;
@@ -371,18 +380,13 @@
       this.trigger('change:order', parent.index(), order);
       event.preventDefault();
     },
-    value_modifiedHandler: function (event, value) {
-      var index = $(event.target).closest('td').index(),
-          order = this.$('th').eq(index).find('.order');
-      if (order.length) {
-        var row = $(event.target).closest('tr')[0];
-        for (var i = 0, len = this.sortArray.length; i < len; i++) {
-          if (this.sortArray[i]['ad'] === row) {
-            this.sortArray[i][PREFIX + index] = value;
-            break;
-          }
-        }
-      }
+    sortUpdateHandler: function (event, ui) {
+      var item = ui.item
+        , index = item.index()
+        , id = item.attr('id')
+        , model = this.collection.get(id);
+      this.collection.add(model, {at: index});
+      this.collection.trigger('sort', model, index);
     }
   });
 }(Nervenet.createNameSpace('dianjoy.component')));
