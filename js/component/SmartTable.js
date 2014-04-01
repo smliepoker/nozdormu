@@ -138,7 +138,7 @@
       'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
       'click thead .label': 'labelFilter_removeHandler',
       'click .order': 'order_clickHandler',
-      'click .add-button': 'addButton_clickHandler',
+      'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'sortupdate': 'sortUpdateHandler'
@@ -207,11 +207,16 @@
       }
       this.model.trigger('load:complete');
     },
-    addButton_clickHandler: function () {
-      this.collection.create({}, {wait: true});
+    addRowButton_clickHandler: function () {
+      var model = new this.collection.model();
+      this.collection.add(model);
     },
     collection_addHandler: function (model) {
-      this.$('tbody').append(this.template({list: [model.toJSON()]}));
+      var item = $(this.template({list: [model.toJSON()]}));
+      item.attr('id', function () {
+        return model.id || model.cid;
+      });
+      this.$('tbody').append(item);
     },
     collection_changeHandler: function (model) {
       var changed = model.changed
