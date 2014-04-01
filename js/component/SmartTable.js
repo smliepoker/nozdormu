@@ -138,6 +138,7 @@
       'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
       'click thead .label': 'labelFilter_removeHandler',
       'click .order': 'order_clickHandler',
+      'click .add-button': 'addButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'sortupdate': 'sortUpdateHandler'
@@ -145,10 +146,6 @@
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').html());
       var init = this.$el.data();
-      // 重置数据记录
-      this.order = [];
-      this.sortArray = [];
-      this.lastOrder = '';
 
       var options = {
         url: init.url,
@@ -159,6 +156,7 @@
       }
       this.collection = dianjoy.model.ListCollection.createInstance(null, options);
       this.collection.on('reset', this.render, this);
+      this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
 
@@ -209,45 +207,11 @@
       }
       this.model.trigger('load:complete');
     },
-    filterRows: function() {
-      // TODO: 这个函数很丑陋的保留了两种筛选机制，将来 http://whale.gamepop.com:3000/issues/12270 的时候一并处理掉
-      var filters = this.model.getFilters(),
-          isShowAll = _.all(filters, function (value) {
-            return value === undefined || value === -1;
-          }),
-          classes = _.map(filters, function (element, key) {
-            return element === -1 ? '' : '.' + key + '-' + element;
-          }),
-          show = this.model.get('show'),
-          keyword = this.model.get('keyword');
-      classes = classes.join('');
-
-      if (this.isPaged) {
-        if (isShowAll && !show && !keyword) {
-          this.visibleItems = this.items;
-        } else {
-          classes += show ? '.' + show.split(' ').join('.') : '';
-          this.visibleItems = _.filter(this.items, function (item) {
-            return (!classes || $(item).is(classes)) && (!keyword || item.innerText.indexOf(keyword) !== -1);
-          }, this);
-        }
-        this.pagination.setTotal(this.visibleItems.length);
-        this.pagination.turnToPage(0);
-        this.model.set('table-items', this.visibleItems);
-        return;
-      }
-
-      var list = this.$('tbody');
-      if (isShowAll && !show) {
-        list.removeClass('hide hide-all');
-      } else if (show) {
-        this.$el.addClass(show);
-      } else {
-        list.addClass('hide hide-all')
-          .children('.show').removeClass('show')
-          .end().children(classes).addClass('show');
-        list.removeClass('hide');
-      }
+    addButton_clickHandler: function () {
+      this.collection.create({}, {wait: true});
+    },
+    collection_addHandler: function (model) {
+      this.$('tbody').append(this.template({list: [model.toJSON()]}));
     },
     collection_changeHandler: function (model) {
       var changed = model.changed

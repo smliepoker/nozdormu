@@ -7,7 +7,8 @@
 
     },
     initialize: function () {
-      this.template = Handlebars.compile(this.$('script').remove().html());
+      this.template = Handlebars.compile(this.$('#slide-template').remove().html());
+      Handlebars.registerPartial('slide-item', this.$('#item-template').remove().html());
       var spec = this.$el.data();
       this.collection = dianjoy.model.ListCollection.createInstance(null, {
         url: spec.url
@@ -29,13 +30,16 @@
       }
       var list = this.collection.toJSON();
       list[0].active = 'active';
-      this.$el.html(this.template({list: list}));
+      this.$el
+        .prepend(this.template({list: list}))
+        .addClass('slide carousel')
+        .carousel();
     },
     collection_addHandler: function (model) {
       this.$('.carousel-inner').append(this.template({list: [model.toJSON()]}));
     },
     collection_changeHandler: function (model) {
-      this.$('#slide-item-' + model.id).replaceWith(this.template({list: [model.toJSON()]}));
+      this.$('#slide-item-' + model.id).replaceWith(Handlebars.partials['slide-item']({list: [model.toJSON()]}));
     },
     collection_destroyHandler: function (model) {
       this.$('#slide-item-' + model.id).remove();
