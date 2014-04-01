@@ -14,7 +14,7 @@
         url: spec.url
       });
       this.collection.on('add', this.collection_addHandler, this);
-      this.collection.on('destroy', this.collection_destroyHandler, this);
+      this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('sort', this.collection_sortHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
@@ -34,15 +34,38 @@
         .prepend(this.template({list: list}))
         .addClass('slide carousel')
         .carousel();
+      this.$('.carousel-control').toggleClass('hide', this.collection.length <= 1);
+
+      this.indicators = this.$('.carousel-indicators');
+      this.slides = this.$('.carousel-inner');
     },
     collection_addHandler: function (model) {
-      this.$('.carousel-inner').append(this.template({list: [model.toJSON()]}));
+      var indicator = this.indicators.children().last().clone()
+        , item = $(Handlebars.partials['slide-item']({list: [model.toJSON()]}));
+      indicator.removeClass('active').attr('data-slide-to', this.collection.length - 1);
+      this.indicators.append(indicator);
+      item.attr('id', 'slide-item-' + model.cid);
+      this.slides.append(item);
+      this.$('.carousel-control').toggleClass('hide', this.collection.length <= 1);
     },
     collection_changeHandler: function (model) {
-      this.$('#slide-item-' + model.id).replaceWith(Handlebars.partials['slide-item']({list: [model.toJSON()]}));
+      var item = this.$('#slide-item-' + ('id' in model.changed ? model.cid : model.id))
+        , data = model.toJSON();
+      data.active = item.hasClass('active') ? 'active' : '';
+      item.replaceWith(Handlebars.partials['slide-item']({list: [data]}));
     },
-    collection_destroyHandler: function (model) {
-      this.$('#slide-item-' + model.id).remove();
+    collection_removeHandler: function (model) {
+      var item = this.$('#slide-item-' + (model.id || model.cid));
+      if (item.hasClass('active')) {
+        this.$el.carousel('prev');
+        item.fadeOut(1000, function () {
+          $(this).remove();
+        });
+      } else {
+        item.remove();
+      }
+      this.indicators.children().last().remove();
+      this.$('.carousel-control').toggleClass('hide', this.collection.length <= 1);
     },
     collection_resetHandler: function () {
       this.render();
@@ -51,9 +74,9 @@
       var item = this.$('#slide-item-' + model.id)
         , now = item.index();
       if (now < index) {
-        item.insertAfter(this.$('.carousel-inner').children().eq(index));
+        item.insertAfter(this.slides.children().eq(index));
       } else {
-        item.insertBefore(this.$('.carousel-inner').children().eq(index));
+        item.insertBefore(this.slides.children().eq(index));
       }
     }
   });

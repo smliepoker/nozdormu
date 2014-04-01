@@ -65,7 +65,7 @@
           return xhr;
         },
         success: function (response) {
-          if (response.id && response.code === 0) {
+          if (response.code === 0) {
             dispatcher.trigger('success', response, dispatcher);
             this.onSuccess(response);
           } else {

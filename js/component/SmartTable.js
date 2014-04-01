@@ -207,8 +207,16 @@
       }
       this.model.trigger('load:complete');
     },
-    addRowButton_clickHandler: function () {
-      var model = new this.collection.model();
+    addRowButton_clickHandler: function (event) {
+      var map = $(event.currentTarget).data('map')
+        , attr = {}
+        , reg = /(\w+):(\w+)/g
+        , arr = reg.exec(map);
+      while (arr) {
+        attr[arr[1]] = this.model.get(arr[2]);
+        arr = reg.exec(map);
+      }
+      var model = new this.collection.model(attr);
       this.collection.add(model);
     },
     collection_addHandler: function (model) {
@@ -220,9 +228,10 @@
     },
     collection_changeHandler: function (model) {
       var changed = model.changed
+        , tr = this.$('#' + ('id' in changed ? model.cid : model.id))
         , target;
       for (var prop in changed) {
-        target = this.$('#' + model.id + ' [href="#' + prop + '"]');
+        target = tr.find('[href=#' + prop + ']');
         if (target.data('refresh')) {
           var tr = $(this.template({list: [model.toJSON()]}))
             , index = target.closest('td').index();
@@ -235,7 +244,7 @@
       }
     },
     collection_removeHandler: function (model) {
-      this.$('#' + model.id).fadeOut(function () {
+      this.$('#' + (model.id || model.cid)).fadeOut(function () {
         $(this).remove();
       })
     },

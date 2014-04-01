@@ -74,17 +74,16 @@
   }
   function onError(error) {
     console.log(error);
-    clear();
     popup.displayResult(false, '修改失败，请稍后重试', 'fa-frown-o');
     popup.reset();
   }
   function onSuccess () {
-    clear();
     popup.displayResult(true, '修改成功', 'fa-smile-o');
     popup.hide();
   }
 
   ns.editModelCommand = function (model, prop, options) {
+    clear();
     options.prop = prop;
     options.value = model.get(prop);
     params = {
