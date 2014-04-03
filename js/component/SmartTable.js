@@ -1,7 +1,17 @@
 ;(function (ns) {
   'use strict';
 
-  var PREFIX = 'o';
+  var saveOptions = {
+    wait: true,
+    patch: true,
+    success: function (model) {
+      var tr = $('#' + model.id);
+      tr = tr.length > 0 ? tr : $('#' + model.cid);
+      tr.find('.hide-button, .show-button').toggleClass('hide-button show-button btn-warning btn-success')
+        .find('i').toggleClass('fa-eye fa-eye-slash');
+    }
+  };
+
   var FixedHeader = Backbone.View.extend({
     className: 'table table-bordered table-header scroll-fix',
     tagName: 'table',
@@ -135,11 +145,10 @@
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     events: {
-      'click tbody .label-ch, tbody .label-ad, tbody .label-pub': 'labelFilter_addHandler',
-      'click thead .label': 'labelFilter_removeHandler',
-      'click .order': 'order_clickHandler',
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
+      'click .show-button': 'showButton_clickHandler',
+      'click .hide-button': 'hideButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'sortupdate': 'sortUpdateHandler'
     },
@@ -227,6 +236,10 @@
       var changed = model.changed
         , tr = this.$('#' + ('id' in changed ? model.cid : model.id))
         , target;
+      if ('id' in changed) {
+        tr.replaceWith(this.template({list: [model.toJSON()]}));
+        return;
+      }
       for (var prop in changed) {
         target = tr.find('[href=#' + prop + ']');
         if (target.data('refresh')) {
@@ -279,17 +292,10 @@
       this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
     },
-    labelFilter_addHandler: function (event) {
-      var filter = event.target.hash.match(/#(\w+)\-(\d+)/);
-      this.model.set(filter[1], Number(filter[2]));
-      this.model.set(filter[1] + '-label', event.currentTarget.innerText);
-      event.preventDefault();
-    },
-    labelFilter_removeHandler: function (event) {
-      var filter = event.target.hash.match(/#(\w+)\-(\d+)/);
-      this.model.set(filter[1], -1);
-      this.model.set(filter[1] + '-label', '-');
-      event.preventDefault();
+    hideButton_clickHandler: function (event) {
+      this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
+        status: 1
+      }, saveOptions);
     },
     model_changeHandler: function (model) {
       if (_.intersection(_.keys(model.changed), _.keys(model.defaults)).length === 0) {
@@ -297,63 +303,10 @@
       }
       this.collection.fetch(model.toJSON());
     },
-    model_filterChangeHandler: function (model, value) {
-      for (var prop in model.changed) {
-        value = model.get(prop);
-        if (!_.isNumber(value)) {
-          continue;
-        }
-        this.$('.filter').find('[href^=#' + prop + ']').remove();
-        if (value !== -1) {
-          var head = this.$('.filter');
-          if (head.length > 1) {
-            head = head.filter('.' + prop);
-          }
-          head.append(this.$('[href=#' + prop + '-' + value + ']').first().clone());
-        }
-      }
-      this.filterRows();
-    },
-    order_clickHandler: function (event) {
-      var parent = $(event.currentTarget).parent(),
-          key = PREFIX + parent.index(),
-          list = this.$('tbody'),
-          amount = list.find('.amount').remove(),
-          order = parent.hasClass('asc') ? 'desc' : 'asc';
-      var func = order === 'asc' ? 'append' : 'prepend';
-
-      // 显示图标
-      parent.siblings().andSelf()
-        .removeClass('asc desc')
-        .find('.fa-sort-amount-asc, .fa-sort-amount-desc').remove();
-      parent
-        .addClass(order)
-        .append('<i class="fa fa-sort-amount-' + order + '"></i>');
-
-      // 键值一样就不需要再排序了
-      if (this.lastOrder !== key) {
-        this.sortArray.sort(function (a, b) {
-          return a[key] - b[key];
-        });
-        this.lastOrder = key;
-        this.items = this.isPaged ? _.map(this.sortArray, function (obj) {
-          return obj.ad;
-        }) : null;
-      }
-      if (this.isPaged) {
-        this.filterRows();
-      } else {
-        // 正序排列或倒序排列
-        this.$el.addClass('hide');
-        _.each(this.sortArray, function (obj) {
-          list[func](obj.ad);
-        });
-        this.$el.removeClass('hide');
-        list.append(amount);
-      }
-
-      this.trigger('change:order', parent.index(), order);
-      event.preventDefault();
+    showButton_clickHandler: function (event) {
+      this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
+        status: 0
+      }, saveOptions);
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item
@@ -362,6 +315,11 @@
         , model = this.collection.get(id);
       this.collection.add(model, {at: index});
       this.collection.trigger('sort', model, index);
+      this.collection.each(function (model, i) {
+        if (model.changedAttributes({seq: i})) {
+          model.save({seq: i}, {wait: true, patch: true});
+        }
+      });
     }
   });
 }(Nervenet.createNameSpace('dianjoy.component')));
