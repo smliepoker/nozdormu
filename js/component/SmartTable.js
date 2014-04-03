@@ -145,12 +145,11 @@
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').html());
-      var init = this.$el.data();
-
-      var options = {
-        url: init.url,
-        pagesize: init.pagesize
-      };
+      var init = this.$el.data()
+        , options = {
+          url: init.url + '/' + this.model.get('path'),
+          pagesize: init.pagesize
+        };
       if ('id' in init) {
         options.model = Backbone.Model.extend({idAttribute: init.id});
       }
@@ -202,21 +201,19 @@
     render: function (collection) {
       this.$('.waiting').hide();
       this.$('tbody').html(this.template({list: collection.toJSON()}));
+      var items = this.$('tbody').children();
+      collection.each(function (model, i) {
+        if (!model.id) {
+          items[i].id = model.cid;
+        }
+      })
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
       this.model.trigger('load:complete');
     },
-    addRowButton_clickHandler: function (event) {
-      var map = $(event.currentTarget).data('map')
-        , attr = {}
-        , reg = /(\w+):(\w+)/g
-        , arr = reg.exec(map);
-      while (arr) {
-        attr[arr[1]] = this.model.get(arr[2]);
-        arr = reg.exec(map);
-      }
-      var model = new this.collection.model(attr);
+    addRowButton_clickHandler: function () {
+      var model = new this.collection.model();
       this.collection.add(model);
     },
     collection_addHandler: function (model) {

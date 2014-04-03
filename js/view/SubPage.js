@@ -94,14 +94,18 @@
         }
       });
     },
-    load: function (url, data) {
+    load: function (url, data, path) {
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
       if (_.isObject(data)) {
+        data.path = path;
         this.model.set(data);
       } else {
-        this.model.set({id: data});
+        this.model.set({
+          id: data,
+          path: path
+        });
       }
       this.trigger('load:start', url);
       ga('send', 'pageview', url);

@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="{{module}}/css/page.css">
 <link rel="stylesheet" href="{{module}}/css/medias.css">
 <link rel="stylesheet" href="{{module}}/css/general.css">
+{{#custom.css}}<link rel="stylesheet" href="{{custom.css}}">{{/custom.css}}
 
 <header id="header">
   <h1 id="site-logo">
@@ -334,5 +335,10 @@
 <script src="{{module}}/js/component/SmartForm.js"></script>
 <script src="{{module}}/js/form/utils.js"></script>
 <script src="{{config}}/js/config.js"></script>
-<script src="{{router}}/js/router/AdminPanel.js"></script>
+{{#custom.router}}
+<script src="{{custom.router}}"></script>
+{{/custom.router}}
+{{^custom.router}}
+<script src="{{module}}/js/router/AdminPanel.js"></script>
+{{/custom.router}}
 <script src="{{module}}/js/app.js"></script>
