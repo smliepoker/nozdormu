@@ -312,12 +312,15 @@
       var item = ui.item
         , index = item.index()
         , id = item.attr('id')
-        , model = this.collection.get(id);
-      this.collection.add(model, {at: index});
+        , model = this.collection.get(id)
+        , curr = this.collection.indexOf(model)
+        , start = this.collection.pagesize * this.model.get('page') || 0;
+      this.collection.models.splice(curr, 1);
+      this.collection.models.splice(index, 0, model);
       this.collection.trigger('sort', model, index);
       this.collection.each(function (model, i) {
-        if (model.changedAttributes({seq: i})) {
-          model.save({seq: i}, {wait: true, patch: true});
+        if (model.changedAttributes({seq: start + i})) {
+          model.save({seq: start + i}, {wait: true, patch: true});
         }
       });
     }
