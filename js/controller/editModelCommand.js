@@ -21,6 +21,7 @@
     popup = dianjoy.popup.Manager.popupEditor(model, options);
     if (isFirstTime) {
       popup.on('submit', onSubmit);
+      popup.on('hidden', onHidden);
       isFirstTime = false;
     }
   }
@@ -38,8 +39,13 @@
     }
   }
   function collection_resetHandler(collection) {
-    params.options.options = collection.toJSON();
-    callPopup(params.model, params.options);
+    if (params) {
+      params.options.options = collection.toJSON();
+      callPopup(params.model, params.options);
+    }
+  }
+  function onHidden() {
+    clear();
   }
   function onSubmit() {
     var value = popup.value()

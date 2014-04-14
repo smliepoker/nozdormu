@@ -166,6 +166,7 @@
     form: null,
     events: {
       'show.bs.modal': 'showHandler',
+      'hidden.bs.modal': 'hiddenHandler',
       'keydown': 'keydownHandler',
       'click .btn-primary': 'submitButton_clickHandler',
       'mousedown .input-group': 'inputGroup_mouseDownHandler'
@@ -228,6 +229,9 @@
         this.save();
         event.preventDefault();
       }
+    },
+    hiddenHandler: function () {
+      this.trigger('hidden');
     },
     showHandler: function () {
       this.$('.btn-primary').prop('disabled', false);
