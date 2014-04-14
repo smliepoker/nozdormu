@@ -6,7 +6,8 @@
 ;(function (ns) {
   'use strict';
   var popup
-    , editor;
+    , editor
+    , timeout;
 
   var NormalAlertPopup = Backbone.View.extend({
     events: {
@@ -166,7 +167,7 @@
     form: null,
     events: {
       'show.bs.modal': 'showHandler',
-      'hidden.bs.modal': 'hiddenHandler',
+      'hide.bs.modal': 'hideHandler',
       'keydown': 'keydownHandler',
       'click .btn-primary': 'submitButton_clickHandler',
       'mousedown .input-group': 'inputGroup_mouseDownHandler'
@@ -196,7 +197,7 @@
     },
     hide: function () {
       var modal = this.$el;
-      setTimeout(function () {
+      timeout = setTimeout(function () {
         modal.modal('hide');
       }, 3000);
     },
@@ -230,8 +231,9 @@
         event.preventDefault();
       }
     },
-    hiddenHandler: function () {
+    hideHandler: function () {
       this.trigger('hidden');
+      clearTimeout(timeout);
     },
     showHandler: function () {
       this.$('.btn-primary').prop('disabled', false);

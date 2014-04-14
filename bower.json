@@ -23,7 +23,7 @@
     "tests"
   ],
   "dependencies": {
-    "nervenet": "~0.1.3",
+    "nervenet": "~0.1.4",
     "spark-md5": "~0.0.5",
     "marked": "~0.3.2",
     "colors": "~0.2.0"
