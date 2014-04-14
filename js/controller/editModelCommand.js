@@ -36,7 +36,7 @@
     if (model.get('code') !== 0) {
       onError(model.get('msg'));
     } else {
-      apply(_.omit(model.toJSON(), 'id', 'code'));
+      apply(_.omit(model.toJSON(), 'id', 'code', 'msg'));
     }
   }
   function collection_resetHandler(collection) {
