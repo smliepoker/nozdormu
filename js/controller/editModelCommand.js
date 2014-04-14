@@ -27,7 +27,8 @@
   }
   function clear() {
     if (collection) {
-      collection.off();
+      collection.off(null, collection_addHandler);
+      collection.off(null, collection_resetHandler);
     }
     collection = params = null;
   }
