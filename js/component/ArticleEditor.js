@@ -33,7 +33,7 @@
                   callback: function (editor) {
                     var options = {
                       img: true,
-                      type: 'attachment'
+                      prop: 'attachment'
                     };
                     var popup = dianjoy.popup.Manager.popupEditor(self.model, options);
                     popup.on('submit', function (value) {
