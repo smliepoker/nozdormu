@@ -209,7 +209,7 @@
       if ($(this.el.elements).filter('[type=submit], button').not('button[type]').prop('disabled')) {
         return;
       }
-      this.trigger('submit');
+      this.trigger('submit', this.value());
     },
     value: function () {
       var radio = this.$('[name=prop-radio]');

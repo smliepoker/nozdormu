@@ -27,6 +27,28 @@
               name: "file",
               data: [
                 {
+                  name: "上传图片",
+                  title: "上传图片",
+                  icon: "fa fa-cloud-upload",
+                  callback: function (editor) {
+                    var options = {
+                      img: true,
+                      type: 'attachment'
+                    };
+                    var popup = dianjoy.popup.Manager.popupEditor(self.model, options);
+                    popup.on('submit', function (value) {
+                      var selected = editor.getSelection()
+                        , label = selected.text || '图片描述'
+                        , chunk = '![' + label + '](' + value + ')'
+                        , start = selected.start;
+                      editor.replaceSelection(chunk);
+                      editor.setSelection(start, start + chunk.length);
+                      popup.hide();
+                      self.refreshPreview();
+                    });
+                  }
+                },
+                {
                   name: "读取本地存储",
                   title: "读取本地存储",
                   icon: "fa fa-upload",
@@ -113,7 +135,7 @@
 
       // 定时更新自动保存的时间
       if (interval === 0) {
-        interval = setInterval(_.bind(this.refreshAutoSaveTime, this), 1000);
+        interval = setInterval(_.bind(this.refreshAutoSaveTime, this), 60000);
       }
     },
     refreshPreview: function () {
@@ -131,6 +153,13 @@
         error: _.bind(this.model_saveErrorHandler, this)
       });
       this.displayProcessing();
+    },
+    showUploadPopup: function () {
+      var options = {
+        img: true
+      };
+      var popup = dianjoy.popup.Manager.popupEditor(this.model, options);
+      popup.on('submit', this.popup_submitHandler, this);
     },
     model_saveErrorHandler: function (error) {
       console.log(error);
