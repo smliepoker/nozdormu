@@ -6,7 +6,11 @@
  */
 ;(function (ns) {
   ns.SmartInfo = Backbone.View.extend({
+    $context: null,
     spec: null,
+    events: {
+      'click .edit': 'edit_clickHandler'
+    },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
       this.spec = this.$el.data();
@@ -20,6 +24,7 @@
     },
     render: function (model) {
       this.$el.html(this.template(model.toJSON()));
+      this.model.on('change', this.model_changeHandler, this);
     },
     idReadyHandler: function (model, id) {
       var Model = Backbone.Model.extend({
@@ -28,6 +33,20 @@
       this.model = new Model({id: id});
       this.model.once('sync', this.render, this);
       this.model.fetch();
+    },
+    edit_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , options = target.data()
+        , prop = event.currentTarget.hash.substr(1);
+      options[options.type || 'short-text'] = true;
+      this.$context.trigger('edit-model', this.model, prop, options);
+      event.preventDefault();
+    },
+    model_changeHandler: function (model) {
+      for (var prop in model.changed) {
+        var target = this.$('[href=#' + prop + ']');
+        target.text(model.changed[target.data('display')]);
+      }
     }
   });
 }(Nervenet.createNameSpace('dianjoy.component')));

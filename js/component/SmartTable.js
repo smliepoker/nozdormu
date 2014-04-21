@@ -115,7 +115,7 @@
       }));
     },
     displayPageNum: function () {
-      var page = this.model.get('page');
+      var page = this.model.get('page') || 0;
       this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
         .siblings().removeClass('active');
       this.$el.each(function () {
@@ -129,11 +129,12 @@
       this.displayPageNum();
     },
     clickHandler: function (event) {
-      if ($(event.currentTarget).parent().hasClass('disabled')) {
+      var target = $(event.currentTarget)
+        , parent = target.parent();
+      if (parent.hasClass('disabled') || parent.hasClass('active')) {
         return false;
       }
-      var target = $(event.currentTarget)
-        , href = target.attr('href')
+      var href = target.attr('href')
         , index = Number(href.substr(href.lastIndexOf('/') + 1));
       this.model.set('page', index);
       target.html('<i class="fa fa-spin fa-spinner"></i>');

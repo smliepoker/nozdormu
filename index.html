@@ -248,6 +248,7 @@
                   {{/each}}
                 </select>
               </div>
+              {{#if addNew}}
               <label for="editor-popup-new">或新建类型：</label>
               <div class="input-group">
                 <span class="input-group-addon">
@@ -255,6 +256,7 @@
                 </span>
                 <input type="text" class="form-control" name="prop-input">
               </div>
+              {{/if}}
               {{/if}}
               {{#if img}}
               <p>
@@ -318,7 +320,7 @@
 <script src="//cdn.staticfile.org/backbone.js/1.1.2/backbone-min.js"></script>
 <script src="//cdn.staticfile.org/raphael/2.1.2/raphael-min.js"></script>
 <script src="//cdn.staticfile.org/morris.js/0.4.3/morris.min.js"></script>
-<script src="//cdn.staticfile.org/moment.js/2.5.1/moment.min.js"></script>
+<script src="//cdn.staticfile.org/moment.js/2.6.0/moment.min.js"></script>
 <script src="//cdn.staticfile.org/bootstrap-markdown/2.2.1/js/bootstrap-markdown.min.js"></script>
 <script src="{{module}}/bower_components/marked/lib/marked.js"></script>
 <script src="{{module}}/bower_components/nervenet/nervenet.min.js"></script>

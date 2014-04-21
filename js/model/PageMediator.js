@@ -21,14 +21,14 @@
         this.set(item);
       }
     },
-    keepStatus: function () {
+    storeStatus: function () {
       localStorage.setItem(location.hash, JSON.stringify(this.getFilters()));
     },
     getFilters: function () {
       return _.pick(this.attributes, _.keys(this.defaults));
     },
     changeHandler: function () {
-      this.keepStatus();
+      this.storeStatus();
     }
   });
 }(Nervenet.createNameSpace('dianjoy.model')));
