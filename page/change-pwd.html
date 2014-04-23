@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">修改密码</h4>
+</div>
+<div class="modal-body">
+  <div class="alert" style="display: none">
+
+  </div>
+  <form action="system/action_pwd.php" method="post" class="form-horizontal" id="change-pwd-form">
+    <input type="hidden" name="m" value="updatepassword" />
+    <div class="form-group">
+      <label for="oldpassword" class="col-sm-2 control-label">原密码</label>
+      <div class="col-sm-10">
+        <input type="password" name="oldpassword" id="oldpassword" class="form-control" maxlength="16" required="required" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="newpassword" class="col-sm-2 control-label">新密码</label>
+      <div class="col-sm-10">
+        <input type="password" name="newpassword" id="newpassword" class="form-control" maxlength="16" required="required" />
+        <p class="help-block">
+          6~16个字符，包括字母、数字、特殊符号，区分大小写
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="repassword" class="col-sm-2 control-label">确认密码</label>
+      <div class="col-sm-10">
+        <input type="password" name="repassword" id="repassword" class="form-control" maxlength="16" required="required" />
+        <p class="help-block">
+          请再次填写新密码
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" form="change-pwd-form"><i class="fa fa-check"></i> 保存</button>
+  <button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
+</div>

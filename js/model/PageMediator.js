@@ -3,6 +3,7 @@
  */
 ;(function (ns) {
   "use strict";
+  var isLoading = false;
   ns.PageMediator = Backbone.Model.extend({
     // defaults里的字段主要用来筛选table的内容和翻页
     defaults: {
@@ -13,6 +14,17 @@
     },
     initialize: function () {
       this.on('change', this.changeHandler, this);
+    },
+    fetch: function (options) {
+      if (isLoading) {
+        return;
+      }
+      isLoading = true;
+      Backbone.Model.prototype.fetch.call(this, options);
+    },
+    parse: function (response, options) {
+      isLoading = true;
+      return Backbone.Model.prototype.parse.call(this, response, options);
     },
     load: function () {
       var item = localStorage.getItem(location.hash);

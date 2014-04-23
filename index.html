@@ -133,7 +133,7 @@
           <a href="#/profile"><i class="fa fa-flag"></i> 绩效目标</a>
         </li>
         <li>
-          <a href="#/my/password" class="popup"><i class="fa fa-edit"></i> 修改密码</a>
+          <a data-target="#normal-popup" href="{{module}}/page/change-pwd.html" data-toggle="modal"><i class="fa fa-edit"></i> 修改密码</a>
         </li>
         <li class="pit">
           <a href="#/config"><i class="fa fa-cogs"></i> 设置</a>
@@ -155,17 +155,17 @@
     {{#category}}
     {{#has_sub}}
     <li class="dropdown">
-      <a data-toggle="dropdown" href="#" role="button" title="{{title}}">
+      <a data-toggle="dropdown" href="#" role="button" title="{{title}}" {{#disabled}}class="disabled"{{/disabled}}>
         <i class="fa fa-{{icon}}"></i> {{title}} <b class="caret"></b>
       </a>
       <ul class="sub-nav dropdown-menu" role="menu" data-title="{{title}}">
         {{#sub}}
-        <li><a href="{{url}}"><i class="fa fa-fw fa-{{icon}}"></i> {{title}}</a></li>
+        <li {{#disabled}}class="disabled"{{/disabled}}><a href="{{url}}"><i class="fa fa-fw fa-{{icon}}"></i> {{title}}</a></li>
         {{/sub}}
       </ul>
     {{/has_sub}}
     {{^has_sub}}
-    <li>
+    <li {{#disabled}}class="disabled"{{/disabled}}>
       <a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a>
     {{/has_sub}}
     </li>

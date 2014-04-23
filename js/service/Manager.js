@@ -101,7 +101,7 @@
     onError: function (xhr, status, error) {
       console.log(xhr, status, error);
       if (status === 401) {
-        this.$subPage.load(webURL + 'template/permission_error.html');
+        this.$subPage.load(webURL + 'page/permission_error.html');
       }
     },
     onProgress: function (loaded, total) {

@@ -20,7 +20,9 @@
       } else {
         this.model.urlRoot = this.spec.url;
         this.model.once('sync', this.render, this);
-        this.model.fetch();
+        if (!this.spec.wait) {
+          this.model.fetch();
+        }
       }
       this.$el.popover({
         selector: '.process-button',

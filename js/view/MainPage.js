@@ -39,9 +39,10 @@
   ns.MainPage = Backbone.View.extend({
     $context: null,
     events: {
+      'change input[type=range]': 'range_changeHandler',
       'click .popup': 'popupButton_clickHandler',
       'click .logout': 'logout_clickHandler',
-      'change input[type=range]': 'range_changeHandler',
+      'click .disabled a': 'disabled_clickHandler',
       'click .to-top-button': 'topButton_clickHandler'
     },
     removeLoading: function () {
@@ -92,6 +93,9 @@
       }
 
       return this;
+    },
+    disabled_clickHandler: function (event) {
+      event.preventDefault();
     },
     logout_clickHandler: function () {
       return window.confirm('您确定要退出登录么？');

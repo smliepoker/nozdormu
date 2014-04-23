@@ -66,7 +66,7 @@
                   title: "帮助",
                   icon: "fa fa-question",
                   callback: function () {
-                    dianjoy.popup.Manager.popup('帮助', webURL + 'template/editor-help.html', false, true, true);
+                    dianjoy.popup.Manager.popup('帮助', webURL + 'page/editor-help.html', false, true, true);
                   }
                 }
               ]
