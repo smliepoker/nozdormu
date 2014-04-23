@@ -9,7 +9,8 @@
     $context: null,
     spec: null,
     events: {
-      'click .edit': 'edit_clickHandler'
+      'click .edit': 'edit_clickHandler',
+      'click .process-button': 'processButton_clickHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
@@ -21,10 +22,22 @@
         this.model.once('sync', this.render, this);
         this.model.fetch();
       }
+      this.$el.popover({
+        selector: '.process-button',
+        delay: {hide: 3000}
+      });
+    },
+    remove: function () {
+      this.model.off(null, null, this);
+      this.$el.popover('destroy');
+      Backbone.View.prototype.remove.call(this);
     },
     render: function (model) {
       this.$el.html(this.template(model.toJSON()));
       this.model.on('change', this.model_changeHandler, this);
+      this.$('time').text(function () {
+        return moment(this.innerHTML).fromNow();
+      });
     },
     idReadyHandler: function (model, id) {
       var Model = Backbone.Model.extend({
@@ -47,6 +60,19 @@
         var target = this.$('[href=#' + prop + ']');
         target.text(model.changed[target.data('display')]);
       }
+    },
+    processButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , href = target.attr('href')
+        , json = JSON.stringify(this.model.toJSON());
+      href = href.replace(':json', encodeURIComponent(json));
+      $.get(href);
+      target.addClass('disabled')
+        .find('i').addClass('fa-spin fa-spinner');
+      event.preventDefault();
+      setTimeout(function () {
+        target.popover('hide');
+      }, 5000);
     }
   });
 }(Nervenet.createNameSpace('dianjoy.component')));
