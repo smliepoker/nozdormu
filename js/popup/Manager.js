@@ -9,27 +9,16 @@
     , editor
     , timeout;
 
-  var NormalAlertPopup = Backbone.View.extend({
+  var NormalAlertPopup = dianjoy.view.DataSyncView.extend({
+    $context: null,
     events: {
       'show.bs.modal': 'showHandler',
       'hidden.bs.modal': 'hiddenHandler',
+      'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
-      'click .iframe': 'iframeButton_clickHandler',
       'submit form': 'form_submitHandler',
-      'change .check-all': 'checkAll_changeHandler',
-      'change input[type=range]': 'range_changeHandler',
-      'change .shortcut': 'shortcut_changeHandler'
-    },
-    displayResult: function (isSuccess, msg) {
-      this.$('.fa-spinner').remove();
-      this.$el.removeClass('processing');
-      this.$('.alert')
-        .hide()
-        .toggleClass('alert-error alert-danger', !isSuccess)
-        .toggleClass('alert-success', isSuccess)
-        .text(msg)
-        .slideDown();
+      'change .check-all': 'checkAll_changeHandler'
     },
     initUI: function (title, content, hasConfirm, hasCancel, isRemote) {
       this.$el
@@ -60,87 +49,8 @@
       }
       return false;
     },
-    form_submitHandler: function (event) {
-      var submitButton = this.$('.modal-footer .btn-primary');
-      if (submitButton.prop('disabled') || this.$el.hasClass('processing')) {
-        return false;
-      }
-      this.$el.addClass('processing');
-      submitButton
-        .prop('disabled', true)
-        .prepend('<i class="icon-spinner icon-spin fa fa-spinner fa-spin"></i> ');
-
-      // ajax提交表单
-      var form = event.currentTarget,
-          url  = form.action,
-          data = $(form).serialize();
-      dianjoy.service.Manager.call(url, data, this.remote_successHandler, this.remote_errorHandler, this);
-      return false;
-    },
-    iframeButton_clickHandler: function (event) {
-      R.router.navigate('#/iframe/' + encodeURIComponent(event.currentTarget.getAttribute('href')));
-      this.$el.modal('hide');
-      event.preventDefault();
-    },
-    range_changeHandler: function (event) {
-      $(event.currentTarget).siblings('.help-inline').text(event.currentTarget.value);
-    },
-    remote_successHandler: function (response) {
-      this.displayResult(true, response.msg);
-
-      if ('value' in response || 'classes' in response) {
-        if (this.button && 'value' in response) {
-          this.button.html(response.value);
-          this.button.trigger('modified', response.value);
-        }
-        if (this.button && 'classes' in response) {
-          this.button.toggleClass(response.classes);
-        }
-      }
-      if (this.button) {
-        switch(this.button.data('on-success')) {
-          case 'remove-row':
-            this.button.closest('tr').remove();
-            break;
-        }
-      }
-      this.model.set(_.omit(response, 'code', 'msg'));
-
-      var modal = this.$el;
-      setTimeout(function () {
-        modal.modal('hide');
-      }, 3000);
-    },
-    remote_errorHandler: function (xhr, status, error) {
-      this.displayResult(false, xhr.hasOwnProperty('msg') ? xhr.msg : error);
-
-      this.$('form').find('input, select, button').prop('disabled', false);
-      this.$('.modal-footer .btn-primary').prop('disabled', false);
-    },
-    shortcut_changeHandler: function (event) {
-      var target = event.currentTarget,
-          value = target.value;
-      try {
-        value = JSON.parse(value);
-        if (_.isObject(value)) {
-          var form = target.form;
-          for (var prop in value) {
-            if (prop in form.elements) {
-              form.elements[prop].value = value[prop];
-            }
-          }
-        }
-      } catch (e) {
-
-      }
-    },
-    submitButton_clickHandler: function () {
-      var form = this.$('form');
-      if (form.length > 0) {
-        if (dianjoy.form.checkForm(form[0])) {
-          form.submit();
-        }
-      } else {
+    submitButton_clickHandler: function (event) {
+      if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
     },
@@ -153,6 +63,14 @@
       this.$('.modal-footer .btn-primary').prop('disabled', false);
       this.$('.date').datepicker({
         dateFormat: 'yy-mm-dd'
+      });
+      var context = this.$context;
+      this.$('form').each(function () {
+        this.action = baseURL + $(this).attr('action');
+        context.createInstance(dianjoy.component.SmartForm, {
+          el: this,
+          model: ns.mediator
+        });
       });
       ns.Manager.trigger('load');
     },
@@ -243,6 +161,11 @@
 
   ns.Manager = _.extend({
     $context: null,
+    postConstruct: function () {
+      if (popup) {
+        this.$context.inject(popup);
+      }
+    },
     popup: function (title, content, hasConfirm, hasCancel, isRemote) {
       hasConfirm = hasConfirm !== null ? hasConfirm : true;
       hasCancel = hasCancel !== null ? hasCancel : true;
@@ -264,17 +187,26 @@
     }
   }, Backbone.Events);
 
-  $(document).on('click', '.popup', function () {
-    var target = $(this),
-        data = target.data(),
-        hasConfirm = 'confirm' in data ? data.confirm : true,
-        hasCancel = 'cancel' in data ? data.cancel : true;
-    popup = popup || new NormalAlertPopup({
-      el: '#normal-popup',
-      model: ns.mediator
+  $(document)
+    .on('click', '.popup', function (event) {
+      var target = $(this),
+          data = target.data(),
+          hasConfirm = 'confirm' in data ? data.confirm : true,
+          hasCancel = 'cancel' in data ? data.cancel : true;
+      popup = popup || ns.Manager.$context.createInstance(NormalAlertPopup, {
+        el: '#normal-popup',
+        model: ns.mediator
+      });
+      popup.button = target;
+      ns.Manager.popup(this.title || target.text(), this.href, hasConfirm, hasCancel, true);
+      ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
+      event.preventDefault();
+      return false;
+    })
+    .on('show.bs.modal', '#normal-popup', function () {
+      popup = popup || ns.Manager.$context.createInstance(NormalAlertPopup, {
+        el: this,
+        model: ns.mediator
+      });
     });
-    popup.button = target;
-    ns.Manager.popup(this.title || target.text(), this.href, hasConfirm, hasCancel, true);
-    return false;
-  });
 }(Nervenet.createNameSpace('dianjoy.popup')));

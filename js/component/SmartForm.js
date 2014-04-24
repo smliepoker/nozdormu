@@ -1,6 +1,6 @@
 ;(function (ns) {
   'use strict';
-  ns.SmartForm = Backbone.View.extend({
+  ns.SmartForm = dianjoy.view.DataSyncView.extend({
     $router: null,
     events: {
       "blur input[type=text]": "input_blurHandler",
@@ -21,18 +21,10 @@
       } else {
         this.fillCitiesSelect(0);
       }
-      this.model.on('load:complete', this.model_loadCompleteHandler, this);
     },
     remove: function () {
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
-    },
-    addLoading: function () {
-      this.$el.addClass('loading');
-      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
-        .prop('disabled', true)
-        .find('i').hide()
-        .end().prepend('<i class="fa fa-spin fa-spinner"></i>')
     },
     createUploader: function (sibling) {
       var data = $(sibling).data()
@@ -54,21 +46,6 @@
         html += '<option value="' + CITIES[index][i] + '">' + CITIES[index][i] + '</option>';
       }
       target.innerHTML = html;
-    },
-    removeLoading: function (className, msg) {
-      this.$('.loading, .processing, .icon-spin, .fa-spin').remove();
-      $(this.el.elements).filter('[type="submit"], button').not('button[type]')
-        .prop('disabled', false)
-        .find('i')
-          .show();
-      this.$el.removeClass('loading');
-      if (className && msg) {
-        this.model.set('form', {
-          className: className,
-          msg: msg
-        });
-      }
-
     },
     setModel: function (model) {
       this.model.off(null, null, this);
@@ -202,18 +179,15 @@
       }
       target.closest('.form-group').addClass('has-success');
     },
-    model_loadCompleteHandler: function () {
-      this.removeLoading();
-    },
     province_changeHandler: function(event) {
       this.fillCitiesSelect(event.currentTarget.selectedIndex);
     },
     submit_successHandler: function(response) {
       this.model.set(_.omit(response, 'code', 'msg'));
-      this.removeLoading('success', response.msg);
+      this.displayResult(true, response.msg, 'smile-o');
     },
     submit_errorHandler: function(xhr, status, error) {
-      this.removeLoading('danger', xhr.msg || error);
+      this.displayResult(false, xhr.msg || error, 'frown-o');
     },
     uploadButton_clickHandler: function(event) {
       var uploader = this.createUploader(event.currentTarget);
@@ -231,7 +205,7 @@
       // 筛选类型的
       if (this.$el.hasClass('keyword-form')) {
         this.model.set('keyword', form.elements.query.value);
-        this.addLoading();
+        this.displayProcessing();
         event.preventDefault();
         return false;
       }
@@ -247,13 +221,18 @@
       }
 
       // 防止多次提交
-      this.addLoading();
+      this.displayProcessing();
 
       // ajax提交类型的
       var isPass = dianjoy.form.checkForm(this.el);
       if (this.$el.hasClass('ajax') && isPass) {
         var data = this.$el.serialize();
-        dianjoy.service.Manager.call(action, data, this.submit_successHandler, this.submit_errorHandler, this);
+        dianjoy.service.Manager.call(action, data, {
+          success: this.submit_successHandler,
+          error: this.submit_errorHandler,
+          context: this,
+          method: this.$el.attr('method')
+        });
         return false;
       }
 

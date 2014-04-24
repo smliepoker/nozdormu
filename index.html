@@ -44,99 +44,15 @@
   </a>
 </header>
 <nav id="top-bar">
-  <ul class="nav navbar-nav navbar-left collapse top-bar-collapse">
-    <li class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-        <i class="fa fa-link"></i> 常用链接 <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-      </ul>
-    </li>
-  </ul>
-  <form class="navbar-form navbar-left ajax pit" action="#/search/:query" method="post" id="search">
-    <input class="form-control" type="text" name="query" placeholder="搜索" />
-    <span class="spin hide"><i class="fa fa-spinner fa-spin"></i></span>
-    <ul class="dropdown-menu">
-    </ul>
-    <script type="text/x-handlebars-template">
-      {{={{{ }}}=}}
-      {{#if empty}}
-        <li class="dropdown-header">查询结果为空</li>
-      {{/else}}
-      {{#each result}}
-        <li class="dropdown-header">{{type}}</li>
-        {{#each list}}
-        <li><a data-label="user" href="{{url}}" class="popup">{{account}}</a></li>
-        {{/each}}
-      {{/each}}
-      {{{={{ }}=}}}
-    </script>
-  </form>
-
   <ul class="nav navbar-nav navbar-right" id="notification">
-    <li class="dropdown">
-      <a href="#" data-toggle="dropdown" role="button" title="我的任务">
-        <i class="fa fa-fw fa-tasks my-task"></i> {{#todo}}<span class="badge">{{num}}</span>{{/todo}}
-      </a>
-      <ul class="dropdown-menu profile-menu tasks" role="menu">
-        <li class="title">我的任务 <i class="fa fa-tasks"></i></li>
-        <script type="text/x-handlebars-template">
-          {{={{{ }}}=}}
-          {{#todo}}
-          <li class="dropdown-submenu">
-            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-              {{label}} <span class="badge badge-important">{{num}}</span>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-              {{#ads}}
-              <li><a href="{{url}}">{{name}}</a></li>
-              {{/ads}}
-            </ul>
-          </li>
-          {{/todo}}
-          {{{={{ }}=}}}
-        </script>
-        <li class="empty">（无）</li>
-      </ul>
-    </li>
-    <li>
-      <a href="#" data-toggle="dropdown" role="button" title="系统通知">
-        <i class="fa fa-fw fa-bell my-alarm"></i>
-      </a>
-      <ul class="dropdown-menu profile-menu alarms" role="menu">
-        <li class="title">
-          系统通知 <i class="fa fa-bell"></i>
-        </li>
-        <script type="text/x-handlebars-template">
-          {{={{{ }}}=}}
-          {{#each notification}}
-          <li class="alarm">
-            <input type="checkbox" name="{{id}}" {{#if status}}checked{{/if}} />
-            <a href="{{handler}}" {{#if is_popup}}class="popup"{{/if}} {{#if is_blank}}target="_blank"{{/if}}>
-              {{name}} {{description}} <small class="text-muted">{{create_time}}</small>
-            </a>
-          </li>
-          {{/each}}
-          {{{={{ }}=}}}
-        </script>
-        <li class="empty">（无）</li>
-      </ul>
-    </li>
-    <li class="disabled pit"><a href="#"><i class="fa fa-fw fa-envelope-o my-task"></i></a></li>
     <li class="vertical-divider"></li>
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="fa fa-user"></i> {{user}} <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu" id="my-profile">
-        <li class="pit">
-          <a href="#/profile"><i class="fa fa-flag"></i> 绩效目标</a>
-        </li>
         <li>
           <a data-target="#normal-popup" href="{{module}}/page/change-pwd.html" data-toggle="modal"><i class="fa fa-edit"></i> 修改密码</a>
-        </li>
-        <li class="pit">
-          <a href="#/config"><i class="fa fa-cogs"></i> 设置</a>
         </li>
         <li class="divider"></li>
         <li>

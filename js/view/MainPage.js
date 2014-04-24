@@ -40,7 +40,6 @@
     $context: null,
     events: {
       'change input[type=range]': 'range_changeHandler',
-      'click .popup': 'popupButton_clickHandler',
       'click .logout': 'logout_clickHandler',
       'click .disabled a': 'disabled_clickHandler',
       'click .to-top-button': 'topButton_clickHandler'
@@ -76,8 +75,8 @@
 
       // 取爆米花导航文本，标记当前菜单
       nav.find('.active').removeClass('active');
-      var breadcrumbs = [button.text()],
-        ul = button.closest('ul');
+      var breadcrumbs = [button.text()]
+        , ul = button.closest('ul');
       button.parent().addClass('active');
       while (ul.length) {
         if (!ul.is('#main-nav')) {
@@ -88,7 +87,7 @@
       }
       this.$('#content-header h1').text(breadcrumbs.join(' / '));
 
-      if (this.$el.filter('#sidebar').hasClass('in')) {
+      if (this.$('#sidebar').hasClass('in')) {
         $('#sidebar-toggle').click();
       }
 
@@ -99,9 +98,6 @@
     },
     logout_clickHandler: function () {
       return window.confirm('您确定要退出登录么？');
-    },
-    popupButton_clickHandler: function (event) {
-      ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
     },
     range_changeHandler: function (event) {
       $(event.currentTarget).siblings('.help-inline').text(event.currentTarget.value);

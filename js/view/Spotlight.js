@@ -95,11 +95,14 @@
     load: function(query, done) {
       dianjoy.service.Manager.call('api/search_result.php', {
         param: query
-      }, function(res) {
-        if (res.code != 0) return done(new Error('Not found!'));
-        done(null, res);
-      }, function() {
-        done(new Error('Not found!'));
+      }, {
+        success: function(res) {
+          if (res.code != 0) return done(new Error('Not found!'));
+          done(null, res);
+        },
+        error: function() {
+          done(new Error('Not found!'));
+        }
       });
     }
   });

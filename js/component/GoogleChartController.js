@@ -65,7 +65,10 @@
         type: this.type,
         date: dates[0]
       };
-      dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, null, this);
+      dianjoy.service.Manager.call(this.remote, data, {
+        success: this.remote_successHandler,
+        context: this
+      });
       this.$('.date, button').prop('disabled', true);
       this.$('.fa-calendar').toggleClass('fa-calendar fa-spinner fa-spin');
     },

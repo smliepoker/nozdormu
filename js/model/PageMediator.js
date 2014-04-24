@@ -23,7 +23,7 @@
       Backbone.Model.prototype.fetch.call(this, options);
     },
     parse: function (response, options) {
-      isLoading = true;
+      isLoading = false;
       return Backbone.Model.prototype.parse.call(this, response, options);
     },
     load: function () {

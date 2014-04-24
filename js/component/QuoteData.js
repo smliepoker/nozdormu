@@ -37,7 +37,10 @@
         m: 'quote',
         date_start: this.$el.data('date'),
         modified: cpas
-      }, this.remote_successHandler, null, this);
+      }, {
+        success: this.remote_successHandler,
+        context: this
+      });
       this.$el.addClass('syncing');
     },
     input_changeHandler: function (event) {

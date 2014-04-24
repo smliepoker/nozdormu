@@ -129,7 +129,11 @@
         type: this.type,
         output: 'json'
       };
-      dianjoy.service.Manager.call(this.remote, data, this.remote_successHandler, this.remote_errorHandler, this);
+      dianjoy.service.Manager.call(this.remote, data, {
+        success: this.remote_successHandler,
+        error: this.remote_errorHandler,
+        context: this
+      });
     },
     validData: function (data) {
       if (this.minLength && this.minLength > data.length - 1) {

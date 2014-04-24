@@ -46,7 +46,10 @@
         date_start: this.$el.data('start'),
         date_end: this.$el.data('end'),
         modified: cpas
-      }, this.remote_successHandler, null, this);
+      }, {
+        success: this.remote_successHandler,
+        context: this
+      });
       this.$el.addClass('syncing');
     },
     input_changeHandler: function (event) {

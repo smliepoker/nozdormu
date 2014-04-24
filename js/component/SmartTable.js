@@ -115,12 +115,13 @@
       }));
     },
     displayPageNum: function () {
-      var page = this.model.get('page') || 0;
+      var page = this.model.get('page') || 0
+        , total = this.total;
       this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
         .siblings().removeClass('active');
       this.$el.each(function () {
         $(this).children().first().toggleClass('disabled', page === 0)
-          .end().last().toggleClass('disabled', page >= this.total - 1);
+          .end().last().toggleClass('disabled', page >= total - 1);
       });
     },
     setTotal: function (total) {
@@ -220,7 +221,6 @@
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
-      this.model.trigger('load:complete');
     },
     addRowButton_clickHandler: function () {
       var model = new this.collection.model();

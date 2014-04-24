@@ -49,7 +49,11 @@
       dianjoy.service.Manager.call('ad/action_ad.php', {
         seq: seq,
         m: 'adjust_seq'
-      }, this.successHandler, this.errorHandler, this);
+      }, {
+        success: this.successHandler,
+        error: this.errorHandler,
+        context: this
+      });
       
       var button = $(event.currentTarget);
       button

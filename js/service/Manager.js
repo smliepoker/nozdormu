@@ -8,15 +8,17 @@
     api: 'upload.php',
     autoUpload: false,
     maxUploadSize: 209715200, // 上传文件上限
-    call: function (url, data, onSuccess, onError, context) {
-      var self = this;
-      onSuccess = onSuccess || this.onSuccess;
-      onError = onError || this.onError;
+    call: function (url, data, options) {
+      options = options || {};
+      var self = this
+        , onSuccess = options.success || this.onSuccess
+        , onError = options.error || this.onError
+        , context = options.context;
       $.ajax({
         url: url,
         data: data,
         dataType: 'json',
-        type: 'post',
+        type: options.method || 'post',
         cache: false,
         success: function (response) {
           if (response.code === 0) {
