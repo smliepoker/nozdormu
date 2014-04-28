@@ -151,6 +151,7 @@
       'click .delete-button': 'deleteButton_clickHandler',
       'click .show-button': 'showButton_clickHandler',
       'click .hide-button': 'hideButton_clickHandler',
+      'click .status-button': 'statusButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'sortupdate': 'sortUpdateHandler'
     },
@@ -214,6 +215,9 @@
       this.$('tbody').html(this.template({list: collection.toJSON()}));
       var items = this.$('tbody').children();
       collection.each(function (model, i) {
+        if (i > items.length - 1) {
+          return;
+        }
         if (!model.id) {
           items[i].id = model.cid;
         }
@@ -249,6 +253,8 @@
           target.parent().replaceWith(tr.children().eq(index));
         } else if (target.children().is('img')) {
           target.children('img').attr('src', changed[prop]);
+        } else if (target.is('.status-button')) {
+          target.toggleClass('active', changed[prop]);
         } else {
           target.text(changed[prop]);
         }
@@ -308,6 +314,14 @@
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
         status: 0
       }, saveOptions);
+    },
+    statusButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , prop = event.currentTarget.hash.substr(1)
+        , value = target.hasClass('active') ? 0 : 1
+        , id = target.closest('tr').attr('id');
+      this.collection.get(id).save(prop, value, {patch: true});
+      event.preventDefault();
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item
