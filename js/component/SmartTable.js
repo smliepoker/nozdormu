@@ -173,7 +173,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
 
       // 实现大类筛选
-      this.model.on('change', this.model_changeHandler, this);
+      this.model.on('change:page', this.model_pageChangeHandler, this);
 
       // 固定头部、翻页、编辑器
       if ('fixHead' in init) {
@@ -196,7 +196,7 @@
         this.$('tbody').sortable();
       }
 
-      this.collection.fetch(_.extend(this.filter, this.model.toJSON()));
+      this.collection.fetch(_.extend(this.filter, this.model.pick('page')));
     },
     remove: function () {
       if (this.header) {
@@ -305,11 +305,9 @@
         status: 1
       }, saveOptions);
     },
-    model_changeHandler: function (model) {
-      if (_.intersection(_.keys(model.changed), _.keys(model.defaults)).length === 0) {
-        return;
-      }
-      this.collection.fetch(_.extend(this.filter, model.toJSON()));
+    model_pageChangeHandler: function (model, page) {
+      this.filter.page = page;
+      this.collection.fetch(this.filter);
     },
     showButton_clickHandler: function (event) {
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
