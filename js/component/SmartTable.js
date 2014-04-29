@@ -12,74 +12,6 @@
     }
   };
 
-  var FixedHeader = Backbone.View.extend({
-    className: 'table table-bordered table-header scroll-fix',
-    tagName: 'table',
-    top: 0,
-    events: {
-      'click .label': 'label_clickHandler',
-      'click .order': 'order_clickHandler',
-      'DOMNodeInsertedIntoDocument': 'insertHandler'
-    },
-    initialize: function (options) {
-      this.body = options.body;
-      this.isInit = options.body.el.offsetWidth > 0;
-
-      var thead = options.body.$('thead'),
-          ths = thead.find('th');
-      this.render();
-      this.$el
-        .appendTo(document.body)
-        .append(thead.clone())
-        .find('th').each(function (i) {
-          this.width = ths[i].offsetWidth;
-        });
-
-      var position = options.body.$el.position();
-      this.$el.attr('data-top', position.top + 50);
-      this.$el.attr('data-index', $('.smart-table').index(options.body.$el));
-
-      this.model.on('change:order', this.order_changeHandler, this);
-      this.model.on('change:ad change:ch change:owner change:pub change:status', this.model_filterChangeHandler, this);
-    },
-    remove: function () {
-      this.model.off(null, null, this);
-      Backbone.View.prototype.remove.call(this);
-    },
-    render: function () {
-      this.$el = $('<' + this.tagName + '>', {
-        'class': this.className
-      });
-    },
-    model_filterChangeHandler: function () {
-      this.$('.label').remove();
-      this.$('.filter').append(this.body.$('.filter').find('.label').clone());
-    },
-    label_clickHandler: function (event) {
-      var href = event.currentTarget.href.substr(event.currentTarget.href.indexOf('#'));
-      this.body.$('thead a.label[href=' + href + ']').click();
-      $(event.currentTarget).remove();
-    },
-    order_changeHandler: function (index, order) {
-      this.$('.fa-sort-amount-asc, .fa-sort-amount-desc').remove();
-      this.$('th').eq(index).append('<i class="fa fa-sort-amount-' + order + '"></i>');
-    },
-    order_clickHandler: function (event) {
-      var index = $(event.currentTarget).parent().index();
-      this.body.$('th').eq(index).find('a.order').click();
-    },
-    insertHandler: function () {
-      if (!this.isInit) {
-        var ths = this.body.$('th');
-        this.$('th').each(function (i) {
-          this.width = ths[i].offsetWidth;
-        });
-        this.isInit = true;
-      }
-      this.$el.off('DOMNodeInsertedIntoDocument');
-    }
-  });
-
   var Pager = Backbone.View.extend({
     events: {
       'click a': 'clickHandler'
@@ -172,16 +104,10 @@
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
 
-      // 实现大类筛选
-      this.model.on('change:page', this.model_pageChangeHandler, this);
+      // 通过页面中介来实现翻页、搜索等功能
+      this.model.on('change', this.model_changeHandler, this);
 
-      // 固定头部、翻页、编辑器
-      if ('fixHead' in init) {
-        this.header = new FixedHeader({
-          body: this,
-          model: this.model
-        });
-      }
+      // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
         this.isPaged = true;
         this.pagination = new Pager({
@@ -191,12 +117,12 @@
         });
       }
 
-      // 排序
+      // 允许对表格排序
       if (this.$el.hasClass('sortable')) {
         this.$('tbody').sortable();
       }
 
-      this.collection.fetch(_.extend(this.filter, this.model.pick('page')));
+      this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
     },
     remove: function () {
       if (this.header) {
@@ -305,8 +231,9 @@
         status: 1
       }, saveOptions);
     },
-    model_pageChangeHandler: function (model, page) {
-      this.filter.page = page;
+    model_changeHandler: function (model) {
+      var changed = model.pick('page', 'keyword');
+      this.filter = _.extend(this.filter, changed);
       this.collection.fetch(this.filter);
     },
     showButton_clickHandler: function (event) {
