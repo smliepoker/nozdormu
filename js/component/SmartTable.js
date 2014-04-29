@@ -162,6 +162,7 @@
           url: init.url + (this.model.has('path') ? '/' + this.model.get('path') : ''),
           pagesize: init.pagesize
         };
+      this.filter = dianjoy.utils.decodeURLParam(init.filter);
       if ('id' in init) {
         options.model = Backbone.Model.extend({idAttribute: init.id});
       }
@@ -195,7 +196,7 @@
         this.$('tbody').sortable();
       }
 
-      this.collection.fetch(this.model.toJSON());
+      this.collection.fetch(_.extend(this.filter, this.model.toJSON()));
     },
     remove: function () {
       if (this.header) {
@@ -308,7 +309,7 @@
       if (_.intersection(_.keys(model.changed), _.keys(model.defaults)).length === 0) {
         return;
       }
-      this.collection.fetch(model.toJSON());
+      this.collection.fetch(_.extend(this.filter, model.toJSON()));
     },
     showButton_clickHandler: function (event) {
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
