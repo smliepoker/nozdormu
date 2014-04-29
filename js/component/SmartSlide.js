@@ -11,14 +11,13 @@
       Handlebars.registerPartial('slide-item', this.$('#item-template').remove().html());
       var spec = this.$el.data();
       this.collection = dianjoy.model.ListCollection.createInstance(null, {
-        url: spec.url
+        url: spec.url + (this.model.has('path') ? '/' + this.model.get('path') : '')
       });
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('sort', this.collection_sortHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
-      this.collection.fetch(this.model.toJSON());
     },
     remove: function () {
       this.collection.off();
