@@ -8,6 +8,7 @@
     , interval = 0;
   ns.ArticleEditor = dianjoy.view.DataSyncView.extend({
     $context: null,
+    $router: null,
     preview: null,
     lastAutoSave: 0,
     events: {
@@ -86,6 +87,7 @@
         this.model.fetch();
       } else {
         this.render();
+        this.model.once('change:id', this.model_savedOnServerHandler, this);
       }
     },
     remove: function () {
@@ -94,7 +96,7 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
-      this.$('[name=topic]').val(this.model.get('topic'))
+      this.$('[name=topic]').val(this.model.get('topic'));
       this.$('textarea').val(this.model.get('content'));
       // 生成预览内容
       this.refreshPreview();
@@ -159,18 +161,15 @@
       });
       this.displayProcessing();
     },
-    showUploadPopup: function () {
-      var options = {
-        img: true
-      };
-      var popup = dianjoy.popup.Manager.popupEditor(this.model, options);
-      popup.on('submit', this.popup_submitHandler, this);
+    model_savedOnServerHandler: function (model, id) {
+      // FIXME 改了会导致莫名其妙的route，看要不要加个特殊处理
+      //this.$router.navigate(location.hash + '/' + id, {trigger: false, replace: true});
     },
     model_saveErrorHandler: function (error) {
       console.log(error);
       this.displayResult(false, '保存失败，请稍后重试', 'fa-frown-o');
     },
-    model_saveSuccessHandler: function (response) {
+    model_saveSuccessHandler: function () {
       this.displayResult(true, '保存成功', 'fa-smile-o');
     },
     saveButton_clickHandler: function () {

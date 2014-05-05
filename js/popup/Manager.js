@@ -109,7 +109,6 @@
       } else {
         this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
       }
-      this.options = options;
 
       // 用组件适配用户操作
       if (this.form) {
@@ -198,12 +197,19 @@
       popup.initUI(title, content, hasConfirm, hasCancel, isRemote);
     },
     popupEditor: function (model, options, collection) {
-      editor = editor || this.$context.createInstance(EditPopup, {
-        el: '#edit-popup',
-        model: model,
-        collection: collection
-      });
-      editor.model = model;
+      if (editor) {
+        if (editor.collection) {
+          editor.collection.off(null, null, editor);
+        }
+        editor.model = model;
+        editor.collection = collection;
+      } else {
+        editor = this.$context.createInstance(EditPopup, {
+          el: '#edit-popup',
+          model: model,
+          collection: collection
+        });
+      }
       editor.initUI(options);
       editor.$el.modal('show');
       return editor;

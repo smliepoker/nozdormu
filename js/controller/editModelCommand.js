@@ -100,9 +100,6 @@
     };
     // 有可能需要从远程取数据
     if (options.url || options.searchUrl) {
-      if (collection) {
-        clear();
-      }
       collection = dianjoy.model.ListCollection.createInstance(null, {url: options.url || options.searchUrl});
       if (options.url) {
         collection.on('reset', collection_resetHandler, this);
