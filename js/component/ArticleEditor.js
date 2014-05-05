@@ -79,24 +79,29 @@
         this.undelegateEvents();
       }
 
+      // model.id存在表示编辑，不然就是新建了
       this.model.urlRoot = this.el.action;
-      this.model.on('sync', this.render, this);
-      this.model.fetch();
+      if (this.model.id) {
+        this.model.on('sync', this.render, this);
+        this.model.fetch();
+      } else {
+        this.render();
+      }
     },
     remove: function () {
       clearInterval(interval);
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
     },
-    render: function (model) {
-      this.$('[name=topic]').val(model.get('topic'))
-      this.$('textarea').val(model.get('content'));
+    render: function () {
+      this.$('[name=topic]').val(this.model.get('topic'))
+      this.$('textarea').val(this.model.get('content'));
       // 生成预览内容
       this.refreshPreview();
       // 上次自动保存的内容
       var store = localStorage.getItem(KEY);
       store = store ? JSON.parse(store) : null;
-      if (store && store.id === this.model.id) {
+      if (store && (store.id === this.model.id || store.id === 0 && !this.model.id)) {
         this.lastAutoSave = store.time;
         this.refreshAutoSaveTime(store.time)
       } else {
@@ -106,7 +111,7 @@
     autoSave: function () {
       this.lastAutoSave = Date.now();
       localStorage.setItem(KEY, JSON.stringify({
-        id: this.model.id,
+        id: this.model.id || 0,
         title: this.$('[name=topic]').val(),
         content: this.$('textarea').val(),
         time: this.lastAutoSave

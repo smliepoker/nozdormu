@@ -20,8 +20,10 @@
       } else {
         this.model.urlRoot = this.spec.url;
         this.model.once('sync', this.render, this);
-        if (!this.spec.wait) {
+        if (this.model.id && !this.spec.wait) {
           this.model.fetch();
+        } else {
+          this.render();
         }
       }
       this.$el.popover({
@@ -34,8 +36,8 @@
       this.$el.popover('destroy');
       Backbone.View.prototype.remove.call(this);
     },
-    render: function (model) {
-      this.$el.html(this.template(model.toJSON()));
+    render: function () {
+      this.$el.html(this.template(this.model.toJSON()));
       this.model.on('change', this.model_changeHandler, this);
       this.$('time').text(function () {
         return moment(this.innerHTML).fromNow();

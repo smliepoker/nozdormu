@@ -98,9 +98,18 @@
         this.$('form').html(this.template(options));
         this.$('select').val(options.value);
         $('[data-for=' + options.prop + ']').clone().show().appendTo(this.$('form'));
+
+        if (options.search) {
+          var html = this.$('.search-result').html();
+          html = html.replace(/\${([#@\-\w\s\/]+)}/g, '{{$1}}');
+          this.item = Handlebars.compile(html);
+          this.$('.search-result').empty();
+          this.collection.on('reset', this.collection_resetHandler, this);
+        }
       } else {
         this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
       }
+      this.options = options;
 
       // 用组件适配用户操作
       if (this.form) {
@@ -136,6 +145,11 @@
       }
       return this.$('[name=prop]').val();
     },
+    collection_resetHandler: function () {
+      var html = this.item({list: this.collection.toJSON()});
+      this.$('.search-result').html(html);
+      this.$('[type=search]').prop('disabled', false);
+    },
     inputGroup_mouseDownHandler: function (event) {
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
     },
@@ -144,9 +158,17 @@
       event.preventDefault();
     },
     keydownHandler: function (event) {
-      if (event.ctrlKey && event.keyCode === 13) { // ctrl+enter
-        this.save();
-        event.preventDefault();
+      if (event.keyCode === 13) {
+        var target = event.target;
+        if (target.type === 'search' && target.value != '') { // search
+          this.collection.fetch({keyword: target.value, from: 'editor'});
+          $(target).prop('disabled', true);
+          event.preventDefault();
+        }
+        if (event.ctrlKey) { // ctrl+enter
+          this.save();
+          event.preventDefault();
+        }
       }
     },
     hideHandler: function () {
@@ -175,10 +197,11 @@
       });
       popup.initUI(title, content, hasConfirm, hasCancel, isRemote);
     },
-    popupEditor: function (model, options) {
+    popupEditor: function (model, options, collection) {
       editor = editor || this.$context.createInstance(EditPopup, {
         el: '#edit-popup',
-        model: model
+        model: model,
+        collection: collection
       });
       editor.model = model;
       editor.initUI(options);

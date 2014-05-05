@@ -17,8 +17,8 @@
       error: onError
     });
   }
-  function callPopup(model, options) {
-    popup = dianjoy.popup.Manager.popupEditor(model, options);
+  function callPopup(model, options, collection) {
+    popup = dianjoy.popup.Manager.popupEditor(model, options, collection);
     if (isFirstTime) {
       popup.on('submit', onSubmit);
       popup.on('hidden', onHidden);
@@ -99,15 +99,17 @@
       options: options
     };
     // 有可能需要从远程取数据
-    if (options.url) {
+    if (options.url || options.searchUrl) {
       if (collection) {
-        collection.off();
+        clear();
       }
-      collection = dianjoy.model.ListCollection.createInstance(null, {url: options.url});
-      collection.on('reset', collection_resetHandler, this);
-      collection.on('add', collection_addHandler, this);
-      collection.fetch({reset: true});
-      callPopup(model);
+      collection = dianjoy.model.ListCollection.createInstance(null, {url: options.url || options.searchUrl});
+      if (options.url) {
+        collection.on('reset', collection_resetHandler, this);
+        collection.on('add', collection_addHandler, this);
+        collection.fetch({reset: true});
+      }
+      callPopup(model, options, collection);
       return;
     }
     callPopup(model, options);
