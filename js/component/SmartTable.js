@@ -236,7 +236,7 @@
       }, saveOptions);
     },
     model_changeHandler: function (model) {
-      var changed = _.pick(model.changed, ('page', 'keyword'));
+      var changed = _.pick(model.changed, 'page', 'keyword');
       if (!('page' in changed) && (!('keyword' in changed) || changed.keyword === undefined)) {
         return;
       }
