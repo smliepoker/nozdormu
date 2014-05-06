@@ -6,21 +6,11 @@
       "blur input[type=text]": "input_blurHandler",
       "click .upload-button": "uploadButton_clickHandler",
       "change input[type=file]": "fileUploader_changeHandler",
-      'change [name=province]': 'province_changeHandler',
       'focus .error input[type=text]': 'errorInput_focusHandler',
       'submit': 'submitHandler'
     },
     initialize: function () {
-      var province = this.el.elements.province;
-      if (province && province.getAttribute('value')) {
-        province.value = province.getAttribute('value');
-        this.province_changeHandler({
-          currentTarget: province
-        });
-        this.el.elements.city.value = this.el.elements.city.getAttribute('value');
-      } else {
-        this.fillCitiesSelect(0);
-      }
+      this.model.on('change', this.model_changeHandler, this);
     },
     remove: function () {
       this.model.off(null, null, this);
@@ -33,23 +23,10 @@
       uploader.insertAfter(sibling);
       return uploader;
     },
-    fillCitiesSelect: function (index) {
-      if (!('CITIES' in window) || index === -1) {
-        return;
-      }
-      var target = this.el.elements.city,
-          html = '';
-      if (!target) {
-        return;
-      }
-      for (var i = 0, len = CITIES[index].length; i < len; i++) {
-        html += '<option value="' + CITIES[index][i] + '">' + CITIES[index][i] + '</option>';
-      }
-      target.innerHTML = html;
-    },
     setModel: function (model) {
       this.model.off(null, null, this);
       this.model = model;
+      this.model.on('change', this.model_changeHandler, this);
     },
     errorInput_focusHandler: function(event) {
       $(event.currentTarget).tooltip('destroy')
@@ -179,8 +156,10 @@
       }
       target.closest('.form-group').addClass('has-success');
     },
-    province_changeHandler: function(event) {
-      this.fillCitiesSelect(event.currentTarget.selectedIndex);
+    model_changeHandler: function (model) {
+      if ('keyword' in model.changed && model.changed.keyword === undefined) {
+        this.displayResult(true);
+      }
     },
     submit_successHandler: function(response) {
       this.model.set(_.omit(response, 'code', 'msg'));

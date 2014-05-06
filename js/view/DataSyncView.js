@@ -6,14 +6,14 @@
   ns.DataSyncView = Backbone.View.extend({
     displayProcessing: function () {
       this.$el.addClass('processing')
-        .find('.btn-primary').prop('disabled', true)
+        .find('button:not([type])').prop('disabled', true)
         .find('i').addClass('fa-spin fa-spinner');
     },
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
       this.$('.fa-spin').removeClass('fa-spin fa-spinner');
       this.$el.removeClass('processing');
-      this.$('.btn-primary').prop('disabled', false);
+      this.$('button:not([type])').prop('disabled', false);
       this.$('.alert-msg')
         .hide()
         .toggleClass('alert-danger', !isSuccess)

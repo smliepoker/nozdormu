@@ -99,7 +99,7 @@
         options.model = Backbone.Model.extend({idAttribute: init.id});
       }
       this.collection = dianjoy.model.ListCollection.createInstance(null, options);
-      this.collection.on('reset', this.render, this);
+      this.collection.on('reset', this.collection_resetHandler, this);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
@@ -137,11 +137,11 @@
       this.model.off(null, null, this);
       Backbone.View.prototype.remove.call(this);
     },
-    render: function (collection) {
+    render: function () {
       this.$('.waiting').hide();
-      this.$('tbody').html(this.template({list: collection.toJSON()}));
+      this.$('tbody').html(this.template({list: this.collection.toJSON()}));
       var items = this.$('tbody').children();
-      collection.each(function (model, i) {
+      this.collection.each(function (model, i) {
         if (i > items.length - 1) {
           return;
         }
@@ -192,6 +192,10 @@
         $(this).remove();
       })
     },
+    collection_resetHandler: function () {
+      this.render();
+      this.model.unset('keyword'); // 删掉搜索关键词，方便多次搜索
+    },
     deleteButton_clickHandler: function (event) {
       if (!confirm('确定删除么？')) {
         return;
@@ -232,7 +236,10 @@
       }, saveOptions);
     },
     model_changeHandler: function (model) {
-      var changed = model.pick('page', 'keyword');
+      var changed = _.pick(model.changed, ('page', 'keyword'));
+      if (!('page' in changed) && (!('keyword' in changed) || changed.keyword === undefined)) {
+        return;
+      }
       this.filter = _.extend(this.filter, changed);
       this.collection.fetch(this.filter);
     },
