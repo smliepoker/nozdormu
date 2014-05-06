@@ -251,7 +251,8 @@
     statusButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , prop = event.currentTarget.hash.substr(1)
-        , value = target.hasClass('active') ? 0 : 1
+        , data = _.extend({active: 1, deactive: 0}, target.data())
+        , value = target.hasClass('active') ? data.deactive : data.active
         , id = target.closest('tr').attr('id');
       this.collection.get(id).save(prop, value, {patch: true});
       event.preventDefault();

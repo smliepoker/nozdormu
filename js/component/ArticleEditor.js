@@ -14,6 +14,7 @@
     events: {
       'textInput textarea': 'textArea_textInputHandler',
       'change [name="topic"]': 'topic_changeHandler',
+      'click .publish-button': 'publishButton_clickHandler',
       'click .save-button': 'saveButton_clickHandler',
       'keydown': 'keydownHandler'
     },
@@ -109,6 +110,11 @@
       } else {
         this.$('.auto-save-info').text('（空）');
       }
+      // 修改发布按钮的状态
+      var active = this.model.get('status') === this.$('.publish-button').data('active');
+      this.$('.publish-button').toggleClass('active', active)
+        .find('i').toggleClass('fa-check-square-o', active)
+        .toggleClass('fa-square-o', !active);
     },
     autoSave: function () {
       this.lastAutoSave = Date.now();
@@ -171,6 +177,13 @@
     },
     model_saveSuccessHandler: function () {
       this.displayResult(true, '保存成功', 'fa-smile-o');
+    },
+    publishButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , data = target.data();
+      this.model.save('status', target.hasClass('active') ? data.deactive : data.active, {patch: true});
+      target.toggleClass('active')
+        .find('i').toggleClass('fa-square-o fa-check-square-o');
     },
     saveButton_clickHandler: function () {
       this.save();
