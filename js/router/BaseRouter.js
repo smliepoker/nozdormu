@@ -3,7 +3,7 @@
   ns.BaseRouter = Backbone.Router.extend({
     $mainPage: null,
     $subPage: null,
-    lastPage: '',
+    lastPage: null,
     routes: {
       '': 'showHomepage',
       ':cate/:sub(/:id)(/*path)': 'showNormalPage'
