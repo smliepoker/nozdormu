@@ -109,7 +109,6 @@
 
       // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
-        this.isPaged = true;
         this.pagination = new Pager({
           el: init && 'pagination' in init ? init.pagination : this.$('.pager'),
           model: this.model,

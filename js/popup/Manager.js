@@ -55,23 +55,13 @@
       }
     },
     hiddenHandler: function () {
+      dianjoy.component.Manager.clear(this.$el);
       this.$('.modal-body').empty();
-      this.$('.hasDatepicker').datepicker('destroy');
       ns.Manager.trigger('normal:hidden', this);
     },
     loadCompleteHandler: function() {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
-      this.$('.date').datepicker({
-        dateFormat: 'yy-mm-dd'
-      });
-      var context = this.$context;
-      this.$('form').each(function () {
-        this.action = baseURL + $(this).attr('action');
-        context.createInstance(dianjoy.component.SmartForm, {
-          el: this,
-          model: ns.mediator
-        });
-      });
+      dianjoy.component.Manager.check(this.$el, this.model);
       ns.Manager.trigger('load');
     },
     showHandler: function () {
@@ -222,15 +212,9 @@
           data = target.data(),
           hasConfirm = 'confirm' in data ? data.confirm : true,
           hasCancel = 'cancel' in data ? data.cancel : true;
-      popup = popup || ns.Manager.$context.createInstance(NormalAlertPopup, {
-        el: '#normal-popup',
-        model: ns.mediator
-      });
-      popup.button = target;
       ns.Manager.popup(this.title || target.text(), this.href, hasConfirm, hasCancel, true);
       ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
       event.preventDefault();
-      return false;
     })
     .on('show.bs.modal', '#normal-popup', function () {
       popup = popup || ns.Manager.$context.createInstance(NormalAlertPopup, {

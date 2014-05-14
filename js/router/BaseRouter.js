@@ -1,19 +1,18 @@
 ;(function (ns) {
   'use strict';
-  ns.AdminPanel = Backbone.Router.extend({
+  ns.BaseRouter = Backbone.Router.extend({
     $mainPage: null,
     $subPage: null,
     lastPage: '',
     routes: {
       '': 'showHomepage',
-      'admin/:sub': 'showAdminPage',
       ':cate/:sub(/:id)(/*path)': 'showNormalPage'
     },
     execute: function (callback, args) {
       if (location.hash === this.lastPage) {
         return;
       }
-      if (this.$subPage.preCheck()) {
+      if (dianjoy.component.Manager.preCheck(this.$subPage.$el)) {
         this.lastPage = location.hash;
         callback.apply(this, args);
       } else {
@@ -27,10 +26,6 @@
     showNormalPage: function (cate, sub, id, path) {
       var url = baseURL + cate + '/template/' + sub + '.html';
       this.$subPage.load(url, id, path);
-    },
-    showAdminPage: function (sub) {
-      var url = baseURL + '/admin/' + sub + '.php';
-      this.$subPage.load(url);
     }
   });
 })(Nervenet.createNameSpace('dianjoy.router'));

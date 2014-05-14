@@ -12,6 +12,7 @@ $(function () {
     })
     , router = new dianjoy.router.AdminPanel();
 
+  context.mediatorMap.isBackbone = true;
   context
     .mapValue('mainPage', mainPage)
     .mapValue('subPage', subPage)
@@ -20,6 +21,7 @@ $(function () {
     .inject(subPage)
     .inject(dianjoy.service.Manager)
     .inject(dianjoy.popup.Manager)
+    .inject(dianjoy.component.Manager)
     .mapEvent('add-recent-document', dianjoy.controller.addRecentDocumentCommand)
     .mapEvent('create-excel', dianjoy.controller.createExcelCommand)
     .mapEvent('edit-model', dianjoy.controller.editModelCommand);
