@@ -81,6 +81,7 @@
       uploader.isSrc = /image|video/i.test(file.type);
       uploader.on('success', this.fileUpload_successHandler, uploader);
       uploader.on('progress', this.fileUpload_progressHandler, uploader);
+      uploader.on('error', this.fileUpload_errorHandler, uploader);
 
       // 是否需要md5和大小校验
       if (validate) {
@@ -93,6 +94,25 @@
         uploader.size = file.size;
         reader.readAsArrayBuffer(file);
       }
+    },
+    fileUpload_errorHandler: function (response) {
+      this.bar
+        .addClass('progress-bar-danger')
+        .fadeOut(function () {
+          $(this).addClass('hide').removeClass('progress-bar-danger');
+        });
+
+      this.preview.append('<p class="text-danger">' + response.msg + '</p>');
+
+      this.button
+        .prop('disabled', false)
+        .removeClass('disabled')
+        .addClass('btn-success')
+        .find('i')
+          .removeClass('fa-spin fa-spinner')
+          .addClass('fa-times');
+      this.button.closest('form').removeClass('loading');
+      this.off();
     },
     fileUpload_progressHandler: function(loaded, total) {
       var progress = (loaded / total * 100 >> 0) + '%';
@@ -108,16 +128,18 @@
       }
 
       // 隐藏进度条
-      this.bar.fadeOut(function () {
-        $(this).addClass('hide');
-      });
+      this.bar
+        .addClass('progress-bar-success')
+        .fadeOut(function () {
+          $(this).addClass('hide').removeClass('progress-bar-success');
+        });
 
       // 生成缩略图或链接
       if (this.preview) {
         if (this.isSrc) {
-          this.preview.attr('src', response.url);
+          this.preview.html('<img src="' + response.url + '" class="img-thumbnail">');
         } else {
-          this.preview.html('<a href="' + src + '">' + this.filename + '</a>已上传');
+          this.preview.html('<a href="' + src + '">' + this.filename + '</a> 已上传');
         }
       }
 

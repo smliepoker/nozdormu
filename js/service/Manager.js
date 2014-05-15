@@ -76,7 +76,7 @@
           }
         },
         error: function (xhr, status, err) {
-          dispatcher.trigger('error', xhr, status, err, dispatcher);
+          dispatcher.trigger('error', xhr.responseJSON, dispatcher);
           this.onError(xhr, status, err);
         }
       });
