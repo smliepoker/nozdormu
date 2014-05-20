@@ -80,6 +80,8 @@
       if (this.preview.length === 0) {
         this.undelegateEvents();
       }
+      this.template = $(data.template);
+      this.template = this.template.length ? Handlebars.compile(this.template.remove().html()) : null;
 
       // model.id存在表示编辑，不然就是新建了
       this.model.urlRoot = this.el.action;
@@ -152,8 +154,14 @@
       }
     },
     refreshPreview: function () {
-      var content = this.$('textarea').val();
-      this.preview.html(marked(content));
+      var content = marked(this.$('textarea').val());
+      if (!this.template) {
+        return this.preview.html(content);
+      }
+      this.preview.html(this.template(_.extend(this.model.toJSON(), {
+        topic: this.$('[name=topic]').val(),
+        content: content
+      })));
     },
     save: function() {
       this.model.save({
