@@ -78,6 +78,7 @@
       'hide.bs.modal': 'hideHandler',
       'keydown': 'keydownHandler',
       'click .btn-primary': 'submitButton_clickHandler',
+      'click .search-button': 'searchButton_clickHandler',
       'mousedown .input-group': 'inputGroup_mouseDownHandler'
     },
     initialize: function () {
@@ -127,6 +128,11 @@
       }
       this.trigger('submit', this.value());
     },
+    search: function () {
+      var keyword = this.$('[type=search]').val();
+      this.collection.fetch({keyword: keyword, from: 'editor'});
+      this.$('[type=search], .search-button').prop('disabled', true);
+    },
     value: function () {
       var radio = this.$('[name=prop-radio]');
       if (radio.length) {
@@ -137,10 +143,13 @@
     collection_resetHandler: function () {
       var html = this.item({list: this.collection.toJSON()});
       this.$('.search-result').html(html);
-      this.$('[type=search]').prop('disabled', false);
+      this.$('[type=search], .search-button').prop('disabled', false);
     },
     inputGroup_mouseDownHandler: function (event) {
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
+    },
+    searchButton_clickHandler: function (event) {
+      this.search();
     },
     submitButton_clickHandler: function (event) {
       this.save();
@@ -150,8 +159,7 @@
       if (event.keyCode === 13) {
         var target = event.target;
         if (target.type === 'search' && target.value != '') { // search
-          this.collection.fetch({keyword: target.value, from: 'editor'});
-          $(target).prop('disabled', true);
+          this.search();
           event.preventDefault();
         }
         if (event.ctrlKey) { // ctrl+enter
