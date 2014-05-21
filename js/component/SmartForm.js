@@ -96,10 +96,10 @@
       }
     },
     fileUpload_errorHandler: function (response) {
-      this.bar
+      this.bar.children()
         .addClass('progress-bar-danger')
-        .fadeOut(function () {
-          $(this).addClass('hide').removeClass('progress-bar-danger');
+        .end().fadeOut(function () {
+          $(this).addClass('hide').children().removeClass('progress-bar-danger');
         });
 
       this.preview.append('<p class="text-danger">' + response.msg + '</p>');
@@ -116,7 +116,7 @@
     },
     fileUpload_progressHandler: function(loaded, total) {
       var progress = (loaded / total * 100 >> 0) + '%';
-      this.bar.find('.bar, .progress-bar')
+      this.bar.children()
         .width(progress)
         .text(progress);
     },
@@ -128,10 +128,10 @@
       }
 
       // 隐藏进度条
-      this.bar
+      this.bar.children()
         .addClass('progress-bar-success')
-        .fadeOut(function () {
-          $(this).addClass('hide').removeClass('progress-bar-success');
+        .end().fadeOut(function () {
+          $(this).addClass('hide').children().removeClass('progress-bar-success');
         });
 
       // 生成缩略图或链接
@@ -184,6 +184,13 @@
       }
     },
     submit_successHandler: function(response) {
+      if ('go_to_url' in response) {
+        var router = this.$router;
+        response.msg += '<br>将于3秒后跳转';
+        setTimeout(function () {
+          router.navigate(response.go_to_url);
+        }, 3000);
+      }
       this.model.set(_.omit(response, 'code', 'msg'));
       this.displayResult(true, response.msg, 'smile-o');
     },

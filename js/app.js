@@ -30,20 +30,6 @@ $(function () {
   subPage.on('load:complete', mainPage.removeLoading, mainPage);
   subPage.on('load:failed', mainPage.showErrorAlert, mainPage);
 
-  // 服务器返回消息全局处理
-  dianjoy.service.Manager.on('complete', function (response) {
-    if (response.refresh) {
-      Backbone.history.loadUrl(Backbone.history.fragment);
-    }
-    if (response.hasOwnProperty('url')) {
-      if (response.url === location.hash) {
-        Backbone.history.loadUrl(Backbone.history.fragment);
-      } else {
-        router.navigate(response.url);
-      }
-    }
-  });
-
   // 弹窗控制
   dianjoy.popup.mediator = mediator;
 
