@@ -85,6 +85,7 @@
       'click .hide-button': 'hideButton_clickHandler',
       'click .status-button': 'statusButton_clickHandler',
       'click .edit': 'edit_clickHandler',
+      'change .stars input': 'star_changeHandler',
       'sortupdate': 'sortUpdateHandler'
     },
     initialize: function () {
@@ -147,7 +148,11 @@
         if (!model.id) {
           items[i].id = model.cid;
         }
-      })
+      });
+      // TODO: 暂时没有想到更好的办法，将来用handlebars的helper来处理表单的选中吧
+      this.$('.stars').each(function () {
+        $(this).find('input[value=' + $(this).data('value') + ']').prop('checked', true);
+      });
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
@@ -246,6 +251,17 @@
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
         status: 0
       }, saveOptions);
+    },
+    star_changeHandler: function (event) {
+      var target = $(event.currentTarget)
+        , id = target.closest('tr').attr('id')
+        , model = this.collection.get(id);
+      model.save({
+        remark: target.val()
+      }, {
+        wait: true,
+        patch: true
+      });
     },
     statusButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
