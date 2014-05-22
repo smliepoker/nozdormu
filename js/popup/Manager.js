@@ -138,7 +138,8 @@
       if (radio.length) {
         return this.$('[name=prop-' + radio.filter(':checked').val() + ']').val();
       }
-      return this.$('[name=prop]').val();
+      var items = this.$('[name=prop]');
+      return items.length > 1 ? items.filter(':checked').val() : items.val();
     },
     collection_resetHandler: function () {
       var html = this.item({list: this.collection.toJSON()});
@@ -148,7 +149,7 @@
     inputGroup_mouseDownHandler: function (event) {
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
     },
-    searchButton_clickHandler: function (event) {
+    searchButton_clickHandler: function () {
       this.search();
     },
     submitButton_clickHandler: function (event) {

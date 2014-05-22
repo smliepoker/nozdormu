@@ -36,8 +36,8 @@
       },
       parse: function (response) {
         this.isLoading = false;
-        this.total = response.total;
-        return response.list;
+        this.total = _.isArray(response) ? response.length : response.total;
+        return _.isArray(response) ? response : response.list;
       }
     });
   Collection.createInstance = function (models, options) {

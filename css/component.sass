@@ -1,4 +1,5 @@
 @import "define"
+@import "../bower_components/font-awesome/scss/variables"
 
 .weight
   background: #FF9933
@@ -83,12 +84,6 @@
     color: #e5412d
 
 /* ====================================
- * game-info
- * ================================== */
-.game-info h2
-  margin-top: 0
-
-/* ====================================
  * editor
  * ================================== */
 .article-editor
@@ -105,8 +100,9 @@
   table
     width: 100%
 
-/* ---------------------------------- */
-/* @morris-hover */
+/* ====================================
+ * morris-chart
+ * ================================== */
 .morris-hover
   position: absolute
   z-index: 5
@@ -611,7 +607,7 @@ body > .table
         padding-left: 25px
 
         &:before
-          content: '\f00c'
+          content: $fa-var-check
           font-family: 'FontAwesome'
           position: absolute
           left: 8px
@@ -644,3 +640,33 @@ body > .table
     ~ hr
       display: block
       width: 100%
+
+/* ====================================
+ * stars
+ * ==================================*/
+.stars
+  unicode-bidi: bidi-override
+  direction: rtl
+
+  input
+    display: none
+
+    &:checked ~ .star:before
+      content: $fa-var-star
+      color: $red
+
+  .star
+    font-size: 1.2em
+    cursor: pointer
+    margin: 0
+
+    &:before
+      content: $fa-var-star-o
+
+    &:hover
+      ~ .star:before,
+      &:before
+        content: $fa-var-star
+        color: $red
+
+

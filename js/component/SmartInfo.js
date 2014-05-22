@@ -10,13 +10,14 @@
     spec: null,
     events: {
       'click .edit': 'edit_clickHandler',
-      'click .process-button': 'processButton_clickHandler'
+      'click .process-button': 'processButton_clickHandler',
+      'change .stars input': 'star_changeHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
       this.spec = this.$el.data();
       if ('infoId' in this.spec) {
-        this.model.once('change:' + this.spec.infoId, this.idReadyHandler, this);
+        this.model.on('change:' + this.spec.infoId, this.idReadyHandler, this);
       } else {
         this.model.urlRoot = this.spec.url;
         this.model.once('sync', this.render, this);
@@ -33,6 +34,9 @@
     },
     remove: function () {
       this.model.off(null, null, this);
+      if (this.page) {
+        this.page.off(null, null, this);
+      }
       this.$el.popover('destroy');
       Backbone.View.prototype.remove.call(this);
     },
@@ -42,13 +46,21 @@
       this.$('time').text(function () {
         return moment(this.innerHTML).fromNow();
       });
+      this.$('[name=remark][value=' + this.model.get('remark') + ']').prop('checked', true);
     },
     idReadyHandler: function (model, id) {
+      // 把页面公用model保存到page里
+      if (this.page) {
+        this.model.id = id;
+        this.model.fetch();
+        return;
+      }
       var Model = Backbone.Model.extend({
         urlRoot: this.spec.url
       });
+      this.page = this.model;
       this.model = new Model({id: id});
-      this.model.once('sync', this.render, this);
+      this.model.on('sync', this.render, this);
       this.model.fetch();
     },
     edit_clickHandler: function (event) {
@@ -77,6 +89,14 @@
       setTimeout(function () {
         target.popover('hide');
       }, 5000);
+    },
+    star_changeHandler: function (event) {
+      this.model.save({
+        remark: event.currentTarget.value
+      }, {
+        wait: true,
+        patch: true
+      });
     }
   });
 }(Nervenet.createNameSpace('dianjoy.component')));
