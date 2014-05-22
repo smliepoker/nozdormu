@@ -102,6 +102,7 @@
       }
 
       // 用组件适配用户操作
+      this.$('[type=datetime]').datetimepicker();
       if (this.form) {
         this.form.setElement(this.$('form'));
         this.form.setModel(this.model);
@@ -130,6 +131,9 @@
     },
     search: function () {
       var keyword = this.$('[type=search]').val();
+      if (!keyword) {
+        return;
+      }
       this.collection.fetch({keyword: keyword, from: 'editor'});
       this.$('[type=search], .search-button').prop('disabled', true);
     },

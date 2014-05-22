@@ -73,8 +73,9 @@
     },
     model_changeHandler: function (model) {
       for (var prop in model.changed) {
-        var target = this.$('[href=#' + prop + ']');
-        target.text(model.changed[target.data('display')]);
+        var target = this.$('[href=#' + prop + ']')
+          , key = target.data('display') ? target.data('display') : prop;
+        target.text(model.changed[key]);
       }
     },
     processButton_clickHandler: function (event) {

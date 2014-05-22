@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="//cdn.staticfile.org/font-awesome/4.1.0/css/font-awesome.min.css" />
 <link rel="stylesheet" href="//cdn.staticfile.org/animate.css/3.1.0/animate.min.css" />
 <link rel="stylesheet" href="//cdn.staticfile.org/bootstrap-markdown/2.2.1/css/bootstrap-markdown.min.css">
+<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap-datetimepicker/3.0.0/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="{{module}}/css/component.css">
 <link rel="stylesheet" href="{{module}}/css/framework.css" />
 <link rel="stylesheet" href="{{module}}/css/layout.css">
@@ -149,6 +150,12 @@
               <input type="text" name="prop" class="form-control" id="editor-popup-input" value="{{value}}"
  autofocus />
               {{/if}}
+              {{#if datetime}}
+              <div class="input-group">
+                <input type="datetime" name="prop" class="form-control date" id="editor-popup-input" value="{{value}}" data-date-format="YYYY-MM-DD HH:mm:ss">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              </div>
+              {{/if}}
               {{#if long-text}}
               <textarea name="prop" class="form-control" rows="3" id="editor-popup-input" autofocus>{{value}}</textarea>
               {{/if}}
@@ -252,6 +259,7 @@
 <script src="//cdn.staticfile.org/morris.js/0.5.0/morris.min.js"></script>
 <script src="//cdn.staticfile.org/moment.js/2.6.0/moment.min.js"></script>
 <script src="//cdn.staticfile.org/bootstrap-markdown/2.2.1/js/bootstrap-markdown.min.js"></script>
+<script src="//cdn.staticfile.org/bootstrap-datetimepicker/3.0.0/js/bootstrap-datetimepicker.min.js"></script>
 <script src="{{module}}/bower_components/marked/lib/marked.js"></script>
 <script src="{{module}}/bower_components/nervenet/nervenet.min.js"></script>
 <script src="{{module}}/bower_components/spark-md5/spark-md5.min.js"></script>
