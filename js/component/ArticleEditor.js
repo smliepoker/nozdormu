@@ -86,7 +86,7 @@
       // model.id存在表示编辑，不然就是新建了
       this.model.urlRoot = this.el.action;
       if (this.model.id) {
-        this.model.on('sync', this.render, this);
+        this.model.once('sync', this.render, this);
         this.model.fetch();
       } else {
         this.render();
