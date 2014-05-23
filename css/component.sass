@@ -568,6 +568,13 @@ body > .table
 /* ====================================
  * label
  * ==================================*/
+.label-list
+  .label
+    line-height: 2
+
+    + .label
+      margin-left: 0
+
 .label
   &.up
     background: $red
@@ -657,16 +664,18 @@ body > .table
 
   .star
     font-size: 1.2em
-    cursor: pointer
     margin: 0
 
     &:before
       content: $fa-var-star-o
 
-    &:hover
-      ~ .star:before,
-      &:before
-        content: $fa-var-star
-        color: $red
+    &:not(.disabled)
+      cursor: pointer
+
+      &:hover
+        ~ .star:before,
+        &:before
+          content: $fa-var-star
+          color: $red
 
 
