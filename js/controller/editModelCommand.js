@@ -53,7 +53,7 @@
       , attr = {};
     popup.displayProcessing();
     // 没有选项集，就不需要转化
-    if (!collection) {
+    if (params.options.type === 'tags' || !collection) {
       attr[params.prop] = value;
       apply(attr);
       return;
@@ -100,8 +100,9 @@
     };
     // 有可能需要从远程取数据
     if (options.url || options.searchUrl) {
-      collection = dianjoy.model.ListCollection.createInstance(null, {url: options.url || options.searchUrl});
-      if (options.url) {
+      var init = _.isArray(options.value) ? options.value : null;
+      collection = dianjoy.model.ListCollection.createInstance(init, {url: options.url || options.searchUrl});
+      if (options.url && !init) {
         collection.on('reset', collection_resetHandler, this);
         collection.on('add', collection_addHandler, this);
         collection.fetch({reset: true});

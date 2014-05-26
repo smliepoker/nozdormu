@@ -67,7 +67,7 @@
       var target = $(event.currentTarget)
         , options = target.data()
         , prop = event.currentTarget.hash.substr(1);
-      options[options.type || 'short-text'] = true;
+      options.type = options.type || 'short-text';
       this.$context.trigger('edit-model', this.model, prop, options);
       event.preventDefault();
     },

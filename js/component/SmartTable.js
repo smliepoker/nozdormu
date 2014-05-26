@@ -229,8 +229,7 @@
         , options = _.extend({
           label: this.$('thead th').eq(index).text()
         }, data);
-      data.type = data.type || 'short-text';
-      options[data.type] = true;
+      options.type = data.type || 'short-text';
       this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
     },

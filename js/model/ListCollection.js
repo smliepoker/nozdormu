@@ -42,7 +42,9 @@
     });
   Collection.createInstance = function (models, options) {
     if (options.url in collections) {
-      return collections[options.url];
+      var collection = collections[options.url];
+      collection.reset(models);
+      return collection;
     } else {
       var collection = new Collection(models, options);
       collections[options.url] = collection;

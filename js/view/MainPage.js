@@ -42,7 +42,8 @@
       'change input[type=range]': 'range_changeHandler',
       'click .logout': 'logout_clickHandler',
       'click .disabled a': 'disabled_clickHandler',
-      'click .to-top-button': 'topButton_clickHandler'
+      'click .to-top-button': 'topButton_clickHandler',
+      'change .check-all': 'checkAll_changeHandler'
     },
     removeLoading: function () {
       clearTimeout(timeout);
@@ -92,6 +93,10 @@
       }
 
       return this;
+    },
+    checkAll_changeHandler: function (event) {
+      var target = $(event.currentTarget);
+      $('[type=checkbox][name=' + target.data('target') + ']').prop('checked', target.prop('checked'));
     },
     disabled_clickHandler: function (event) {
       event.preventDefault();

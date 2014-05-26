@@ -10,7 +10,6 @@
       '.smart-info': 'dianjoy.component.SmartInfo',
       '.smart-list': 'dianjoy.component.SmartList',
       '.smart-slide': 'dianjoy.component.SmartSlide',
-      '.search-result': 'dianjoy.component.SearchResult',
       '.morris-chart': 'dianjoy.component.MorrisChart',
       '.article-editor': 'dianjoy.component.ArticleEditor',
       'form': 'dianjoy.component.SmartForm'
