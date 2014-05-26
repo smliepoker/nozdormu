@@ -85,6 +85,7 @@
       'click .hide-button': 'hideButton_clickHandler',
       'click .status-button': 'statusButton_clickHandler',
       'click .edit': 'edit_clickHandler',
+      'change .edit': 'edit_changeHandler',
       'change .stars input': 'star_changeHandler',
       'sortupdate': 'sortUpdateHandler'
     },
@@ -153,6 +154,9 @@
       this.$('.stars').each(function () {
         $(this).find('input[value=' + $(this).data('value') + ']').prop('checked', true);
       });
+      this.$('select.edit').val(function () {
+        return $(this).attr('value');
+      });
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
@@ -220,6 +224,9 @@
       event.preventDefault();
     },
     edit_clickHandler: function (event) {
+      if (event.currentTarget.tagName.toLowerCase() === 'select') {
+        return;
+      }
       var target = $(event.currentTarget)
         , data = target.data()
         , index = target.closest('td').index()
@@ -232,6 +239,14 @@
       options.type = data.type || 'short-text';
       this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
+    },
+    edit_changeHandler: function (event) {
+      var target = $(event.currentTarget)
+        , id = target.closest('tr').attr('id')
+        , prop = target.attr('name');
+      this.collection.get(id).save(prop, target.val(), {
+        patch: true
+      });
     },
     hideButton_clickHandler: function (event) {
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
