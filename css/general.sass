@@ -20,6 +20,9 @@ legend,
   &:hover
     border-bottom: none
 
+  &:empty:before
+    content: '[edit]'
+
 /* ====================================
  * rewrite bootstrap
  * ==================================*/
@@ -61,9 +64,6 @@ legend,
 
   + .pagination
     margin: 0
-
-  .edit:empty:before
-    content: '[edit]'
 
 /* ---------------------------------- */
 /* label */
