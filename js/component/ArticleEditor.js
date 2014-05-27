@@ -34,8 +34,8 @@
                   icon: "fa fa-cloud-upload",
                   callback: function (editor) {
                     var options = {
-                      img: true,
-                      prop: 'attachment'
+                      prop: 'attachment',
+                      type: 'img'
                     };
                     var popup = dianjoy.popup.Manager.popupEditor(self.model, options);
                     popup.on('submit', function (value) {
