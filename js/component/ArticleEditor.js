@@ -45,7 +45,7 @@
                         , start = selected.start;
                       editor.replaceSelection(chunk);
                       editor.setSelection(start, start + chunk.length);
-                      popup.hide();
+                      popup.hide(0);
                       self.refreshPreview();
                     });
                   }

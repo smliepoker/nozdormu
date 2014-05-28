@@ -72,13 +72,14 @@
         this.options = options;
         $.get(webURL + 'template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
-      this.$('form').html('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
+      this.$('.modal-body').append('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
     },
-    hide: function () {
+    hide: function (delay) {
+      delay = delay === null ? 3000 : delay;
       var modal = this.$el;
       timeout = setTimeout(function () {
         modal.modal('hide');
-      }, 3000);
+      }, delay);
     },
     reset: function () {
       this.$('.btn-primary').prop('disabled', false)
@@ -165,9 +166,10 @@
     },
     loadCompleteHandler: function (data) {
       this.template = Handlebars.compile(data);
-      this.$('form').html(this.template(this.options));
+      this.$('p').remove();
+      var form = $('<form class="editor fake" id="prop-editor"></form>').appendTo(this.$('.modal-body'));
+      form.html(this.template(this.options));
       this.$('select').val(this.options.value);
-      $('[data-for=' + this.options.prop + ']').clone().show().appendTo(this.$('form'));
 
       var html = this.$('.item-grid').html();
       if (html) {
@@ -189,6 +191,7 @@
       dianjoy.component.Manager.check(this.$el, this.model);
     },
     hiddenHandler: function () {
+      dianjoy.component.Manager.clear(this.$el);
       this.trigger('hidden');
       clearTimeout(timeout);
     },
