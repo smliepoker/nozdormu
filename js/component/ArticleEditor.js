@@ -38,7 +38,7 @@
                       type: 'img'
                     };
                     var popup = dianjoy.popup.Manager.popupEditor(self.model, options);
-                    popup.on('submit', function (value) {
+                    popup.once('submit', function (value) {
                       var selected = editor.getSelection()
                         , label = selected.text || '图片描述'
                         , chunk = '![' + label + '](' + value + ')'
