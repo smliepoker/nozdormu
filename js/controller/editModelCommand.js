@@ -106,6 +106,8 @@
         collection.on('reset', collection_resetHandler, this);
         collection.on('add', collection_addHandler, this);
         collection.fetch({reset: true});
+        callPopup();
+        return;
       }
       callPopup(model, options, collection);
       return;
