@@ -6,8 +6,7 @@
 
   var collection
     , params
-    , popup
-    , isFirstTime = true;
+    , popup;
 
   function apply(attr) {
     params.model.save(attr, {
@@ -19,16 +18,19 @@
   }
   function callPopup(model, options, collection) {
     popup = dianjoy.popup.Manager.popupEditor(model, options, collection);
-    if (isFirstTime) {
-      popup.on('submit', onSubmit);
-      popup.on('hidden', onHidden);
-      isFirstTime = false;
+    if (model) {
+      popup.once('submit', onSubmit);
+      popup.once('hidden', onHidden);
     }
   }
   function clear() {
     if (collection) {
       collection.off(null, collection_addHandler);
       collection.off(null, collection_resetHandler);
+    }
+    if (popup) {
+      popup.off('submit', onSubmit);
+      popup.off('hidden', onHidden);
     }
     collection = params = null;
   }
