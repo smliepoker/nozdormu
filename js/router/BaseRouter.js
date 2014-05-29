@@ -14,7 +14,7 @@
       }
       if (dianjoy.component.Manager.preCheck(this.$subPage.$el)) {
         this.lastPage = location.hash;
-        callback.apply(this, args);
+        Backbone.Router.prototype.execute.call(this, callback, args);
       } else {
         this.navigate(this.lastPage, {trigger: false, replace: true});
       }

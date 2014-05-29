@@ -141,6 +141,9 @@
       }
     },
     preCheck: function () {
+      if ('id' in this.model.changed) {
+        return true;
+      }
       var isModified = this.model.get('content') !== this.$('textarea').val() || this.model.get('topic') !== this.$('[name=topic]').val();
       return !isModified || confirm('您修改的内容尚未保存，确定要离开么？');
     },
@@ -176,8 +179,7 @@
       this.displayProcessing();
     },
     model_savedOnServerHandler: function (model, id) {
-      // FIXME 改了会导致莫名其妙的route，看要不要加个特殊处理
-      //this.$router.navigate(location.hash + '/' + id, {trigger: false, replace: true});
+      this.$router.navigate(location.hash + '/' + id, {trigger: false, replace: true});
     },
     model_saveErrorHandler: function (error) {
       console.log(error);
