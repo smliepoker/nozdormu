@@ -75,7 +75,7 @@
       this.$('.modal-body').append('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
     },
     hide: function (delay) {
-      delay = delay === null ? 3000 : delay;
+      delay = delay === undefined ? 3000 : delay;
       var modal = this.$el;
       timeout = setTimeout(function () {
         modal.modal('hide');

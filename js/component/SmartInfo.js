@@ -56,10 +56,13 @@
         return;
       }
       var Model = Backbone.Model.extend({
+        idAttribute: this.spec.infoId,
         urlRoot: this.spec.url
       });
+      var data = {};
+      data['infoId' in this.spec ? this.spec.infoId : 'id'] = id;
       this.page = this.model;
-      this.model = new Model({id: id});
+      this.model = new Model(data);
       this.model.on('sync', this.render, this);
       this.model.fetch();
     },

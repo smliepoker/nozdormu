@@ -191,7 +191,7 @@
         } else if (target.is('.status-button')) {
           target.toggleClass('active', changed[prop]);
         } else {
-          target.text(changed[prop]);
+          target.text(changed[target.data('display') ? target.data('display') : prop]);
         }
       }
     },
