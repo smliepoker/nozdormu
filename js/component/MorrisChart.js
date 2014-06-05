@@ -28,7 +28,7 @@
       if ('color' in spec) {
         options.colors = options.lineColors = options.barColors = spec.color.split(',');
       } else {
-        options.colors = options.lineColors = options.barColors = R.chartColors;
+        options.colors = options.lineColors = options.barColors = dianjoy.colors;
       }
       if (this.className === 'Donut') {
         options.formatter = function (y, data) {
