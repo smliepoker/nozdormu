@@ -16,6 +16,7 @@
       'change [name="topic"]': 'topic_changeHandler',
       'click .publish-button': 'publishButton_clickHandler',
       'click .save-button': 'saveButton_clickHandler',
+      'click .status-button': 'statusButton_clickHandler',
       'keydown': 'keydownHandler'
     },
     initialize: function () {
@@ -117,6 +118,10 @@
       this.$('.publish-button').toggleClass('active', active)
         .find('i').toggleClass('fa-check-square-o', active)
         .toggleClass('fa-square-o', !active);
+      var model = this.model;
+      this.$('.status-button').toggleClass(function () {
+        return model.get($(this).attr('href').substr(1)) ? 'active' : '';
+      });
     },
     autoSave: function () {
       this.lastAutoSave = Date.now();
@@ -197,6 +202,15 @@
     },
     saveButton_clickHandler: function () {
       this.save();
+    },
+    statusButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , prop = event.currentTarget.hash.substr(1)
+        , data = _.extend({active: 1, deactive: 0}, target.data())
+        , value = target.hasClass('active') ? data.deactive : data.active;
+      this.model.save(prop, value, {patch: true});
+      target.toggleClass('active');
+      event.preventDefault();
     },
     textArea_textInputHandler: function () {
       this.countDown();
