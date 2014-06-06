@@ -70,7 +70,7 @@
         return;
       }
       var uploader = dianjoy.service.Manager.upload(file, {
-        id: this.model.id,
+        id: this.model.id || '',
         type: data.type
       }, this);
       uploader.bar = progress;

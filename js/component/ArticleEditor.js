@@ -184,7 +184,7 @@
       this.displayProcessing();
     },
     model_savedOnServerHandler: function (model, id) {
-      this.$router.navigate(location.hash + '/' + id, {trigger: false, replace: true});
+      //this.$router.navigate(location.hash + '/' + id, {trigger: false, replace: true});
     },
     model_saveErrorHandler: function (error) {
       console.log(error);
