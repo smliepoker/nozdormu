@@ -638,6 +638,8 @@
     order: 1
     display: none
     margin: 0 0 5px
+    background-color: $gray
+    height: 2px
 
   input[type=radio]:checked,
   input[type=checkbox]:checked
@@ -659,9 +661,9 @@
   input
     display: none
 
-    &:checked ~ .star:before
-      content: $fa-var-star
-      color: $red
+  &:not(:hover) input:checked ~ .star:before
+    content: $fa-var-star
+    color: $red
 
   .star
     font-size: 1.2em

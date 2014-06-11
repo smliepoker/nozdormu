@@ -128,13 +128,15 @@
       this.add();
     },
     collection_addHandler: function (model) {
-      this.$('.tags').append(this.item({value: [model.toJSON()]}));
+      var data = model.toJSON();
+      data.index = this.collection.length - 1;
+      $(this.item({value: [data], append: true})).insertBefore(this.$('hr'));
       this.$('[name=query],.add-button').prop('disabled', false).val('');
       this.$('.add-button i').removeClass('fa-spin fa-spinner');
     },
     collection_resetHandler: function () {
       var html = this.item({list: this.collection.toJSON()});
-      this.$('.search-result').html(html);
+      this.$('.search-result').html(html + '<hr />');
       this.$('[type=search], .search-button').prop('disabled', false);
     },
     inputGroup_mouseDownHandler: function (event) {
