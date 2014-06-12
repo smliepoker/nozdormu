@@ -77,8 +77,17 @@
     model_changeHandler: function (model) {
       for (var prop in model.changed) {
         var target = this.$('[href=#' + prop + ']')
+          , type = target.data('type')
           , key = target.data('display') ? target.data('display') : prop;
-        target.text(model.changed[key]);
+        switch (type) {
+          case 'img':
+            target.find('img').attr('src', model.changed[key]);
+            break;
+
+          default:
+            target.text(model.changed[key]);
+            break;
+        }
       }
     },
     processButton_clickHandler: function (event) {

@@ -94,7 +94,7 @@
   ns.editModelCommand = function (model, prop, options) {
     clear();
     options.prop = prop;
-    options.value = model.get(prop);
+    options.value = model.get(prop) || model.get(options.display);
     params = {
       model: model,
       prop: prop,
