@@ -1,5 +1,8 @@
 ;(function (ns) {
   'use strict';
+
+  var pageReg = /\/p(\d+)(\/?)/;
+
   ns.BaseRouter = Backbone.Router.extend({
     $mainPage: null,
     $subPage: null,
@@ -17,6 +20,18 @@
         Backbone.Router.prototype.execute.call(this, callback, args);
       } else {
         this.navigate(this.lastPage, {trigger: false, replace: true});
+      }
+    },
+    pageTo: function (page) {
+      var pn = location.hash.match(pageReg)
+        , options = {
+          trigger: false,
+          replace: true
+        };
+      if (pn) {
+        this.navigate(location.hash.replace(pageReg, '/p' + page + '$2'), options);
+      } else {
+        this.navigate(location.hash + '/p' + page, options);
       }
     },
     showHomepage: function () {
