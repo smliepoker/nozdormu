@@ -262,9 +262,6 @@
       if ('keyword' in changed && model.get('page') !== 0) {
         changed.page = 0;
       }
-      if ('page' in changed) {
-        this.$router.pageTo(changed.page);
-      }
       this.filter = _.extend(this.filter, changed);
       this.collection.fetch(this.filter);
     },

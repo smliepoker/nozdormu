@@ -120,7 +120,13 @@
         .toggleClass('fa-square-o', !active);
       var model = this.model;
       this.$('.status-button').toggleClass(function () {
-        return model.get($(this).attr('href').substr(1)) ? 'active' : '';
+        var active = $(this).data('active')
+          , value = model.get($(this).attr('href').substr(1));
+        if (active) {
+          return active === value ? 'active' : '';
+        } else {
+          return value ? 'active' : '';
+        }
       });
     },
     autoSave: function () {
