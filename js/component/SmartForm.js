@@ -3,13 +3,15 @@
   ns.SmartForm = dianjoy.view.DataSyncView.extend({
     $router: null,
     events: {
-      "blur input[type=text]": "input_blurHandler",
+      "blur input": "input_blurHandler",
+      'focus input': 'input_focusHandler',
       "click .upload-button": "uploadButton_clickHandler",
       "change input[type=file]": "fileUploader_changeHandler",
-      'focus .error input[type=text]': 'errorInput_focusHandler',
       'submit': 'submitHandler'
     },
     initialize: function () {
+      this.submit = this.getSubmit();
+      this.submit.toggleClass('disabled', this.$(':invalid').length !== 0);
       this.model.on('change', this.model_changeHandler, this);
     },
     remove: function () {
@@ -23,14 +25,14 @@
       uploader.insertAfter(sibling);
       return uploader;
     },
-    setModel: function (model) {
-      this.model.off(null, null, this);
-      this.model = model;
-      this.model.on('change', this.model_changeHandler, this);
-    },
-    errorInput_focusHandler: function(event) {
-      $(event.currentTarget).tooltip('destroy')
-        .closest('.form-group').removeClass('error');
+    getSubmit: function () {
+      var selector = 'button:not([type=button]), input[type=submit]'
+        , submit = this.$(selector);
+      if (submit.length === 0) {
+        var id = this.$el.attr('id');
+        submit = $(selector).filter('[for=' + id + ']');
+      }
+      return submit;
     },
     fileUploader_changeHandler: function(event) {
       var input = $(event.currentTarget)
@@ -164,19 +166,20 @@
       this.off();
     },
     input_blurHandler: function(event) {
-      var target = event.currentTarget,
-          msgs = dianjoy.form.checkInput(target);
-      target = $(target);
-      if (msgs.length > 0) {
-        target.closest('.form-group').addClass('has-error');
+      var target = $(event.currentTarget)
+        , msg = dianjoy.form.checkInput(target);
+      if (msg) {
+        this.$('input').tooltip('destroy');
         target.tooltip({
-          title: msgs[0],
+          title: msg,
           placement: 'bottom',
-          trigger: 'click'
+          trigger: 'manual'
         }).tooltip('show');
-        return;
       }
-      target.closest('.form-group').addClass('has-success');
+      this.submit.toggleClass('disabled', this.$(':invalid').length !== 0);
+    },
+    input_focusHandler: function(event) {
+      $(event.currentTarget).tooltip('destroy');
     },
     model_changeHandler: function (model) {
       if ('keyword' in model.changed && model.changed.keyword === undefined) {
@@ -204,7 +207,7 @@
     submitHandler: function(event) {
       var form = this.el,
           action = form.action;
-      // 不需要提交的表单
+      // 不需要提交的表单和不能提交
       if (this.$el.hasClass('fake') || this.$el.hasClass('loading')) {
         event.preventDefault();
         return false;

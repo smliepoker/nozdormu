@@ -61,30 +61,32 @@
       return true;
     },
     checkInput: function (input) {
-      var msgs = [],
-        input = $(input);
       // 验证必填项
-      if (input.attr('required') && input.val() === '') {
-        msgs.push('此项为必填项，您好像漏掉了哟');
+      if (input.prop('required') && input.val() === '') {
+        return '此项为必填项，您好像漏掉了哟';
       }
       // 验证内容
       var pattern = input.attr('pattern');
       if (pattern && input.val() !== '' && !RegExp(pattern).test(input.val())) {
-        msgs.push('填写格式有误，麻烦您检查并重新填写');
+        return '填写格式有误，麻烦您检查并重新填写';
       }
       // 验证数值
-      if (/number/i.test(input.attr('type')) && input.attr('min') && input.attr('max')) {
+      if (/number/i.test(input.attr('type')) && (input.attr('min') !== undefined || input.attr('max') !== undefined)) {
         var value = Number(input.val());
-        if (isNaN(value) || value < input.attr('min') || value > input.attr('max')) {
-          msgs.push('数值超出规定范围');
+        if (isNaN(value)) {
+          return '此项只能输入数字';
+        }
+        if (input.attr('min') !== undefined && value < input.attr('min')
+          || input.attr('max') !== undefined && value > input.attr('max')) {
+          return '数值超出规定范围';
         }
       }
       // 验证密码
       if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,16}$/.test(input.val())) {
-        msgs.push('密码应为6~16个字符，包含字母、数字、特殊符号等');
+        return '密码应为6~16个字符，包含字母、数字、特殊符号等';
       }
 
-      return msgs;
+      return '';
     }
   };
   _.extend(ns, utils);
