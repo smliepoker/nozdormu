@@ -16,6 +16,7 @@ $(function () {
   context
     .mapValue('mainPage', mainPage)
     .mapValue('subPage', subPage)
+    .mapValue('mediator', mediator)
     .mapValue('router', router)
     .inject(router)
     .inject(subPage)

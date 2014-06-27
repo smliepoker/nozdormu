@@ -23,20 +23,17 @@
       this.$el.empty();
     },
     initComponents: function () {
-      this.model.load();
       dianjoy.component.Manager.check(this.$el, this.model);
     },
-    load: function (url, data, path) {
+    load: function (url, data) {
       this.setDisabled(true);
       this.clear();
       this.$el.load(url, _.bind(this.loadCompleteHandler, this));
       if (_.isObject(data)) {
-        data.path = path;
         this.model.set(data);
       } else {
         this.model.set({
-          id: data,
-          path: path
+          id: data
         });
       }
       this.trigger('load:start', url);

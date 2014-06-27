@@ -203,7 +203,7 @@
     },
     collection_resetHandler: function () {
       this.render();
-      this.model.unset('keyword'); // 删掉搜索关键词，方便多次搜索
+      this.$context.trigger('table-ready');
     },
     deleteButton_clickHandler: function (event) {
       if (!confirm('确定删除么？')) {
@@ -258,9 +258,6 @@
       var changed = _.pick(model.changed, 'page', 'keyword');
       if (!('page' in changed) && (!('keyword' in changed) || changed.keyword === undefined)) {
         return;
-      }
-      if ('keyword' in changed && model.get('page') !== 0) {
-        changed.page = 0;
       }
       this.filter = _.extend(this.filter, changed);
       this.collection.fetch(this.filter);
