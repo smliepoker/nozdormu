@@ -47,6 +47,9 @@
       var path = '#/' + this.params.cate + '/' + this.params.sub + '/'
         , rest = [];
       for (var prop in this.params) {
+        if (!this.params[prop]) {
+          continue;
+        }
         var label;
         if (prop === 'page') {
           label = 'p';

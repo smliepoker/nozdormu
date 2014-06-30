@@ -11,7 +11,7 @@
       Handlebars.registerPartial('slide-item', this.$('#item-template').remove().html());
       var spec = this.$el.data();
       this.collection = dianjoy.model.ListCollection.createInstance(null, {
-        url: spec.url + (this.model.has('path') ? '/' + this.model.get('path') : '')
+        url: spec.url + (this.model.id ? '/' + this.model.id : '')
       });
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);

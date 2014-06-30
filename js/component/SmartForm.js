@@ -1,6 +1,7 @@
 ;(function (ns) {
   'use strict';
   ns.SmartForm = dianjoy.view.DataSyncView.extend({
+    $context: null,
     $router: null,
     events: {
       "blur input": "input_blurHandler",
@@ -13,9 +14,11 @@
       this.submit = this.getSubmit();
       this.submit.toggleClass('disabled', this.$(':invalid').length !== 0);
       this.model.on('change', this.model_changeHandler, this);
+      this.$context.mapEvent('table-rendered', this.searchedHandler, this);
     },
     remove: function () {
       this.model.off(null, null, this);
+      this.$context.removeEvent('table-rendered', this.searchedHandler);
       Backbone.View.prototype.remove.call(this);
     },
     createUploader: function (sibling) {
@@ -204,6 +207,9 @@
       var uploader = this.createUploader(event.currentTarget);
       uploader.click();
     },
+    searchedHandler: function () {
+      this.displayResult(true);
+    },
     submitHandler: function(event) {
       var form = this.el,
           action = form.action;
@@ -215,7 +221,7 @@
 
       // 筛选类型的
       if (this.$el.hasClass('keyword-form')) {
-        this.model.set('keyword', form.elements.query.value);
+        this.$context.trigger('search', this.$('[name=query]').val());
         this.displayProcessing();
         event.preventDefault();
         return false;

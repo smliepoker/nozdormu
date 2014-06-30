@@ -94,7 +94,7 @@
       this.template = Handlebars.compile(this.$('script').html());
       var init = this.$el.data()
         , options = {
-          url: init.url + (this.model.has('path') ? '/' + this.model.get('path') : ''),
+          url: init.url + (this.model.id ? '/' + this.model.id : ''),
           pagesize: init.pagesize
         };
       this.filter = dianjoy.utils.decodeURLParam(init.filter);
@@ -107,8 +107,11 @@
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
 
-      // 通过页面中介来实现翻页、搜索等功能
+      // 通过页面中介来实现翻页等功能
       this.model.on('change', this.model_changeHandler, this);
+
+      // 启用搜索
+      this.$context.mapEvent('search', this.searchHandler, this);
 
       // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
@@ -127,9 +130,6 @@
       this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
     },
     remove: function () {
-      if (this.header) {
-        this.header.remove();
-      }
       if (this.pagination) {
         this.pagination.off();
         this.pagination.remove();
@@ -137,6 +137,7 @@
       this.collection.off();
       dianjoy.model.ListCollection.destroyInstance(this.collection.url);
       this.model.off(null, null, this);
+      this.$context.removeEvent('search', this.searchHandler);
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
@@ -161,6 +162,7 @@
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
+      this.$context.trigger('table-rendered');
     },
     addRowButton_clickHandler: function () {
       var model = new this.collection.model();
@@ -255,12 +257,10 @@
       }, saveOptions);
     },
     model_changeHandler: function (model) {
-      var changed = _.pick(model.changed, 'page', 'keyword');
-      if (!('page' in changed) && (!('keyword' in changed) || changed.keyword === undefined)) {
-        return;
+      if ('page' in model.changed) {
+        this.filter.page = model.get('page');
+        this.collection.fetch(this.filter);
       }
-      this.filter = _.extend(this.filter, changed);
-      this.collection.fetch(this.filter);
     },
     showButton_clickHandler: function (event) {
       this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
@@ -286,6 +286,15 @@
         , id = target.closest('tr').attr('id');
       this.collection.get(id).save(prop, value, {patch: true});
       event.preventDefault();
+    },
+    searchHandler: function (keyword) {
+      this.filter.page = 0;
+      this.filter.keyword = keyword;
+      this.model.set({
+        page: 0,
+        keyword: keyword
+      });
+      this.collection.fetch(this.filter);
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item
