@@ -55,6 +55,8 @@
           label = 'p';
         } else if (prop === 'keyword') {
           label = 'keyword-';
+        } else if (prop === 'id') {
+          label = '';
         } else {
           label = prop;
         }
