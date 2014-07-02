@@ -94,7 +94,7 @@
       this.template = Handlebars.compile(this.$('script').html());
       var init = this.$el.data()
         , options = {
-          url: init.url + (this.model.id ? '/' + this.model.id : ''),
+          url: init.url + (this.model.get('path') ? '/' + this.model.get('path') : ''),
           pagesize: init.pagesize
         };
       this.filter = dianjoy.utils.decodeURLParam(init.filter);

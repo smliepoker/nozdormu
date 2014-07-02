@@ -28,7 +28,7 @@
      * @param omit
      */
     diff: function (data, omit) {
-      omit = omit || ['p', 'keyword']; // 忽略的参数，默认包括翻页和搜索
+      omit = omit || ['p', 'keyword', 'path']; // 忽略的参数，默认包括翻页和搜索
       var keys = _.chain(data).omit(omit).keys().value();
       for (var i = 0, len = keys.length; i < len; i++) {
         if (data[keys[i]] !== this.params[keys[i]]) {
@@ -36,7 +36,7 @@
         }
       }
       // 需要更新到页面中
-      var pick = _.pick(data, 'p', 'keyword');
+      var pick = _.extend({page: 0}, _.pick(data, 'p', 'keyword'));
       if (pick.p) {
         pick.page = pick.p;
       }
@@ -47,7 +47,7 @@
       var path = '#/' + this.params.cate + '/' + this.params.sub + '/'
         , rest = [];
       for (var prop in this.params) {
-        if (!this.params[prop]) {
+        if (!this.params[prop] || prop === 'path') {
           continue;
         }
         var label;

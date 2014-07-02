@@ -30,27 +30,9 @@
   var utils = {
     checkForm: function (form) {
       // 验证表单项是否合乎要求
-      var msgs = [],
-        elements = form.elements,
-        error = _.find(elements, function (element) {
-          // 不验证button
-          if (/button/i.test(element.tagName)) {
-            return;
-          }
-          element = $(element);
-          // 不验证隐藏项
-          if (element.is(':hidden')) {
-            return;
-          }
-          msgs = msgs.concat(utils.checkInput(element));
-          return msgs.length > 0;
-        });
-      if (/[^\s]uploading[$\s]/.test(form.className)) {
-        msgs.push('上传文件中，请稍候');
-      }
-      if (msgs.length > 0) {
-        showErrorPopup(error, msgs);
-        return false;
+      var elements = form.elements;
+      if ($(form).hasClass('uploading')) {
+        $(form).find('.upload-button').push('上传文件中，请稍候');
       }
       // 验证两次输入的密码是否一致
       if ('newpassword' in elements && elements.newpassword.value !== elements.repassword.value) {

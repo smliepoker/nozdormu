@@ -88,6 +88,9 @@
       uploader.on('progress', this.fileUpload_progressHandler, uploader);
       uploader.on('error', this.fileUpload_errorHandler, uploader);
 
+      // 添加样式
+      this.$el.addClass('uploading');
+
       // 是否需要md5和大小校验
       if (validate) {
         var spark = new SparkMD5.ArrayBuffer()
@@ -106,6 +109,7 @@
         .end().fadeOut(function () {
           $(this).addClass('hide').children().removeClass('progress-bar-danger');
         });
+      this.$el.removeClass('uploading');
 
       this.preview.append('<p class="text-danger">' + response.msg + '</p>');
 
@@ -132,12 +136,13 @@
         return;
       }
 
-      // 隐藏进度条
+      // 隐藏进度条，去掉样式
       this.bar.children()
         .addClass('progress-bar-success')
         .end().fadeOut(function () {
           $(this).addClass('hide').children().removeClass('progress-bar-success');
         });
+      this.$el.removeClass('uploading');
 
       // 生成缩略图或链接
       if (this.preview) {
