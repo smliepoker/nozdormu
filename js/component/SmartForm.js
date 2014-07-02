@@ -108,8 +108,8 @@
         .addClass('progress-bar-danger')
         .end().fadeOut(function () {
           $(this).addClass('hide').children().removeClass('progress-bar-danger');
-        });
-      this.$el.removeClass('uploading');
+        })
+        .closest('form').removeClass('uploading');
 
       this.preview.append('<p class="text-danger">' + response.msg + '</p>');
 
@@ -141,8 +141,8 @@
         .addClass('progress-bar-success')
         .end().fadeOut(function () {
           $(this).addClass('hide').children().removeClass('progress-bar-success');
-        });
-      this.$el.removeClass('uploading');
+        })
+        .closest('form').removeClass('uploading');
 
       // 生成缩略图或链接
       if (this.preview) {
