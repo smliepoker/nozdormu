@@ -73,6 +73,7 @@
       this.$mediator.on('change', this.mediator_changeHandler, this);
     },
     showHomepage: function () {
+      this.params = {};
       var url = baseURL + 'dashboard/';
       this.$subPage.load(url);
     },
