@@ -36,7 +36,7 @@
         }
       }
       // 需要更新到页面中
-      var pick = _.extend({page: 0}, _.pick(data, 'page', 'keyword'));
+      var pick = _.extend({page: 0, keyword: ''}, _.pick(data, 'page', 'keyword'));
       this.$mediator.set(pick);
       return false;
     },
