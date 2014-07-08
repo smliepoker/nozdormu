@@ -19,6 +19,7 @@ $(function () {
     .mapValue('mediator', mediator)
     .mapValue('router', router)
     .inject(router)
+    .inject(mainPage)
     .inject(subPage)
     .inject(dianjoy.service.Manager)
     .inject(dianjoy.popup.Manager)

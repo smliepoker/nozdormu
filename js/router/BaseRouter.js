@@ -28,7 +28,7 @@
      * @param omit
      */
     diff: function (data, omit) {
-      omit = omit || ['p', 'keyword', 'path']; // 忽略的参数，默认包括翻页和搜索
+      omit = omit || ['page', 'keyword', 'path']; // 忽略的参数，默认包括翻页和搜索
       var keys = _.chain(data).omit(omit).keys().value();
       for (var i = 0, len = keys.length; i < len; i++) {
         if (data[keys[i]] !== this.params[keys[i]]) {
@@ -36,20 +36,15 @@
         }
       }
       // 需要更新到页面中
-      var pick = _.extend({page: 0}, _.pick(data, 'p', 'keyword'));
-      if (pick.p) {
-        pick.page = pick.p;
-      }
+      var pick = _.extend({page: 0}, _.pick(data, 'page', 'keyword'));
       this.$mediator.set(pick);
       return false;
     },
-    getPath: function () {
-      var path = '#/' + this.params.cate + '/' + this.params.sub + '/'
+    getPath: function (isList) {
+      var path = isList ? '' : '#/' + this.params.cate + '/' + this.params.sub + '/'
+        , omit = ['cate', 'sub'].concat(isList ? ['keyword', 'page'] : null)
         , rest = [];
-      for (var prop in this.params) {
-        if (!this.params[prop] || prop === 'path') {
-          continue;
-        }
+      for (var prop in _.omit(this.params, omit)) {
         var label;
         if (prop === 'page') {
           label = 'p';
@@ -60,9 +55,7 @@
         } else {
           label = prop;
         }
-        if (prop !== 'cate' && prop !== 'sub') {
-          rest.push(label + this.params[prop]);
-        }
+        rest.push(label + this.params[prop]);
       }
       if (rest.length) {
         path += rest.join('/');
@@ -88,8 +81,7 @@
       var data = {
         cate: cate,
         sub: sub,
-        id: id,
-        path: path
+        id: id
       };
       if (this.diff(data)) {
         return;
@@ -102,6 +94,12 @@
       var changed = _.pick(model.changed, 'page', 'keyword');
       if (_.keys(changed).length > 0) {
         this.params = _.extend(this.params, changed);
+        if (!this.params.keyword) {
+          delete this.params.keyword;
+        }
+        if (!this.params.page) {
+          delete this.params.page;
+        }
         this.navigate(this.getPath(), {trigger: false});
       }
     }

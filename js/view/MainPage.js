@@ -1,40 +1,7 @@
 ;(function (ns, $) {
   'use strict';
-  var timeout = 0
-    , isScroll = false
-    , requestAnimFrame = (function () {
-        return window.requestAnimationFrame ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame ||
-          function (callback) {
-            window.setTimeout(callback, 1000 / 30);
-          };
-      }());
 
-  function update() {
-    var theads = document.getElementsByClassName('scroll-fix')
-      , tables = document.getElementsByClassName('smart-table')
-      , container = document.getElementById('fix-header-container');
-    for (var i = 0, len = theads.length; i < len; i++) {
-      var thead = theads[i]
-        , top = Number(thead.getAttribute('data-top'))
-        , index = Number(thead.getAttribute('data-index'))
-        , table = tables[index];
-      if (document.body.scrollTop > top && table.offsetWidth > 0 && !$.contains(container, thead)) {
-        container.appendChild(thead);
-      } else if (document.body.scrollTop < top && $.contains(container, thead)) {
-        document.body.appendChild(thead);
-      }
-    }
-    isScroll = false;
-  }
-
-  $(window).on('scroll', function () {
-    if (!isScroll) {
-      isScroll = true;
-      requestAnimFrame(update);
-    }
-  });
+  var timeout;
 
   ns.MainPage = Backbone.View.extend({
     $context: null,
@@ -44,6 +11,11 @@
       'click .disabled a': 'disabled_clickHandler',
       'click .to-top-button': 'topButton_clickHandler',
       'change .check-all': 'checkAll_changeHandler'
+    },
+    postConstruct: function () {
+      this.$context.mapEvent('table-rendered', function () {
+        this.$el.scrollTop(0);
+      }, this);
     },
     removeLoading: function () {
       clearTimeout(timeout);

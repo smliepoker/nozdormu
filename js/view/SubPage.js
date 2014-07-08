@@ -13,9 +13,6 @@
   ns.SubPage = Backbone.View.extend({
     $context: null,
     events: eventsMap,
-    initialize: function () {
-      this.model.on('change:form', this.modelForm_changeHandler, this);
-    },
     clear: function () {
       dianjoy.popup.Manager.off();
       dianjoy.component.Manager.clear(this.$el);
@@ -73,18 +70,6 @@
       var img = $(event.currentTarget).clone();
       img.removeClass('preview img-polaroid');
       dianjoy.popup.Manager.popup(img.attr('alt'), img[0].outerHTML, false);
-    },
-    modelForm_changeHandler: function (model, value) {
-      if (!value) {
-        return;
-      }
-      this.$('.alert')
-        .hide()
-        .removeClass('alert-success alert-danger')
-        .addClass('alert-' + value.className)
-        .text(value.msg)
-        .slideDown();
-      this.$('input, select, button').prop('disabled', false);
     },
     toggle_changeHandler: function (event) {
       var target = $(event.currentTarget),

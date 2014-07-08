@@ -93,8 +93,9 @@
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').html());
       var init = this.$el.data()
+        , path = this.$router.getPath(true)
         , options = {
-          url: init.url + (this.model.get('path') ? '/' + this.model.get('path') : ''),
+          url: init.url + (path ? '/' + path : ''),
           pagesize: init.pagesize
         };
       this.filter = dianjoy.utils.decodeURLParam(init.filter);
@@ -257,8 +258,8 @@
       }, saveOptions);
     },
     model_changeHandler: function (model) {
-      if ('page' in model.changed) {
-        this.filter.page = model.get('page');
+      if ('page' in model.changed || 'keyword' in  model.changed) {
+        this.filter = _.extend(this.filter, _.pick(model.changed, 'page', 'keyword'));
         this.collection.fetch(this.filter);
       }
     },
