@@ -92,8 +92,9 @@
     },
     processButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
+        , pick = target.data('pick')
         , href = target.attr('href')
-        , json = JSON.stringify(this.model.toJSON());
+        , json = JSON.stringify(pick ? this.model.pick(pick.split(',')) : this.model.toJSON());
       href = href.replace(':json', encodeURIComponent(json));
       $.get(href);
       target.addClass('disabled')
