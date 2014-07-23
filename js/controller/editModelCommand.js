@@ -105,9 +105,10 @@
       var init = _.isArray(options.value) ? options.value : null;
       collection = dianjoy.model.ListCollection.createInstance(init, {url: options.url || options.searchUrl});
       if (options.url && !init) {
+        collection.pagesize = 0;
         collection.on('reset', collection_resetHandler, this);
         collection.on('add', collection_addHandler, this);
-        collection.fetch({reset: true});
+        collection.fetch();
         callPopup();
         return;
       }

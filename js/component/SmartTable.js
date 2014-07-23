@@ -1,17 +1,6 @@
 ;(function (ns) {
   'use strict';
 
-  var saveOptions = {
-    wait: true,
-    patch: true,
-    success: function (model) {
-      var tr = $('#' + model.id);
-      tr = tr.length > 0 ? tr : $('#' + model.cid);
-      tr.find('.hide-button, .show-button').toggleClass('hide-button show-button btn-warning btn-success')
-        .find('i').toggleClass('fa-eye fa-eye-slash');
-    }
-  };
-
   var Pager = Backbone.View.extend({
     events: {
       'click a': 'clickHandler'
@@ -82,8 +71,6 @@
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
-      'click .show-button': 'showButton_clickHandler',
-      'click .hide-button': 'hideButton_clickHandler',
       'click .status-button': 'statusButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'change .edit': 'edit_changeHandler',
@@ -101,6 +88,9 @@
       this.filter = dianjoy.utils.decodeURLParam(init.filter);
       if ('id' in init) {
         options.model = Backbone.Model.extend({idAttribute: init.id});
+      }
+      if ('collectionId' in init) {
+        options.id = init.collectionId;
       }
       this.collection = dianjoy.model.ListCollection.createInstance(null, options);
       this.collection.on('reset', this.collection_resetHandler, this);
@@ -136,7 +126,7 @@
         this.pagination.remove();
       }
       this.collection.off();
-      dianjoy.model.ListCollection.destroyInstance(this.collection.url);
+      dianjoy.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
       this.model.off(null, null, this);
       this.$context.removeEvent('search', this.searchHandler);
       Backbone.View.prototype.remove.call(this);
@@ -166,15 +156,14 @@
       this.$context.trigger('table-rendered');
     },
     addRowButton_clickHandler: function () {
-      var model = new this.collection.model();
-      this.collection.add(model);
+      this.collection.add({});
     },
     collection_addHandler: function (model) {
       var item = $(this.template({list: [model.toJSON()]}));
       item.attr('id', function () {
         return model.id || model.cid;
-      });
-      this.$('tbody').append(item);
+      }).addClass('animated flash');
+      this.$('tbody')[this.$('.add-row-button').length ? 'append' : 'prepend'](item);
     },
     collection_changeHandler: function (model) {
       var changed = model.changed
@@ -252,21 +241,11 @@
         patch: true
       });
     },
-    hideButton_clickHandler: function (event) {
-      this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
-        status: 1
-      }, saveOptions);
-    },
     model_changeHandler: function (model) {
       if ('page' in model.changed || 'keyword' in  model.changed) {
         this.filter = _.extend(this.filter, _.pick(model.changed, 'page', 'keyword'));
         this.collection.fetch(this.filter);
       }
-    },
-    showButton_clickHandler: function (event) {
-      this.collection.get($(event.currentTarget).closest('tr').attr('id')).save({
-        status: 0
-      }, saveOptions);
     },
     star_changeHandler: function (event) {
       var target = $(event.currentTarget)

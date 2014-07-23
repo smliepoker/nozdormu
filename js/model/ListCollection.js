@@ -41,19 +41,22 @@
       }
     });
   Collection.createInstance = function (models, options) {
-    if (options.url in collections) {
-      var collection = collections[options.url];
+    if (!('id' in options)) {
+      return new Collection(models, options);
+    }
+    if (options.id in collections) {
+      var collection = collections[options.id];
       collection.reset(models);
       return collection;
     } else {
       var collection = new Collection(models, options);
-      collections[options.url] = collection;
+      collections[options.id] = collection;
       return collection;
     }
   };
-  Collection.destroyInstance = function (url) {
-    if (url in collections) {
-      delete collections.url;
+  Collection.destroyInstance = function (id) {
+    if (id in collections) {
+      delete collections.id;
     }
   }
 }(Nervenet.createNameSpace('dianjoy.model')));

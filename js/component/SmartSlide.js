@@ -21,8 +21,8 @@
     },
     remove: function () {
       this.collection.off();
+      dianjoy.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
       Backbone.View.prototype.remove.call(this);
-      dianjoy.model.ListCollection.destroyInstance(this.collection.url);
     },
     render: function () {
       if (this.collection.length === 0) {
