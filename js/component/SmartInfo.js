@@ -14,7 +14,7 @@
       'change .stars input': 'star_changeHandler'
     },
     initialize: function () {
-      this.template = Handlebars.compile(this.$('script').remove().html());
+      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       this.spec = this.$el.data();
       if ('infoId' in this.spec) {
         this.model.on('change:' + this.spec.infoId, this.idReadyHandler, this);

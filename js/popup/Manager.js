@@ -184,6 +184,12 @@
         this.collection.on('reset', this.collection_resetHandler, this);
       }
       if (this.options.type === 'tags') {
+        if (this.options.tag && this.collection) {
+          var prop = this.options.tag;
+          this.collection.map(function (model) {
+            model.set('tag', model.get(prop));
+          });
+        }
         this.collection.on('add', this.collection_addHandler, this);
         this.$('.item-grid').html(this.item({value: this.collection.toJSON()}));
       }

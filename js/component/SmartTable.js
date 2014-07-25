@@ -78,7 +78,7 @@
       'sortupdate': 'sortUpdateHandler'
     },
     initialize: function () {
-      this.template = Handlebars.compile(this.$('script').html());
+      this.template = Handlebars.compile(this.$('script').html().replace(/\s{2,}|\n/g, ''));
       var init = this.$el.data()
         , path = this.$router.getPath(true)
         , options = {
