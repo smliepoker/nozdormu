@@ -46,7 +46,9 @@
     }
     if (options.id in collections) {
       var collection = collections[options.id];
-      collection.reset(models);
+      if (collection.length === 0 && models) {
+        collection.reset(models);
+      }
       return collection;
     } else {
       var collection = new Collection(models, options);
