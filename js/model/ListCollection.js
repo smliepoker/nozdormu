@@ -3,12 +3,18 @@
  */
 ;(function (ns) {
   'use strict';
-  var collections = {};
+  var collections = {}
+    , Model = Backbone.Model.extend({
+      parse: function (response, options) {
+        return _.omit(response, 'code', 'msg');
+      }
+    });
   var Collection = ns.ListCollection = Backbone.Collection.extend({
       total: 0,
       pagesize: null,
       param: {},
       isLoading: false,
+      model: Model,
       initialize: function(models, options) {
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {

@@ -87,7 +87,7 @@
         };
       this.filter = dianjoy.utils.decodeURLParam(init.filter);
       if ('id' in init) {
-        options.model = Backbone.Model.extend({idAttribute: init.id});
+        options.model = dianjoy.model.ListCollection.prototype.model.extend({idAttribute: init.id});
       }
       if ('collectionId' in init) {
         options.id = init.collectionId;
