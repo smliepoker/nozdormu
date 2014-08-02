@@ -86,6 +86,7 @@
           pagesize: init.pagesize
         };
       this.filter = dianjoy.utils.decodeURLParam(init.filter);
+      this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
       if ('id' in init) {
         options.model = dianjoy.model.ListCollection.prototype.model.extend({idAttribute: init.id});
       }
@@ -156,7 +157,7 @@
       this.$context.trigger('table-rendered');
     },
     addRowButton_clickHandler: function () {
-      this.collection.add({});
+      this.collection.add(this.model.pick(this.include));
     },
     collection_addHandler: function (model) {
       var item = $(this.template({list: [model.toJSON()]}));
