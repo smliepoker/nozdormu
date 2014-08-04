@@ -64,7 +64,7 @@
   };
   Collection.destroyInstance = function (id) {
     if (id in collections) {
-      delete collections.id;
+      delete collections[id];
     }
   }
 }(Nervenet.createNameSpace('dianjoy.model')));

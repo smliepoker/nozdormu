@@ -171,7 +171,6 @@
       this.$('p').remove();
       var form = $('<form class="editor fake" id="prop-editor"></form>').appendTo(this.$('.modal-body'));
       form.html(this.template(this.options));
-      this.$('select').val(this.options.value);
 
       var html = this.$('.item-grid').html();
       if (html) {
@@ -193,6 +192,12 @@
         this.collection.on('add', this.collection_addHandler, this);
         this.$('.item-grid').html(this.item({value: this.collection.toJSON()}));
       }
+      this.$('select')
+        .val(this.options.value)
+        .prop('disabled', this.options.options.length === 0)
+        .html(function () {
+          return $(this).prop('disabled') ? '<option>&lt;没有结果&gt;</option>' : this.innerHTML;
+        });
 
       // 用组件适配用户操作
       this.$('[type=datetime]').datetimepicker();
