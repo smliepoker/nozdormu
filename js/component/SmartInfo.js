@@ -85,7 +85,12 @@
             break;
 
           default:
-            target.text(model.changed[key]);
+            if (target.data('refresh')) {
+              var info = $(this.template(model.toJSON()));
+              target.replaceWith(info.find('[href=#' + prop + ']'));
+            } else {
+              target.text(model.changed[key]);
+            }
             break;
         }
       }

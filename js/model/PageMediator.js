@@ -20,7 +20,7 @@
     },
     parse: function (response, options) {
       isLoading = false;
-      return Backbone.Model.prototype.parse.call(this, response, options);
+      return Backbone.Model.prototype.parse.call(this, _.omit(response, 'msg', 'code'), options);
     }
   });
 }(Nervenet.createNameSpace('dianjoy.model')));

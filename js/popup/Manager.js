@@ -194,7 +194,7 @@
       }
       this.$('select')
         .val(this.options.value)
-        .prop('disabled', this.options.options.length === 0)
+        .prop('disabled', this.options.options && this.options.options.length === 0)
         .html(function () {
           return $(this).prop('disabled') ? '<option>&lt;没有结果&gt;</option>' : this.innerHTML;
         });
