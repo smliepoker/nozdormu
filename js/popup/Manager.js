@@ -192,12 +192,15 @@
         this.collection.on('add', this.collection_addHandler, this);
         this.$('.item-grid').html(this.item({value: this.collection.toJSON()}));
       }
-      this.$('select')
-        .val(this.options.value)
-        .prop('disabled', this.options.options && this.options.options.length === 0)
-        .html(function () {
-          return $(this).prop('disabled') ? '<option>&lt;没有结果&gt;</option>' : this.innerHTML;
-        });
+      if (this.options.type === 'select') {
+        if (this.options.options.length === 0) {
+          this.$('select')
+            .prop('disabled', true)
+            .html('<option>&lt;没有结果&gt;</option>');
+        } else {
+          this.$('select').val(this.options.value)
+        }
+      }
 
       // 用组件适配用户操作
       this.$('[type=datetime]').datetimepicker();
