@@ -80,7 +80,7 @@
       return;
     }
     // 娘滴，真没有，只好新建了
-    attr[params.options.display] = value;
+    attr[params.options.display || params.options.prop] = value;
     collection.create(attr, {wait: true});
   }
   function onError(error) {
