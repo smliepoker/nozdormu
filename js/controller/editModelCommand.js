@@ -63,7 +63,9 @@
     // 用户选择了集合里有的
     if (collection.get(value)) {
       attr[params.prop] = value;
-      attr[params.options.display] = collection.get(value).get('label');
+      if (params.options.display) {
+        attr[params.options.display] = collection.get(value).get('label');
+      }
       apply(attr);
       return;
     }
