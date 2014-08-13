@@ -9,7 +9,6 @@
   
   ns.AdEditor = Backbone.View.extend({
     events: {
-      'paste textarea' : 'textarea_pasteHandler',
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .ad-sdk-type input': 'adSDKType_clickHandler',
       'click .platform label': 'platformButton_clickHandler',
@@ -45,19 +44,6 @@
     remove: function () {
       Backbone.View.prototype.remove.call(this);
       this.model.off(null, null, this);
-    },
-    image_pasteHandler : function(event){
-      var text = document.activeElement.value
-        , textPart1 = text.substring(0, document.activeElement.selectionStart)
-        , textPart2 = text.substring(document.activeElement.selectionEnd, event.currentTarget.value.length)
-        , clip = event.clipboardData || event.originalEvent.clipboardData;
-      var str = clip.getData('text/html');
-      var html_reg = /<\/?(html|body)>/g
-        , comment_reg = /<!--(.*?)-->/g;
-      str = str.replace(html_reg, '').replace(comment_reg, '');
-      var output = toMarkdown(str);
-      event.currentTarget.value = textPart1 + output + textPart2;
-      return false;
     },
     adSDKType_clickHandler: function (event) {
       this.$el
