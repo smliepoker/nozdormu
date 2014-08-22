@@ -226,8 +226,11 @@
         , clip = event.clipboardData || event.originalEvent.clipboardData;
       var str = clip.getData('text/html');
       var html_reg = /<\/?(html|body)>/g
-        , comment_reg = /<!--(.*?)-->/g;
-      str = str.replace(html_reg, '').replace(comment_reg, '');
+        , comment_reg = /<!--(.*?)-->/g
+        , span_reg = /<\/?span.*?>/g
+        , div_reg1 = /<div.*?>/g
+        , div_reg2 = /<\/div>/g;
+      str = str.replace(html_reg, '').replace(comment_reg, '').replace(span_reg,'').replace(div_reg1,'<p>').replace(div_reg2,'</p>');
       var output = toMarkdown(str);
       event.currentTarget.value = textPart1 + output + textPart2;
       event.preventDefault();
