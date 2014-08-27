@@ -4,7 +4,7 @@
     $context: null,
     $router: null,
     events: {
-      "blur input": "input_blurHandler",
+      "blur input,textarea,select": "input_blurHandler",
       'focus input': 'input_focusHandler',
       "click .upload-button": "uploadButton_clickHandler",
       "change input[type=file]": "fileUploader_changeHandler",
