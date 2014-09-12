@@ -19,7 +19,7 @@
   function callPopup(model, options, collection) {
     popup = dianjoy.popup.Manager.popupEditor(model, options, collection);
     if (model) {
-      popup.once('submit', onSubmit);
+      popup.on('submit', onSubmit);
       popup.once('hidden', onHidden);
     }
   }
