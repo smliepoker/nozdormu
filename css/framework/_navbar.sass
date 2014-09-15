@@ -1,0 +1,43 @@
+@charset "UTF-8"
+@import "../define"
+@import "compass/css3/images"
+
+#header
+  height: 50px
+  @include background(linear-gradient(to bottom, #333, #222))
+
+  .navbar-toggle
+    float: right
+    padding: 5px 7px
+    margin-top: -8px
+    margin-bottom: 0
+    color: #666
+    font-size: 18px
+    line-height: 0
+    border-color: transparent
+    background: #e5412d
+    color: #FFF
+
+    &:hover
+      text-decoration: none
+
+  .navbar-toggle.collapsed
+    background-color: transparent
+
+    &:hover,
+    &:focus
+      background: #222
+
+  #sidebar-toggle.collapsed
+    color: #e5412d
+
+  .vertical-divider
+    border-left: 1px solid #444
+    width: 1px
+    height: 20px
+    margin: ($topbar-height - 20px) / 2 5px
+    overflow: hidden
+
+  .navbar-brand
+    width: $sidebar-width
+    padding: ($topbar-height - 36px) / 2 ($sidebar-width - 36px) / 2

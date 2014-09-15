@@ -1,0 +1,67 @@
+@charset "UTF-8"
+
+#notification
+
+  i
+    margin-right: 0
+
+  i + .badge
+    position: absolute
+    top: 2px
+    right: 2px
+    line-height: 20px
+    padding: 0
+    min-width: 20px
+    text-align: center
+    background-color: $red
+
+  .profile-menu
+    background: #F0F0F0
+    padding: 5px
+    min-width: 200px
+
+    li
+      background: #FFF
+      border-bottom: #F0F0F0
+
+      &:nth-last-child(1)
+        border: none
+
+    .title
+      background: #F0F0F0
+      color: #333
+      font: bold 14px/2 $text-font
+      margin-bottom: 5px
+      text-indent: 5px
+
+      .more
+        text-indent: 0
+        padding: 4px 5px
+
+      + .empty
+        display: block
+
+    .empty
+      color: #333
+      display: none
+      line-height: 60px
+      text-align: center
+
+  .alarms
+    min-width: 300px
+    max-height: 500px
+    overflow-x: hidden
+    overflow-y: auto
+
+    > li
+      padding: 0 5px
+      white-space: nowrap
+
+      > a
+        display: inline-block
+        padding: 4px 0
+        vertical-align: middle
+
+      input:checked
+        + a
+          text-decoration: line-through

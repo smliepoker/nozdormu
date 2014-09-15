@@ -1,0 +1,71 @@
+@charset "UTF-8"
+@import "../../bower_components/colors/sass/variables"
+@import "../define"
+@import "compass/css3/images"
+
+#main-page
+  position: relative
+  margin-left: $sidebar-width
+
+  > .alert
+    margin-left: $gap
+    margin-right: $gap
+
+#sub-page
+  min-height: 300px
+  position: relative
+  padding: 0 $gap $gap
+
+  .row + .row
+    margin-top: 2em
+
+  .row + .row.row-margin-less
+    margin-top: 0 !important
+
+#content-header
+  @include background(linear-gradient(to bottom, $white, $silver))
+  border-bottom: 1px solid #CCC
+  height: $sidebar-width
+  padding-left: $gap
+  margin-bottom: $gap
+
+  h1
+    color: #444
+    font: 400 30px/#{$sidebar-width} $title-font
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5)
+    margin: 0
+
+#page-loading
+  overflow: hidden
+  width: 240px
+  position: fixed
+  top: 320px
+  left: 50%
+  z-index: 11
+  margin-left: $sidebar-width - 240px / 2
+
+#fix-header-container
+  background: #FFF
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.25)
+  position: fixed
+  top: $topbar-height
+  left: $sidebar-width
+  right: 0
+  padding: 5px 20px
+  z-index: 10
+
+  &:empty
+    display: none
+
+  table
+    margin-bottom: 0
+
+#mask
+  background: #000
+  opacity: 0.4
+  position: fixed
+  top: $topbar-height + $sidebar-width
+  left: $sidebar-width
+  right: 0
+  bottom: $footer-height
+  z-index: 10

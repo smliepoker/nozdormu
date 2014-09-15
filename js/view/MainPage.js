@@ -35,7 +35,7 @@
       this.$('.overtime').removeClass('hide');
     },
     setBreadcrumb: function() {
-      var nav = this.$('#main-nav')
+      var nav = this.$('#sidebar')
         , target = location.hash
         , button = nav.find('[href="' + target + '"]');
       while (button.length === 0) {
@@ -52,7 +52,7 @@
         , ul = button.closest('ul');
       button.parent().addClass('active');
       while (ul.length) {
-        if (!ul.is('#main-nav')) {
+        if (!ul.is('#sidebar')) {
           breadcrumbs.unshift(ul.siblings('a').text());
           ul.parent().addClass('active');
         }

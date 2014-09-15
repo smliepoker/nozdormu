@@ -25,70 +25,81 @@
 <link rel="stylesheet" href="//cdn.staticfile.org/bootstrap-datetimepicker/3.0.0/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" href="{{module}}/css/component.css">
 <link rel="stylesheet" href="{{module}}/css/framework.css" />
-<link rel="stylesheet" href="{{module}}/css/layout.css">
 <link rel="stylesheet" href="{{module}}/css/page.css">
 <link rel="stylesheet" href="{{module}}/css/medias.css">
 <link rel="stylesheet" href="{{module}}/css/general.css">
 {{#custom.css}}<link rel="stylesheet" href="{{custom.css}}">{{/custom.css}}
 
-<header id="header">
-  <h1 id="site-logo">
-    <a href="./">
-      <img src="{{img_url}}/img/logo.png" alt="{{project.name}} 管理员后台" width="36" />
-    </a>
-  </h1>
-  <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
-    <i class="fa fa-cog"></i>
-  </a>
-  <a href="javascript:;" data-toggle="collapse" data-target="#sidebar" id="sidebar-toggle" class="navbar-toggle collapsed">
-    <i class="fa fa-bars"></i>
-  </a>
-</header>
-<nav id="top-bar">
-  <ul class="nav navbar-nav navbar-right" id="notification">
-    <li class="vertical-divider"></li>
-    <li class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-user"></i> {{user}} <span class="caret"></span>
+<nav class="navbar navbar-inverse navbar-fixed-top" id="header">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar">
+        <span class="sr-only">收放导航</span>
+        <i class="fa fa-bars"></i>
+      </button>
+      <a href="./" class="navbar-brand">
+        <img src="{{img_url}}/img/logo.png" alt="{{project.name}} 管理员后台" width="36" />
       </a>
-      <ul class="dropdown-menu" role="menu" id="my-profile">
-        <li>
-          <a data-target="#normal-popup" href="{{module}}/page/change-pwd.html" data-toggle="modal"><i class="fa fa-edit"></i> 修改密码</a>
-        </li>
-        <li class="divider"></li>
-        <li>
-          <a href="{{logout}}" class="logout"><i class="fa fa-sign-out"></i> 退出登录</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-
+    </div>
+    <ul class="nav navbar-nav links">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-link"></i> 常用链接 <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="http://www.yxpopo.com/">官网</a></li>
+          <li><a href="http://m.yxpopo.com/">Web版应用</a></li>
+        </ul>
+      </li>
+    </ul>
+    <form class="navbar-form navbar-left" role="search" action="#/search/" method="post">
+      <div class="form-group">
+        <input type="search" class="form-control" placeholder="请输入关键字">
+      </div>
+      <button class="btn btn-default">搜索</button>
+    </form>
+    <ul class="nav navbar-nav navbar-right" id="notification">
+      <li class="vertical-divider"></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-user"></i> {{user}} <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu" id="my-profile">
+          <li>
+            <a data-target="#normal-popup" href="{{module}}/page/change-pwd.html" data-toggle="modal"><i class="fa fa-edit"></i> 修改密码</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="{{logout}}" class="logout"><i class="fa fa-sign-out"></i> 退出登录</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </nav>
-<div id="sidebar">
-  <ul id="main-nav">
-    <li class="active">
-      <a href="#/"><i class="fa fa-dashboard"></i> 首页</a>
-    </li>
-    {{#category}}
-    {{#has_sub}}
-    <li class="dropdown">
-      <a data-toggle="dropdown" href="#" role="button" title="{{title}}" {{#disabled}}class="disabled"{{/disabled}}>
-        <i class="fa fa-{{icon}}"></i> {{title}} <b class="caret"></b>
-      </a>
-      <ul class="sub-nav dropdown-menu" role="menu" data-title="{{title}}">
-        {{#sub}}
-        <li {{#disabled}}class="disabled"{{/disabled}}><a href="{{url}}"><i class="fa fa-fw fa-{{icon}}"></i> {{title}}</a></li>
-        {{/sub}}
-      </ul>
-    {{/has_sub}}
-    {{^has_sub}}
-    <li {{#disabled}}class="disabled"{{/disabled}}>
-      <a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a>
-    {{/has_sub}}
-    </li>
-    {{/category}}
-  </ul>
-</div>
+<ul id="sidebar">
+  <li class="active">
+    <a href="#/"><i class="fa fa-dashboard"></i> 首页</a>
+  </li>
+  {{#category}}
+  {{#has_sub}}
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#" role="button" title="{{title}}" {{#disabled}}class="disabled"{{/disabled}}>
+      <i class="fa fa-{{icon}}"></i> {{title}} <b class="caret"></b>
+    </a>
+    <ul class="sub-nav dropdown-menu" role="menu" data-title="{{title}}">
+      {{#sub}}
+      <li {{#disabled}}class="disabled"{{/disabled}}><a href="{{url}}"><i class="fa fa-fw fa-{{icon}}"></i> {{title}}</a></li>
+      {{/sub}}
+    </ul>
+  {{/has_sub}}
+  {{^has_sub}}
+  <li {{#disabled}}class="disabled"{{/disabled}}>
+    <a href="{{url}}"><i class="fa fa-{{icon}}"></i> {{title}}</a>
+  {{/has_sub}}
+  </li>
+  {{/category}}
+</ul>
 
 <div id="fix-header-container"></div>
 <div class="main-area" id="main-page">

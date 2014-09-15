@@ -1,9 +1,11 @@
+@charset "UTF-8"
 @import "define"
 
 body
   color: #444
-  font: 14px/1.6 $text-font
-  background: #FFF url(../img/sidebar-bg.png) repeat-y ($sidebar-width - 250px) 0
+  font: 14px/1.5 $text-font
+  padding: $topbar-height 0 $footer-height
+  overflow-x: hidden
 
 h1, h2, h3, h4, h5, h6,
 legend,
@@ -12,7 +14,11 @@ legend,
 .secondary-masthead .breadcrumb,
 .btn-large,
 #page-loading
-  font-family: 'Open Sans', 'trebuchet ms', arial, Microsoft Yahei, Simhei
+  font-family: $title-font
+
+body,
+html
+  min-height: 100%
 
 .edit
   border-bottom: 1px dotted #CCC
@@ -22,123 +28,6 @@ legend,
 
   &:empty:before
     content: '[edit]'
-
-/* ====================================
- * rewrite bootstrap
- * ==================================*/
-.dropdown-backdrop
-  display: none
-
-.navbar
-  padding-right: 8px
-
-  .pagination
-    margin: 8px 0
-
-.navbar-static-top
-  z-index: auto
-
-.navbar-form .btn-group
-  &.hidden-xs
-    display: inline-block !important
-
-/* ---------------------------------- */
-/* table */
-.table
-  .label
-    font-size: 100%
-
-  th .label
-    margin-left: 0.5em
-
-  tr.show
-    display: table-row !important
-
-  td.btn-group
-    display: table-cell
-    white-space: nowrap
-    font-size: 0
-
-    .btn
-      float: none
-
-  + .pagination
-    margin: 0
-
-  .list-group:last-child
-    margin-bottom: 0
-
-    &:not(:first-child)
-      margin-top: 8px
-
-  .break
-    word-break: break-all
-
-/* ---------------------------------- */
-/* label */
-.label-ch
-  background: $info-color
-
-.label-ad
-  background: $success-color
-
-/* ---------------------------------- */
-/* modal */
-.modal-body
-  max-height: 600px
-  overflow: auto
-
-  img:not([class])
-    max-width: 100%
-    max-height: 600px
-
-  .container
-    width: 100%
-
-/* ---------------------------------- */
-/* media */
-.media-body
-  > h4:first-child
-    margin-top: 2px
-
-  > p:last-child
-    margin-bottom: 0
-
-/* ---------------------------------- */
-/* other */
-.date[readonly]
-  cursor: pointer
-  text-align: center
-
-.nav-tabs,
-.nav-pills
-  margin-bottom: 1.5em
-
-.dropdown-menu
-  > li
-    > a
-      padding: 6px 12px
-      border-radius: 4px
-
-      &:hover,
-      &:focus
-        color: #fff
-        background-color: #e5412d
-
-  .active
-    > a,
-    > a:hover,
-    > a:focus
-      color: #fff
-      background-color: #a7a7a7
-
-.badge-important
-  background-color: $primary-color
-
-.pagination
-  > .active
-    > a
-      z-index: initial
 
 /* ====================================
  * form
@@ -237,3 +126,5 @@ input[required]:invalid
  * ==================================*/
 .bg-gray
   background-color: #F0F0F0
+
+@import "bootstrap"
