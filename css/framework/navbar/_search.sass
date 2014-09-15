@@ -1,31 +1,10 @@
 @charset "UTF-8"
 
-#search
-  padding: 3px
-  margin: 0
-  position: relative
+#spotlight
 
-#search button
-  color: #393939
-  font-size: 15px
-  font-weight: 600
-  position: absolute
-  top: 2px
-  right: 0
-  background: transparent
-  transition: color 0.25s linear
+  button i
+    display: none
 
-#search button:hover,
-#search button:focus
-  color: #bd2917
-  outline: none
-
-#search .form-control
-  background: #4e4e4e
-  width: 210px
-  border: 1px solid #363636
-  color: #FFF
-  box-sizing: border-box
-
-#search .form-control:focus
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(229, 65, 45, 0.5)
+  &.loading
+    button span
+      display: none

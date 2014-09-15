@@ -52,11 +52,26 @@
         </ul>
       </li>
     </ul>
-    <form class="navbar-form navbar-left" role="search" action="#/search/" method="post">
+    <form class="navbar-form navbar-left" role="search" action="#/search/" method="post" id="spotlight">
       <div class="form-group">
         <input type="search" class="form-control" placeholder="请输入关键字">
+        <ul class="dropdown-menu" role="menu">
+          <script type="text/x-handlebars-template">
+            {{={{{ }}}=}}
+            {{#if empty}}
+            <li class="disabled">没有搜索结果。</li>
+            {{#each group}}
+            <li role="presentation" class="dropdown-header">{{title}}</li>
+            {{#each list}}
+            <li><a href="{{url}}">{{name}}</a></li>
+            {{/each}}
+            <li role="presentation" class="divider"></li>
+            {{/each}}
+            {{{={{ }}=}}}
+          </script>
+        </ul>
       </div>
-      <button class="btn btn-default">搜索</button>
+      <button class="btn btn-default"><i class="fa fa-spin fa-spinner"></i> <span>搜索</span></button>
     </form>
     <ul class="nav navbar-nav navbar-right" id="notification">
       <li class="vertical-divider"></li>
@@ -209,6 +224,7 @@
 <script src="{{module}}/js/view/MainPage.js"></script>
 <script src="{{module}}/js/view/SubPage.js"></script>
 <script src="{{module}}/js/view/DataSyncView.js"></script>
+<script src="{{module}}/js/view/Spotlight.js"></script>
 <script src="{{module}}/js/popup/Manager.js"></script>
 <script src="{{module}}/js/service/Manager.js"></script>
 <script src="{{module}}/js/model/PageMediator.js"></script>

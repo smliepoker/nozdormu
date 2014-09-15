@@ -27,73 +27,29 @@
 
   ns.Search = Backbone.View.extend({
     events: {
-      'input input[name="query"]': 'query_handler',
-      'focus input[name="query"]': 'show_menu',
-      'click a': 'item_click'
+      'textinput input': 'input_textInputHandler',
+      'blur input': 'input_blurHandler',
+      'focus input': 'input_focusHandler',
+      'click .dropdown-menu a': 'menu_clickHandler'
     },
     initialize: function () {
-      var script = this.$('script').remove();
       this.dropdown = this.$('.dropdown-menu');
-      this.template = Handlebars.compile(script.html());
-      this._query = debounce(this.query, 200);
-      this.spin = this.$('.spin');
-      $(document).on('click', function(e) {
-        var el = $(e.target).parents('#search');
-        if (!el.length) {
-          this.hide_menu();
-        }
-      }.bind(this));
+      this.template = Handlebars.compile(this.$('script').remove().html());
     },
-    item_click: function(e) {
-      var href = $(e.target).attr('href');
-      var label = $(e.target).attr('data-label');
-      ga('send', 'event', {
-        'eventCategory': 'Spotlight',
-        'eventAction': 'click',
-        'eventLabel': label,
-        'eventValue': href
-      });
-      this.hide_menu();
-    },
-    hide_menu: function() {
+    hideMenu: function() {
       this.dropdown.hide();
     },
-    show_menu: function() {
+    showMenu: function() {
       if (this.queryString && this.queryString.length > 1) {
         this.dropdown.show();
       }
     },
-    query_handler: function(e) {
-      var str = $(e.target).val().trim();
-      this.queryString = str;
-      if (str.length < 2) {
-        this.dropdown.html('');
-        return this.hide_menu();
-      }
-      this._query();
-    },
     query: function() {
-      this.spin.css('display', 'block');
-      this.load(this.queryString, function(err, data) {
-        this.spin.hide();
-        this.dropdown.html('');
-        if (!this.queryString) return this.hide_menu();
-        var html;
-        if (err) {
-          html = this.template({
-            empty: true
-          })
-          $(html).appendTo(this.dropdown);
-        } else {
-          data.end_date = moment().subtract('days', 1).format('YYYY-MM-DD');
-          data.start_date = moment().subtract('days', 8).format('YYYY-MM-DD');
-          $(this.template(data)).appendTo(this.dropdown);
-        }
-        this.show_menu();
-      }.bind(this));
+      this.$el.addClass('loading');
+      this.load(this.queryString, this.loadCompleteHandler.bind(this));
     },
     load: function(query, done) {
-      dianjoy.service.Manager.call('api/search_result.php', {
+      dianjoy.service.Manager.call('api/search.php', {
         param: query
       }, {
         success: function(res) {
@@ -104,6 +60,35 @@
           done(new Error('Not found!'));
         }
       });
+    },
+    input_blurHandler: function () {
+      this.hideMenu();
+    },
+    input_focusHandler: function () {
+      this.showMenu();
+    },
+    input_textInputHandler: function(e) {
+      var str = this.queryString = e.target.value.trim();
+      if (str.length < 2) {
+        return this.hideMenu();
+      }
+      this.query();
+    },
+    menu_clickHandler: function(e) {
+      var target = $(e.target)
+        , href = target.attr('href')
+        , label = target.data('label');
+      ga('send', 'event', {
+        'eventCategory': 'Spotlight',
+        'eventAction': 'click',
+        'eventLabel': label,
+        'eventValue': href
+      });
+    },
+    loadCompleteHandler: function (err, data) {
+      this.$el.removeClass('loading');
+      this.dropdown.html(this.template(data));
+      this.showMenu();
     }
   });
 }(Nervenet.createNameSpace('dianjoy.view'), jQuery));
