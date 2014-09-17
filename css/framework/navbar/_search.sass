@@ -1,10 +1,25 @@
 @charset "UTF-8"
+@import "compass/css3/transition"
 
 #spotlight
+  position: relative
 
-  button i
-    display: none
+  button
+    @include transition(all 0.2s)
+
+    i
+      display: none
 
   &.loading
-    button span
+    button
+      i
+        display: inline-block
+
+      span
+        display: none
+
+  .dropdown-menu
+    left: 14px
+
+    .divider:last-child
       display: none

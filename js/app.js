@@ -10,6 +10,9 @@ $(function () {
       el: '#sub-page',
       model: mediator
     })
+    , spotlight = new dianjoy.view.Spotlight({
+      el: '#spotlight'
+    })
     , router = new dianjoy.router.AdminPanel();
 
   context.mediatorMap.isBackbone = true;
@@ -34,6 +37,20 @@ $(function () {
 
   // 弹窗控制
   dianjoy.popup.mediator = mediator;
+
+  // 权限问题，重新登录
+  mediator.on('error', function (model, response) {
+    if (response.code === 100) {
+      dianjoy.popup.Manager.popup({
+        title: '权限失效，请重新登录',
+        content: webURL + '/template/login.html',
+        hasConfirm: true,
+        hasCancel: true,
+        isRemote: true,
+        data: dianjoy.config.login
+      });
+    }
+  });
 
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
