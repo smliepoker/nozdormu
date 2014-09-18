@@ -3,6 +3,9 @@
  */
 ;(function (ns) {
   'use strict';
+
+  var timeout;
+
   ns.BasePopup = dianjoy.view.DataSyncView.extend({
     $context: null,
     events: {
@@ -10,36 +13,49 @@
       'hidden.bs.modal': 'hiddenHandler',
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
-      'submit form': 'form_submitHandler'
+      'form-success': 'form_successHandler'
     },
-    initUI: function (title, content, hasConfirm, hasCancel, isRemote) {
-      this.$el
-        .find('.modal-title').text(title).end()
-        .find('.modal-footer .btn-primary')
-          .prop('disabled', true)
-          .toggleClass('hide', !hasConfirm).end()
-        .find('[type=button]')
-          .toggleClass('hide', !hasCancel).end()
-        .modal('show');
-      if (isRemote) {
-        if (/\.hbs$/i.test(content)) {
-          $.ajax(content, {
+    render: function (options) {
+      this.options = options;
+      if (options.isRemote) {
+        this.$('.modal-body').html('<p align="center"><i class="fa fa-spinner fa-spin fa-4x"></i></p>');
+        if (/\.hbs$/i.test(options.content)) {
+          $.ajax(options.content, {
             dataType: 'html',
             context: this,
             success: this.template_successHandler
           });
+          options.isRemote = false;
         } else {
-          this.$('.modal-body').load(content, _.bind(this.loadCompleteHandler, this));
+          options.isRemote = options.content;
         }
-        this.$('.modal-body').html('<p align="center"><i class="fa fa-spinner fa-spin fa-4x"></i></p>')
       } else {
-        this.$('.modal-body').html(content);
+        this.$('.modal-body').html(options.content);
       }
+      this.$el
+        .find('.modal-title').text(options.title).end()
+        .find('.modal-footer .btn-primary')
+          .prop('disabled', true)
+          .toggleClass('hide', !options.hasConfirm).end()
+        .find('[type=button]')
+          .toggleClass('hide', !options.hasCancel).end()
+        .modal({
+          show: true,
+          remote: options.remote
+        });
+    },
+    hide: function () {
+      var modal = this.$el;
+      timeout = setTimeout(function () {
+        modal.modal('hide');
+      }, 3000);
     },
     onLoadComplete: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
       dianjoy.component.Manager.check(this.$el, this.model);
-      ns.Manager.trigger('load');
+    },
+    form_successHandler: function () {
+      this.hide();
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
@@ -48,20 +64,20 @@
     },
     template_successHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.$('.modal-body').html(this.template(config));
+      this.$('.modal-body').html(this.template(this.options.data));
       this.onLoadComplete();
     },
     hiddenHandler: function () {
       dianjoy.component.Manager.clear(this.$el);
       this.$('.modal-body').empty();
-      ns.Manager.trigger('normal:hidden', this);
+      clearTimeout(timeout);
     },
-    loadCompleteHandler: function(response) {
+    loadCompleteHandler: function() {
       this.onLoadComplete();
     },
     showHandler: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
-      this.$('.alert').addClass('hide');
+      this.$('.alert').hide();
     }
   });
 }(Nervenet.createNameSpace('dianjoy.popup')));

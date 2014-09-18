@@ -204,6 +204,7 @@
       }
       this.model.set(_.omit(response, 'code', 'msg'));
       this.displayResult(true, response.msg, 'smile-o');
+      this.$el.trigger('form-success');
     },
     submit_errorHandler: function(xhr, status, error) {
       this.displayResult(false, xhr.msg || error, 'frown-o');

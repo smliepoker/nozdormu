@@ -39,15 +39,15 @@ $(function () {
   dianjoy.popup.mediator = mediator;
 
   // 权限问题，重新登录
-  mediator.on('error', function (model, response) {
-    if (response.code === 100) {
+  mediator.on('error', function (model, xhr) {
+    if (xhr.responseJSON.code === 100) {
       dianjoy.popup.Manager.popup({
         title: '权限失效，请重新登录',
-        content: webURL + '/template/login.html',
+        content: webURL + 'template/login.hbs',
         hasConfirm: true,
         hasCancel: true,
         isRemote: true,
-        data: dianjoy.config.login
+        data: dianjoy.config
       });
     }
   });

@@ -69,7 +69,11 @@
     face_clickHandler: function(event) {
       var img = $(event.currentTarget).clone();
       img.removeClass('preview img-polaroid');
-      dianjoy.popup.Manager.popup(img.attr('alt'), img[0].outerHTML, false);
+      dianjoy.popup.Manager.popup({
+        title: img.attr('alt'),
+        content: img[0].outerHTML,
+        hasConfirm: false
+      });
     },
     toggle_changeHandler: function (event) {
       var target = $(event.currentTarget),

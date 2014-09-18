@@ -15,14 +15,14 @@
         this.$context.inject(popup);
       }
     },
-    popup: function (title, content, hasConfirm, hasCancel, isRemote) {
-      hasConfirm = hasConfirm !== null ? hasConfirm : true;
-      hasCancel = hasCancel !== null ? hasCancel : true;
+    popup: function (options) {
+      options.hasConfirm = 'hasConfirm' in options ? options.hasConfirm : true;
+      options.hasCancel = 'hasCancel' in options ? options.hasCancel : true;
       popup = popup || this.$context.createInstance(ns.BasePopup, {
         el: '#normal-popup',
         model: ns.mediator
       });
-      popup.initUI(title, content, hasConfirm, hasCancel, isRemote);
+      popup.render(options);
     },
     popupEditor: function (model, options, collection) {
       if (editor) {
@@ -50,7 +50,13 @@
           data = target.data(),
           hasConfirm = 'confirm' in data ? data.confirm : true,
           hasCancel = 'cancel' in data ? data.cancel : true;
-      ns.Manager.popup(this.title || target.text(), this.href, hasConfirm, hasCancel, true);
+      ns.Manager.popup({
+        title: this.title || target.text(),
+        content: this.href,
+        hasConfirm: hasConfirm,
+        hasCancel: hasCancel,
+        isRemote: true
+      });
       ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
       event.preventDefault();
     })
